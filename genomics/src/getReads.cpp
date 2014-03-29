@@ -9,23 +9,7 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-void usefulRead(std::string sReadSequence)
-{
-	int j;
-
-	if(sReadSequence.find("N") > sReadSequence.size())
-	{
-		std::ofstream osRead(sOutFileName + std::to_string(j));
-		sReadSequence.push_back('\n');
-
-		osRead << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
-		osRead << sReadSequence;
-		//std::cout << sReadSequence;
-		osRead.close();
-
-		j++;
-	}
-}
+#include "isUsefulRead.hpp"
 
 int main(int argc, const char* argv[])
 {
@@ -41,8 +25,8 @@ int main(int argc, const char* argv[])
 
 	/* Code stars here */
 
-	int iNumberOfReads=1000000;
-	int iReadSize=500;
+	int iNumberOfReads=100;
+	int iReadSize=5;
 	
 	std::chrono::time_point<std::chrono::system_clock> t_start,t_end;
 	t_start = std::chrono::system_clock::now();
@@ -59,39 +43,53 @@ int main(int argc, const char* argv[])
 	
 	int j(1);
 
+	long int iPosition = (iSize*1.0*generator())/generator.max();
+
 	while(j<=iNumberOfReads)
 	{
-		long int iPosition = (iSize*1.0*generator())/generator.max();
-		isParsed.seekg(iPosition,isParsed.beg);
-		std::string sReadSequence;
+		
+		//if(iPosition < iSize)
+		//{
 
-		for(int k=0;k<iReadSize;k++)
-		{
-			char cRead = isParsed.get();
-			sReadSequence.push_back(cRead);
-		}
+			isParsed.seekg(iPosition,isParsed.beg);
+			std::string sReadSequence;
 
-		if(sReadSequence.find("N") > sReadSequence.size())
-		{
-			std::ofstream osRead(sOutFileName + std::to_string(j));
-			sReadSequence.push_back('\n');
-			
-			osRead << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
-			osRead << sReadSequence;
-			//std::cout << sReadSequence;
-			osRead.close();
-			
-			j++;
-		}
-		sReadSequence.clear();
-		//sReadSequence = "";
+			for(int k=0;k<iReadSize;k++)
+			{
+				char cRead = isParsed.get();
+				sReadSequence.push_back(cRead);
+			}
+
+			if(isUsefulRead(sReadSequence) == true)
+			{
+				std::ofstream osRead(sOutFileName + std::to_string(j));
+				sReadSequence.push_back('\n');
+				
+				//std::cout << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
+				//std::cout << sReadSequence << std::endl;
+				osRead << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
+				osRead << sReadSequence;
+				osRead.close();
+				
+				j++;
+			}
+			else
+			{
+				//std::cout << "Bad read, omitting\n";
+			}
+			sReadSequence.clear();
+			//}
+	
+		iPosition = (iSize*1.0*generator())/generator.max();
+
+		//std::cout << iPosition << "\n";
 	}
 
 	isParsed.close();
 	
 	t_end = std::chrono::system_clock::now();
 	
-	std::cout << "Generate " << iNumberOfReads << " reads of " << iReadSize <<"bp took me about\n\t" << std::chrono::duration_cast<std::chrono::milliseconds> (t_end-t_start).count() << " ms" << std::endl;
+	std::cout << "Taking " << iNumberOfReads << " random reads of " << iReadSize <<"bp each, took me about\n\t" << std::chrono::duration_cast<std::chrono::milliseconds> (t_end-t_start).count() << " ms" << std::endl;
 	std::cout << "\t" << std::chrono::duration_cast<std::chrono::seconds> (t_end-t_start).count() << " s" << std::endl;
 	std::cout << "\t" << std::chrono::duration_cast<std::chrono::minutes> (t_end-t_start).count() << " m" << std::endl;
 	return 0;
