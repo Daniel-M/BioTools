@@ -25,16 +25,17 @@ int main(int argc, const char* argv[])
 
 	/* Code stars here */
 
-	int iNumberOfReads=100;
-	int iReadSize=5;
+	int iNumberOfReads=500;
+	int iReadSize=20;
 	
 	std::chrono::time_point<std::chrono::system_clock> t_start,t_end;
 	t_start = std::chrono::system_clock::now();
 
 
 	std::ifstream  isParsed(sWorkingDir+"/"+sInGenomeFileName);
-	std::string  sOutFileName(sWorkingDir+"/results/"+sOutReadFileNameRoot+"-");
-	
+	//std::string  sOutFileName(sWorkingDir+"/results/"+sOutReadFileNameRoot+"-");//
+	std::string  sOutFileName(sWorkingDir+"/"+sInGenomeFileName+"-random-reads");//
+
 	isParsed.seekg(0,isParsed.end);
 	long int iSize = isParsed.tellg();
 	isParsed.seekg(0,isParsed.beg);
@@ -42,6 +43,8 @@ int main(int argc, const char* argv[])
 	std::random_device generator("/dev/urandom");
 	
 	int j(1);
+
+	std::ofstream osRead(sOutFileName);//
 
 	long int iPosition = (iSize*1.0*generator())/generator.max();
 
@@ -62,14 +65,14 @@ int main(int argc, const char* argv[])
 
 			if(isUsefulRead(sReadSequence) == true)
 			{
-				std::ofstream osRead(sOutFileName + std::to_string(j));
+				//std::ofstream osRead(sOutFileName + std::to_string(j));//
 				sReadSequence.push_back('\n');
 				
 				//std::cout << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
 				//std::cout << sReadSequence << std::endl;
 				osRead << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
-				osRead << sReadSequence;
-				osRead.close();
+				osRead << sReadSequence << std::endl;//
+				//osRead.close();//
 				
 				j++;
 			}
@@ -86,8 +89,10 @@ int main(int argc, const char* argv[])
 	}
 
 	isParsed.close();
-	
+	osRead.close(); //
+
 	t_end = std::chrono::system_clock::now();
+
 	
 	std::cout << "Taking " << iNumberOfReads << " random reads of " << iReadSize <<"bp each, took me about\n\t" << std::chrono::duration_cast<std::chrono::milliseconds> (t_end-t_start).count() << " ms" << std::endl;
 	std::cout << "\t" << std::chrono::duration_cast<std::chrono::seconds> (t_end-t_start).count() << " s" << std::endl;
