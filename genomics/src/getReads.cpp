@@ -66,12 +66,12 @@ int main(int argc, const char* argv[])
 			if(isUsefulRead(sReadSequence) == true)
 			{
 				//std::ofstream osRead(sOutFileName + std::to_string(j));//
-				sReadSequence.push_back('\n');
+				//sReadSequence.push_back('\n');
 				
 				//std::cout << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
 				//std::cout << sReadSequence << std::endl;
-				osRead << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName <<std::endl;
-				osRead << sReadSequence << std::endl;//
+				osRead << "> Read # " << j << " - Taken from  " << iPosition << " to " << (iPosition+iReadSize) << " of " <<  sInGenomeFileName << std::endl;
+				osRead << sReadSequence << std::endl << std::endl;//
 				//osRead.close();//
 				
 				j++;
@@ -80,6 +80,7 @@ int main(int argc, const char* argv[])
 			{
 				//std::cout << "Bad read, omitting\n";
 			}
+			
 			sReadSequence.clear();
 			//}
 	

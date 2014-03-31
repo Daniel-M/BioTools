@@ -13,14 +13,14 @@ bool isUsefulRead(std::string sReadSequence)
 {
 	if(sReadSequence.find("N") > sReadSequence.size())
 	{
-		if((sReadSequence.find("A") > sReadSequence.size()) || (sReadSequence.find("T") > sReadSequence.size()) || (sReadSequence.find("G") > sReadSequence.size()) || (sReadSequence.find("C") > sReadSequence.size()))
-		{
-			return false;
-		}
-		else
-		{
+		//if((sReadSequence.find("A") > sReadSequence.size()) || (sReadSequence.find("T") > sReadSequence.size()) || (sReadSequence.find("G") > sReadSequence.size()) || (sReadSequence.find("C") > sReadSequence.size()))
+		//{
+			//return false;
+		//}
+		//else
+		//{
 			return true;
-		}
+		//}
 	}
 	else
 	{

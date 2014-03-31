@@ -30,14 +30,23 @@ int main(int argc, const char* argv[])
 
 	while(isGenome.good())
 	{
-		char cRead = isGenome.get();
-		if(cRead != '\n')
+
+		std::string sRead;
+		
+		getline(isGenome,sRead);
+		
+		if( (sRead.substr(0,1) != ">") )
 		{
-			if(cRead != ' ')
+			if(sRead.substr(sRead.size(),1) == "\n")
 			{
-				osParsed << cRead;
+				osParsed << sRead.substr(0,sRead.size()-2);
+			}
+			else
+			{
+				osParsed << sRead;
 			}
 		}
+		
 	}
 
 	isGenome.close();
