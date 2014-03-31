@@ -7,3 +7,4 @@ ADD_DEFINITIONS( --std=c++11 )
 
 ADD_EXECUTABLE(Reads src/getReads)
 ADD_EXECUTABLE(Accond src/removeEscapes)
+ADD_EXECUTABLE(MicroSat src/getMicroSatellite)

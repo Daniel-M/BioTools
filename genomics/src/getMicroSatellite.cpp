@@ -4,12 +4,11 @@
 #include <random>
 #include <chrono>
 #include <string>
+#include <map>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
-
-
 
 
 int main(int argc, const char* argv[])
@@ -19,53 +18,62 @@ int main(int argc, const char* argv[])
 	std::string sWorkingDir(argv[1]);
 	std::cout << " Working directory: " << sWorkingDir << std::endl;
 	
-	std::string sReadFileNameRoot(argv[2]);//"read");
+	std::string sInReadsFileName(argv[2]);//"parsed");
 
-	std::cout << " Read file name root: " << sReadFileNameRoot << std::endl;
+	std::cout << " Reads file: " << sInReadsFileName << std::endl;
 
 	/* Code stars here */
 
-	int iNumberOfReads(1000000);
-	int iReadSize(500);
-	int iMicroUniverseSize(2);
-	int iMicroUniverseMinRepeats(6);
-	int iMicroUniverseMaxRepeats(12);
-
-
-	std::string sMicroUniversePattern("TC");
-
 	std::chrono::time_point<std::chrono::system_clock> t_start,t_end;
 	t_start = std::chrono::system_clock::now();
-	
-	int j(1);
 
-	int iMicroUniverseCounts(0);
+	std::ifstream  fInReadsFile(sWorkingDir+"/"+sInReadsFileName);
+	std::string  sOutFileName(sWorkingDir+"/"+sInReadsFileName+"-uSatellites");//
 
-	while(j<=iNumberOfReads)
+	fInReadsFile.seekg(0,fInReadsFile.end);
+	long int iSize = fInReadsFile.tellg();
+	fInReadsFile.seekg(0,fInReadsFile.beg);
+
+	std::ofstream osRead(sOutFileName);//
+
+	int iSatelliteCount(0);
+	int j(0);
+
+	std::string sMicroSatelliteTemplate("TTT");
+	std::map<std::string,int> msStalliteCounts;
+	std::string sMicroSatelliteSearch("");
+
+	while(fInReadsFile.good())
 	{
-		std::ifstream  isRead(sWorkingDir+"/results/"+sOutReadFileNameRoot+"-"+std::to_string(j));
-	
-		isRead.seekg(0,isRead.end);
-		long int iSize = isRead.tellg();
-		isRead.seekg(0,isRead.beg);
-	
-		std::string sMicroUniverseSearch;
+		//char cRead = fInReadsFile.get();
+		//sMicroSatelliteSearch.push_back(cRead);
+		
+		fInReadsFile.seekg(j,fInReadsFile.beg);
 
-		while(isRead.good())
+		for(int i=0;i<sMicroSatelliteTemplate.size();i++)
 		{
-			char cRead = isRead.get();
-			
+			char cRead = fInReadsFile.get();
+			sMicroSatelliteSearch.push_back(cRead);
+		}
+		
+		j++;
+
+		std::cout << sMicroSatelliteSearch << "\t" << iSatelliteCount << std::endl;
+		
+		if(sMicroSatelliteTemplate == sMicroSatelliteSearch)
+		{
+			iSatelliteCount++;	
 		}
 
-
-
-		isRead.close();
+		sMicroSatelliteSearch.clear();
 	}
 
-		
+	fInReadsFile.close();
+
 	t_end = std::chrono::system_clock::now();
+
 	
-	std::cout << "Counting \'" << sMicroUniversePattern << "\' repeats took me about\n\t" << std::chrono::duration_cast<std::chrono::milliseconds> (t_end-t_start).count() << " ms" << std::endl;
+	std::cout << "Searching " << iSatelliteCount << " ocurrences, took me about\n\t" << std::chrono::duration_cast<std::chrono::milliseconds> (t_end-t_start).count() << " ms" << std::endl;
 	std::cout << "\t" << std::chrono::duration_cast<std::chrono::seconds> (t_end-t_start).count() << " s" << std::endl;
 	std::cout << "\t" << std::chrono::duration_cast<std::chrono::minutes> (t_end-t_start).count() << " m" << std::endl;
 	return 0;
