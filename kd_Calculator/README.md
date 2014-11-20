@@ -1,6 +1,8 @@
 kd-calculator
 =============
 
+This is part of the "muskin" protocol
+
 Code to calculate the Kd for the reaction Calcium-MagFluo4 by using the fittin parameters obtained from  
 the normalized fluorescence maxima. Those maxima created a Lorentzian/Sigmoid curved that its fitted to  
 
