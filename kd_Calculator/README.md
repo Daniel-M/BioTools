@@ -19,3 +19,7 @@ ddx=3.7739e-2
 dx0=4.19038e-2 
 
 Where for the each parameter J the error is expresed as dJ. So taking dx above, the error is ddx
+
+The default input filename is "kd-params.txt", but other files can be passed as argv[1]: 
+
+    ./kd-calculator.out parameters_are_here.txt
