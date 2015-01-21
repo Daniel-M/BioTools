@@ -1,0 +1,67 @@
+#include "headers.hpp"
+
+
+int_t node::siNumberOfNodes=0;
+
+int main(void)
+{
+	////Point p;
+	//point_t v,t;
+	//index_t a={1,0,1};	
+
+	//for(int i=0;i<3;i++)
+	//{
+		//v.push_back(i);
+	//}
+	
+	//t=(-1.23*v)+(2*v); //(v*v);
+
+	////int_t node::siNumberOfNodes=0;
+
+	//node nod1(v,{1,0,0},2.232);
+	//std::cout << "there are " << node::getNumberOfNodes() << " nodes created\n";
+	//node nod2(2*v,{0,1,0},2.232);
+	//std::cout << "there are " << node::getNumberOfNodes() << " nodes created\n";
+	//node nod3(3*v,{0,0,1},2.232);
+	//std::cout << "there are " << node::getNumberOfNodes() << " nodes created\n";
+	//node nod4(t,{1,1,0},2.232);
+	//std::cout << "there are " << node::getNumberOfNodes() << " nodes created\n";
+
+	//index_t b={1,0,0}, c={1,1,0};
+
+	//if(b != c)
+	//{
+		//std::cout << "Hey!!, Listen!!" << std::endl;
+	//}
+	//else
+	//{
+		//std::cout << "Hey!!, Dont Listen!!" << std::endl;
+	//}
+
+	//std::cout << a << std::endl;
+	//std::cout << v << std::endl;
+	//std::cout << nod1 << std::endl;
+	//std::cout << nod2 << std::endl;
+	//std::cout << nod3 << std::endl;
+	//std::cout << nod4 << std::endl;
+
+	//mesh cMesh;
+
+	//cMesh.push_backBN(nod1);
+
+	point_t pa,pb;
+
+	pa.push_back(1);
+	pa.push_back(0);
+	pb.push_back(5);
+	pb.push_back(10);
+
+	std::cout << pa << std::endl;
+	std::cout << pb << std::endl;
+
+	index_t ia={5,5};
+
+	mesh dMesh(2,ia,pa,pb);
+
+}
+
