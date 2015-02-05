@@ -15,17 +15,21 @@ This code is inherited from my old repository cppBioCheN(A transtional repositor
 ##### DESCRIPTION   
 ###### Introduction   
 Dealing with Biochemical Reaction Networks (BcRN) can be exhausting. BcRN can be modeled by many 
-means, one of them by the use of differential equations. There's the Michaelis-Menten approach,  
-which could be derived form the differential equations that describe the network and apply equilibria   
-criterion. When looking for the complete description of the BcRN, one must reduce the the assumptions  
+ways, one of them by using ordinary differential equations. There's the Michaelis-Menten approach,  
+which could be derived from the differential equations that describe the network and apply equilibrium   
+criterion. When looking for the complete description of the BcRN, one must reduce the assumptions  
 made in order to get the more information that one can get.  
   
 Using the differential equations approach, the analytical steps on deriving the set of equations   
-for the BcRN takes lots of time. More when the model have to be changed or modified, the task becomes   
-so exhausting. Given the fact that the differential equations can get so complex and the involved   
+for the BcRN takes lots of time and errors propagate faster in the process.   
+If the more when the model have to be changed or modified, the task becomes so exhausting.   
+Given the fact that the differential equations can get so complex and the involved   
 chemical species can get to high levels of coupling among the equations that describe the network,  
 I found the need of developing a computational tool for deriving the differential equations, by now  
-using the _mass action law_   
+using the _mass action law_ kinetics.
+
+This library exploits the _vector space_ like features that _chemical reaction networks_ theorist have developed   
+since the works of James Wei _et al._ on the 60's.
 
 (more to be coming...)
 
@@ -36,8 +40,8 @@ using the _mass action law_
 (more to be coming...)
 
 ##### TO DO:
-* Add doxygen documentation.  
-* Add cmake oriented structure.  
+* Add doxygen documentation.  **DONE**
+* Add cmake oriented structure. **DONE**  
 * Update readme with usage notes.  
 
 ##### EVENTS:
