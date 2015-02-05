@@ -1,2 +1,2 @@
 #!/bin/bash
-vim src/*.cpp include/*.hpp
+vim src/*.cpp lib/*.cpp include/*.hpp

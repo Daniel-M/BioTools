@@ -1,7 +1,7 @@
-CheReNe-lib
+CheReNE-lib
 =======
 
-##### PROJECT NAME:	CheReNe-lib (Chemical Reaction Networks - library)  
+##### PROJECT NAME:	CheReNE-lib (Chemical Reaction Networks Equations - library)  
 ##### STATUS:		On development    
 ##### AUTOR:		Daniel M.
 ##### E-MAIL:		[danielmejia55@gmail.com](mailto:danielmejia55@gmail.com)  
@@ -45,16 +45,16 @@ using the _mass action law_
 
 ##### LICENSE
     
-The CheReNe-lib project consist of an  implementation of STL containers and lib BOOST libraries
+The CheReNE-lib project consist of an  implementation of STL containers and lib BOOST libraries
 to generate differential equations for reaction networks by only using a set of strings as an input
 Copyright (C) 2013-2014  Daniel Mejía R. [danielmejia55@gmail.com](mailto:danielmejia55@gmail.com) 
 
-"CheReNe-lib" is free software: you can redistribute it and/or modify
+"CheReNE-lib" is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-"CheReNe-lib" is distributed in the hope that it will be useful,
+"CheReNE-lib" is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
