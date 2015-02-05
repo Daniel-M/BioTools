@@ -1,6 +1,6 @@
 #include "cherene.hpp"
 
-void  getReactionMatrix(std::vector<std::string> vsSimpleReactions,std::map<std::string,int> mSpecies, boost::numeric::ublas::matrix<int>& mNmatrix)
+void getReactionMatrix(std::vector<std::string> vsSimpleReactions,std::map<std::string,int> mSpecies, boost::numeric::ublas::matrix<int>& mNmatrix)
 {
     mNmatrix.resize(mSpecies.size(),0);
     std::vector<int> viReactantsVector(mSpecies.size());

@@ -1,8 +1,8 @@
 #include "stl_includes.hpp"
 #include "libboost_includes.hpp"
 
-namespace cherene
-{
+//namespace cherene
+//{
 
 #ifndef GET_MASS_ACTION_LAW_EQUATIONS
   #define GET_MASS_ACTION_LAW_EQUATIONS
@@ -68,5 +68,5 @@ namespace cherene
 	//void getSpeciesMap(std::vector<std::string> vsStringInput, std::map<std::string,int> &mSpecies);
 	
 	//int unStoichem(std::string& sInput);
-}
+//}
 

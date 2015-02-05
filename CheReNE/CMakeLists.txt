@@ -3,7 +3,7 @@ PROJECT(cppBioCheN)
 
 INCLUDE_DIRECTORIES( include )
 
-#ADD_SUBDIRECTORY(test)
+ADD_SUBDIRECTORY(lib)
 
 ADD_DEFINITIONS( --std=c++11 )
 
@@ -17,4 +17,4 @@ ADD_EXECUTABLE(boost-parser src/boost_test)
 ADD_EXECUTABLE(ca-model src/ca-model)
 #ADD_EXECUTABLE(odeint-example src/harmonic_oscillator)
 #ADD_EXECUTABLE(matrix src/matrix-function)
-#target_link_libraries( matrix libmatrix)
+target_link_libraries(boost-parser cherene)

@@ -11,7 +11,7 @@
  *
  * To achieve this, the function uses the boost::algorithm to manipulate strings.
  * First it deletes all white spaces " ", then the "=" and "-" are removed leaving only the complexes
- * and the symbols "<" and ">". Those symbols carry the information relevant to generate the simple reactions
+ * and the symbols "<" or ">". Those symbols carry the information relevant to generate the simple reactions.
  *
  * \param[in] sInput Input string containing the complex reaction.
  * \param[out] vsSimpleReactions The vector that will contain all the simple reactions.
