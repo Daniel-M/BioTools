@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES( include )
 
 ADD_SUBDIRECTORY(lib)
 
-ADD_DEFINITIONS( --std=c++11 )
+ADD_DEFINITIONS( --std=c++11 -fopenmp)
 
 #add_library(matrix SHARED
 #include/

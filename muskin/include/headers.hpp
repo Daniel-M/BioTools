@@ -1,6 +1,11 @@
 #include "stl_includes.hpp"
 #include "libboost_includes.hpp"
 
+#ifndef OMP_H
+	#include "omp.h"
+	#define OMP_H
+#endif
+
 #ifndef TYPES_H
 	#include "typedef.hpp"
 	#define TYPES_H

@@ -6,13 +6,13 @@ int_t node::siNumberOfNodes=0;
 int main(void)
 {
 	////Point p;
-	//point_t v,t;
-	//index_t a={1,0,1};	
+	point_t v,t;
+	index_t a={1,0,1};	
 
-	//for(int i=0;i<3;i++)
-	//{
-		//v.push_back(i);
-	//}
+	for(int i=0;i<3;i++)
+	{
+	  v.push_back(i);
+	}
 	
 	//t=(-1.23*v)+(2*v); //(v*v);
 
@@ -41,6 +41,16 @@ int main(void)
 	//std::cout << a << std::endl;
 	//std::cout << v << std::endl;
 	//std::cout << nod1 << std::endl;
+	//double val=10.1;
+	//
+	//nod1 = val;
+	//std::cout << nod1 << std::endl;
+	//
+	//a={1,1,0};
+	//nod1 = a;
+
+	//std::cout << nod1 << std::endl;
+
 	//std::cout << nod2 << std::endl;
 	//std::cout << nod3 << std::endl;
 	//std::cout << nod4 << std::endl;
@@ -56,12 +66,14 @@ int main(void)
 	pb.push_back(5);
 	pb.push_back(10);
 
-	std::cout << pa << std::endl;
-	std::cout << pb << std::endl;
+	std::cout << "RangeA" <<  pa << std::endl;
+	std::cout << "RangeB" << pb << std::endl;
 
-	index_t ia={5,5};
+	index_t ia={40,50};
 
 	mesh dMesh(2,ia,pa,pb);
+
+	dMesh.createMeshFile("mess.msh");
 
 }
 
