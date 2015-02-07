@@ -276,7 +276,8 @@ int_t mesh::createMeshFile(std::string sFileName)
 				sFileStream << ptBuffer[j] << "\t";
 			}
 
-			sFileStream << "\t" << dBuffer << std::endl;
+			//sFileStream << "\t" << dBuffer << std::endl;
+			sFileStream << std::endl;
 		}
 
 		for(int i(0); i < vInnerMesh.size();i++)
@@ -289,7 +290,8 @@ int_t mesh::createMeshFile(std::string sFileName)
 				sFileStream << ptBuffer[j] << "\t";
 			}
 
-			sFileStream << "\t" << dBuffer << std::endl;
+			//sFileStream << "\t" << dBuffer << std::endl;
+			sFileStream << std::endl;
 		}
 
 		sFileStream.close();

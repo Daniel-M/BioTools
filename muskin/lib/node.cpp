@@ -28,8 +28,17 @@ void node::setNode(point_t coords, index_t indices, double value)
 	itNodeNumber=siNumberOfNodes;
 }
 
+node& node::operator=(const index_t itIndex_)
+{
+	itIndices = itIndex_;
+}
 
-int_t node::size()
+node& node::operator=(const double dValue_)
+{
+	dNodeValue=dValue_;
+}
+
+int_t node::getDimension()
 {
 	return ptCoordinates.size();
 }

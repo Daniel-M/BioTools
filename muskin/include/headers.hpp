@@ -25,3 +25,8 @@
 	#include "mesh.hpp"
 	#define MESH_H
 #endif
+
+#ifndef MATHGLDRAW_H
+	#include "mglDrawData.hpp"
+	#define MATHGLDRAW_H
+#endif

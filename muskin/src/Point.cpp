@@ -75,5 +75,9 @@ int main(void)
 
 	dMesh.createMeshFile("mess.msh");
 
+	mglDrawData("mess.msh");
+
+	exit(0);
+
 }
 
