@@ -69,13 +69,14 @@ int main(void)
 	std::cout << "RangeA" <<  pa << std::endl;
 	std::cout << "RangeB" << pb << std::endl;
 
-	index_t ia={40,50};
+	//index_t ia={40,50};
 
-	mesh dMesh(2,ia,pa,pb);
+	//mesh dMesh(2,ia,pa,pb);
 
-	dMesh.createMeshFile("mess.msh");
+	//dMesh.createMeshFile("mesh.msh");
+	//dMesh.createMeshPNG();
 
-	mglDrawData("mess.msh");
+	mesh eMesh("M.xml");
 
 	exit(0);
 

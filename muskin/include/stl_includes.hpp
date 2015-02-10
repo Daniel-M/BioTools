@@ -10,4 +10,3 @@
   #include <cmath>
   #include <fstream>
 #endif
-

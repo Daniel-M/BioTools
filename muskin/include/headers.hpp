@@ -2,7 +2,7 @@
 #include "libboost_includes.hpp"
 
 #ifndef OMP_H
-	#include "omp.h"
+	#include <omp.h>
 	#define OMP_H
 #endif
 
@@ -30,3 +30,9 @@
 	#include "mglDrawData.hpp"
 	#define MATHGLDRAW_H
 #endif
+
+#ifndef NUMBERSTRINGS_H
+	#include "numberStrings.hpp"
+	#define NUMBERSTRINGS_H
+#endif
+

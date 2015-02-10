@@ -2,22 +2,18 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
 PROJECT(MusKin)
 
 INCLUDE_DIRECTORIES( include )
-
 ADD_SUBDIRECTORY(lib)
 
-ADD_DEFINITIONS( --std=c++11 -fopenmp)
+FIND_PACKAGE(OpenMP REQUIRED) 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}") 
 
-#add_library(matrix SHARED
-#include/
-#src/
-#)
 
-#add_library(node SHARED
-#include/
-#src/
-#)
+#ADD_DEFINITIONS( --std=c++11 -fopenmp)
+ADD_DEFINITIONS( --std=c++11)
+
 
 ADD_EXECUTABLE(point src/Point)
+
 TARGET_LINK_LIBRARIES(point node)
 TARGET_LINK_LIBRARIES(point mesh)
 TARGET_LINK_LIBRARIES(point mgl)
