@@ -71,12 +71,23 @@ int main(void)
 
 	//index_t ia={40,50};
 
-	//mesh dMesh(2,ia,pa,pb);
+	//mesh aMesh(2,ia,pa,pb,"aMesh");
+	//aMesh.createMeshFile();
+	//aMesh.createMeshPNG();
 
-	//dMesh.createMeshFile("mesh.msh");
-	//dMesh.createMeshPNG();
+	//mesh bMesh(2,ia,pa,pb);
+	//bMesh.createMeshFile();
+	//bMesh.createMeshPNG();
 
-	mesh eMesh("M.xml");
+	//mesh cMesh("cMesh.xml");
+	//cMesh.setMeshName("cMesh");
+	//cMesh.createMeshXML();
+	
+	mesh dMesh, eMesh;
+	dMesh.createMeshXML();
+	dMesh.createMeshPNG();
+
+	eMesh.createMeshPNG();
 
 	exit(0);
 
