@@ -1,2 +1,2 @@
 #!/bin/bash
-vim src/*.cpp lib/*.cpp include/*.hpp
+vim lib/*.cpp include/*.hpp src/*.cpp CMakeLists.txt lib/CMakeLists.txt

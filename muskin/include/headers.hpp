@@ -26,14 +26,20 @@
 	#define MESH_H
 #endif
 
-#ifndef MATHGLDRAW_H
-	#include "mglDrawData.hpp"
-	#define MATHGLDRAW_H
-#endif
-
 #ifndef NUMBERSTRINGS_H
 	#include "numberStrings.hpp"
 	#define NUMBERSTRINGS_H
+#endif
+
+#ifndef NUMBERSTRINGS_H
+	#include "pTreeXML.hpp"
+	#define NUMBERSTRINGS_H
+#endif
+
+#ifndef MATHGLDRAW_H
+	#include "mglDrawData.hpp"
+    #include<mgl2/mgl.h>
+#define MATHGLDRAW_H
 #endif
 
 //#ifndef FEXISTS_H

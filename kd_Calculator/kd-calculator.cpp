@@ -114,6 +114,7 @@ int main(int argc,char **argv)
 		
 		return 1;
 	}
-
+	
+	std::cout << "Press any key to end..." << std::endl;
 	return 0;
 }

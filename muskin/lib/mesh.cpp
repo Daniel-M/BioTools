@@ -8,8 +8,7 @@
 #include "headers.hpp"
 //#include "mesh.hpp"
 
-mesh::mesh() : mesh(2,{10,10},{0,0}, {5,5})
-
+mesh::mesh() : mesh(2,{10,10},{0,0}, {1,1})
 {
 	//itMeshDim = 2;
 
@@ -564,12 +563,20 @@ mesh::mesh(std::string sFileName)
 	itInnerNodes = prtrXML.get("mesh.inodes",0);
 	
 	boost::property_tree::ptree	prtrDims = prtrXML.get_child("mesh.nodesdimensions");
+	//for(const auto& tree : prtrDims)
+	//{
+		////inNodesOnDim.push_back(tree.second.get("",0));
+		//inNodesOnDim.push_back(tree.second.get<int_t>(""));
+	//}
+	int i(0);
 	for(const auto& tree : prtrDims)
 	{
-		//inNodesOnDim.push_back(tree.second.get("",0));
-		inNodesOnDim.push_back(tree.second.get<int_t>(""));
+		//inNodesOnDim.push_back(tree.second.get<int_t>(NumberToString(i)));
+		inNodesOnDim.push_back(tree.second.get(NumberToString(i)),1);
+		i++;
 	}
 
+	
 	boost::property_tree::ptree	prtrDeltas = prtrXML.get_child("mesh.deltaondim");
 	for(const auto& tree: prtrDeltas)
 	{
@@ -699,45 +706,45 @@ int_t mesh::createMeshFile(std::string sFileName)
 
 }
 
-int_t mesh::createMeshXML()
-{
-	createMeshXML(sMeshXML);
-}
+//int_t mesh::createMeshXML()
+//{
+	//createMeshXML(sMeshXML);
+//}
 
 
-int_t mesh::createMeshXML(std::string sFileName)
-{
-	sMeshXML = sFileName;
-	prtrXML.put("mesh.meshxml",sMeshXML);
-	prtrXML.put("mesh.meshfile",sMeshFile);
-	prtrXML.put("mesh.dimension",itMeshDim);
-	prtrXML.put("mesh.nnodes",itNumberOfNodes);
-	prtrXML.put("mesh.bnodes",itBoundaryNodes);
-	prtrXML.put("mesh.inodes",itInnerNodes);
+//int_t mesh::createMeshXML(std::string sFileName)
+//{
+	//sMeshXML = sFileName;
+	//prtrXML.put("mesh.meshxml",sMeshXML);
+	//prtrXML.put("mesh.meshfile",sMeshFile);
+	//prtrXML.put("mesh.dimension",itMeshDim);
+	//prtrXML.put("mesh.nnodes",itNumberOfNodes);
+	//prtrXML.put("mesh.bnodes",itBoundaryNodes);
+	//prtrXML.put("mesh.inodes",itInnerNodes);
 
 
-	for(int i(0); i < inNodesOnDim.size();i++)
-	{
-		prtrXML.put("mesh.nodesdimensions."+NumberToString(i),inNodesOnDim[i]);
-	}
+	//for(int i(0); i < inNodesOnDim.size();i++)
+	//{
+		//prtrXML.put("mesh.nodesdimensions."+NumberToString(i),inNodesOnDim[i]);
+	//}
 
-	for(int i(0); i < ptDeltaOnDim.size();i++)
-	{
-		prtrXML.put("mesh.deltaondim."+NumberToString(i),ptDeltaOnDim[i]);
-	}
+	//for(int i(0); i < ptDeltaOnDim.size();i++)
+	//{
+		//prtrXML.put("mesh.deltaondim."+NumberToString(i),ptDeltaOnDim[i]);
+	//}
 
-	for(int i(0); i < ptRectangleLowA.size();i++)
-	{
-		prtrXML.put("mesh.pointa."+NumberToString(i),ptRectangleLowA[i]);
-	}
+	//for(int i(0); i < ptRectangleLowA.size();i++)
+	//{
+		//prtrXML.put("mesh.pointa."+NumberToString(i),ptRectangleLowA[i]);
+	//}
 	
-	for(int i(0); i < ptRectangleHighB.size();i++)
-	{
-		prtrXML.put("mesh.pointb."+NumberToString(i),ptRectangleHighB[i]);
-	}
+	//for(int i(0); i < ptRectangleHighB.size();i++)
+	//{
+		//prtrXML.put("mesh.pointb."+NumberToString(i),ptRectangleHighB[i]);
+	//}
 	
-	write_xml(sFileName,prtrXML);
-}
+	//write_xml(sFileName,prtrXML);
+//}
 
 int_t mesh::createMeshPNG()
 {

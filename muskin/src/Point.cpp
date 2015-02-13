@@ -66,8 +66,8 @@ int main(void)
 	pb.push_back(5);
 	pb.push_back(10);
 
-	std::cout << "RangeA" <<  pa << std::endl;
-	std::cout << "RangeB" << pb << std::endl;
+	//std::cout << "RangeA" <<  pa << std::endl;
+	//std::cout << "RangeB" << pb << std::endl;
 
 	//index_t ia={40,50};
 
@@ -83,12 +83,14 @@ int main(void)
 	//cMesh.setMeshName("cMesh");
 	//cMesh.createMeshXML();
 	
-	mesh dMesh, eMesh;
-	dMesh.createMeshXML();
-	dMesh.createMeshPNG();
+	//mesh dMesh, eMesh;
+	//dMesh.createMeshXML();
+	//dMesh.createMeshPNG();
 
-	eMesh.createMeshPNG();
+	//eMesh.createMeshPNG();
 
+	mesh fMesh("NewMesh.xml");
+	fMesh.createMeshPNG();
 	exit(0);
 
 }

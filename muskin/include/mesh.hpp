@@ -50,5 +50,6 @@ class mesh
 	void push_backIN(node cNode);
 	void push_backBN(node cNode);
 
+	//friend	void pTreeXML(node& nod);
 };
 
