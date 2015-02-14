@@ -44,10 +44,6 @@ class mesh
 	/* Int_t return methods */
 	int_t createMeshPNG();
 	int_t createMeshFile();
-	//int_t createMeshJSON();
-	//int_t createMeshXML();
-	//int_t createMeshJSON(std::string sFileName);
-	//int_t createMeshXML(std::string sFileName);
 	int_t createMeshFile(std::string sFileName);
 
 	/* void return methods */
