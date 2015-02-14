@@ -22,13 +22,14 @@ class mesh
 	point_t ptRectangleHighB;
 
 	std::string sMeshName;
+	std::string sMeshJSON;
 	std::string sMeshXML;
 	std::string sMeshFile;
 	
 	std::vector<node> vBoundaryMesh;
 	std::vector<node> vInnerMesh;
 
-	boost::property_tree::ptree prtrXML;
+	boost::property_tree::ptree prTreeMesh;
 
 	//mesh();
 	//mesh(){ itNumberOfNodes=0;}
@@ -43,11 +44,19 @@ class mesh
 	/* Int_t return methods */
 	int_t createMeshPNG();
 	int_t createMeshFile();
-	int_t createMeshXML();
-	int_t createMeshXML(std::string sFileName);
+	//int_t createMeshJSON();
+	//int_t createMeshXML();
+	//int_t createMeshJSON(std::string sFileName);
+	//int_t createMeshXML(std::string sFileName);
 	int_t createMeshFile(std::string sFileName);
 
 	/* void return methods */
+	void createMeshJSON();
+	void createMeshXML();
+	void createMeshJSON(std::string sFileName);
+	void createMeshXML(std::string sFileName);
+	
+	void createPropertyTree();
 	void setMeshName(std::string sMeshName_);
 	void push_backIN(node cNode);
 	void push_backBN(node cNode);
@@ -62,5 +71,8 @@ class mesh
 	 * */
 	friend	std::ostream& operator<<(std::ostream& outStream, mesh& cMesh);
 	//friend	void pTreeXML(node& nod);
+	
+	/* Misc methods */
+	boost::property_tree::ptree getPropertyTree();
 };
 

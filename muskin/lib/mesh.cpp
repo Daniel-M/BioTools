@@ -271,14 +271,14 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) 
 //mesh::mesh(std::string sFileName)
 //{
 	////try{
-	//read_xml(sFileName,prtrXML);
+	//read_xml(sFileName,prTree);
 
-	//itMeshDim = prtrXML.get("mesh.dimension",0);
-	//itNumberOfNodes = prtrXML.get("mesh.nnodes",0);
-	//itBoundaryNodes = prtrXML.get("mesh.bnodes",0);
-	//itInnerNodes = prtrXML.get("mesh.inodes",0);
+	//itMeshDim = prTree.get("mesh.dimension",0);
+	//itNumberOfNodes = prTree.get("mesh.nnodes",0);
+	//itBoundaryNodes = prTree.get("mesh.bnodes",0);
+	//itInnerNodes = prTree.get("mesh.inodes",0);
 	
-	//boost::property_tree::ptree	prtrDims = prtrXML.get_child("mesh.nodesdimensions");
+	//boost::property_tree::ptree	prtrDims = prTree.get_child("mesh.nodesdimensions");
 	////for(const auto& tree : prtrDims)
 	////{
 		//////inNodesOnDim.push_back(tree.second.get("",0));
@@ -293,26 +293,26 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) 
 	//}
 
 	
-	//boost::property_tree::ptree	prtrDeltas = prtrXML.get_child("mesh.deltaondim");
+	//boost::property_tree::ptree	prtrDeltas = prTree.get_child("mesh.deltaondim");
 	//for(const auto& tree: prtrDeltas)
 	//{
 	  //ptDeltaOnDim.push_back(tree.second.get<double>(""));
 	//}
 	
-	//boost::property_tree::ptree	prtrRangeA = prtrXML.get_child("mesh.pointa");
+	//boost::property_tree::ptree	prtrRangeA = prTree.get_child("mesh.pointa");
 	//for(const auto& tree: prtrRangeA)
 	//{
 		//ptRectangleLowA.push_back(tree.second.get<double>(""));
 	//}
 	
-	//boost::property_tree::ptree	prtrRangeB = prtrXML.get_child("mesh.pointb");
+	//boost::property_tree::ptree	prtrRangeB = prTree.get_child("mesh.pointb");
 	//for(const auto& tree: prtrRangeB)
 	//{
 		//ptRectangleHighB.push_back(tree.second.get<double>(""));
 	//}	
 
-	//sMeshFile = prtrXML.get<std::string>("mesh.meshfile");
-	//sMeshXML = prtrXML.get<std::string>("mesh.meshxml");
+	//sMeshFile = prTree.get<std::string>("mesh.meshfile");
+	//sMeshXML = prTree.get<std::string>("mesh.meshxml");
 
 	//if(itMeshDim == 0 || itNumberOfNodes == 0 || (ptRectangleLowA.size() != itMeshDim) || (ptRectangleHighB.size() != itMeshDim))
 	//{
@@ -446,35 +446,35 @@ int_t mesh::createMeshFile(std::string sFileName)
 //int_t mesh::createMeshXML(std::string sFileName)
 //{
 	//sMeshXML = sFileName;
-	//prtrXML.put("mesh.meshxml",sMeshXML);
-	//prtrXML.put("mesh.meshfile",sMeshFile);
-	//prtrXML.put("mesh.dimension",itMeshDim);
-	//prtrXML.put("mesh.nnodes",itNumberOfNodes);
-	//prtrXML.put("mesh.bnodes",itBoundaryNodes);
-	//prtrXML.put("mesh.inodes",itInnerNodes);
+	//prTree.put("mesh.meshxml",sMeshXML);
+	//prTree.put("mesh.meshfile",sMeshFile);
+	//prTree.put("mesh.dimension",itMeshDim);
+	//prTree.put("mesh.nnodes",itNumberOfNodes);
+	//prTree.put("mesh.bnodes",itBoundaryNodes);
+	//prTree.put("mesh.inodes",itInnerNodes);
 
 
 	//for(int i(0); i < inNodesOnDim.size();i++)
 	//{
-		//prtrXML.put("mesh.nodesdimensions."+NumberToString(i),inNodesOnDim[i]);
+		//prTree.put("mesh.nodesdimensions."+NumberToString(i),inNodesOnDim[i]);
 	//}
 
 	//for(int i(0); i < ptDeltaOnDim.size();i++)
 	//{
-		//prtrXML.put("mesh.deltaondim."+NumberToString(i),ptDeltaOnDim[i]);
+		//prTree.put("mesh.deltaondim."+NumberToString(i),ptDeltaOnDim[i]);
 	//}
 
 	//for(int i(0); i < ptRectangleLowA.size();i++)
 	//{
-		//prtrXML.put("mesh.pointa."+NumberToString(i),ptRectangleLowA[i]);
+		//prTree.put("mesh.pointa."+NumberToString(i),ptRectangleLowA[i]);
 	//}
 	
 	//for(int i(0); i < ptRectangleHighB.size();i++)
 	//{
-		//prtrXML.put("mesh.pointb."+NumberToString(i),ptRectangleHighB[i]);
+		//prTree.put("mesh.pointb."+NumberToString(i),ptRectangleHighB[i]);
 	//}
 	
-	//write_xml(sFileName,prtrXML);
+	//write_xml(sFileName,prTree);
 //}
 
 int_t mesh::createMeshPNG()
@@ -519,6 +519,7 @@ void mesh::setMeshName(std::string sMeshName_)
 {
 	sMeshName = sMeshName_;
 	sMeshFile = sMeshName + ".msh";
+	sMeshJSON = sMeshName + ".json";
 	sMeshXML = sMeshName + ".xml";
 }
 
