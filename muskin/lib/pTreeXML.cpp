@@ -23,10 +23,13 @@ std::ostream& operator<<(std::ostream& outStream, boost::property_tree::ptree& p
     {
         outStream << rowPair.first << ": " << std::endl;
  		
-		/* Level 1 */
+		/* Level 1 
+		 *	At this point the relevant information can be obtained on itemPair. members
+		 * */
         BOOST_FOREACH( boost::property_tree::ptree::value_type const& itemPair, rowPair.second ) 
         {
-            outStream << "\t" << itemPair.first << " -> " << itemPair.second.get_value<std::string>() << " ; ";
+			outStream << "\t" << itemPair.first << " -> " << itemPair.second.get_value<std::string>() << " ; ";
+			//outStream << "\t" << itemPair.first << " -> ";
  			
 			/* Level 2*/
             BOOST_FOREACH( boost::property_tree::ptree::value_type const& node, itemPair.second ) 
