@@ -2,8 +2,8 @@
 
 int mglDrawData( std::string sFile, point_t ptRangeA, point_t ptRangeB)
 {
-	std::string Title("Mesh generated from " + sFile + "\n see " + sFile +".xml for details");
-	std::string out_datafile(sFile + "-mgl.png");
+	std::string Title("Mesh generated from " + sFile + ".msh\n See " + sFile +".xml for details");
+	std::string out_datafile(sFile + "_mgl.png");
 
 	// Be careful, this extension must be changed, this line if for test only
 	sFile+=".msh";
@@ -12,7 +12,7 @@ int mglDrawData( std::string sFile, point_t ptRangeA, point_t ptRangeB)
 	mglData points(sFile.c_str());
 
 	plot.SetSize(1200,900);          ///gr->SetSize(1200,900) Set image size in pixels
-	plot.SetMarkSize(0.7);    /// gr->SetMarkSize(0.0005) Set size of the marker, i.e. the dot size on plot
+	plot.SetMarkSize(0.5);    /// gr->SetMarkSize(0.0005) Set size of the marker, i.e. the dot size on plot
 	
 	plot.Alpha(true); plot.Light(true); //plot.Transparent(false);
 	

@@ -31,19 +31,13 @@
 	#define NUMBERSTRINGS_H
 #endif
 
-#ifndef NUMBERSTRINGS_H
-	#include "pTreeXML.hpp"
-	#define NUMBERSTRINGS_H
-#endif
+//#ifndef NUMBERSTRINGS_H
+	//#include "pTreeXML.hpp"
+	//#define NUMBERSTRINGS_H
+//#endif
 
 #ifndef MATHGLDRAW_H
 	#include "mglDrawData.hpp"
-    #include<mgl2/mgl.h>
+	#include<mgl2/mgl.h>
 #define MATHGLDRAW_H
 #endif
-
-//#ifndef FEXISTS_H
-//#include "fexist.hpp"
-//#define FEXISTS_H
-//#endif
-

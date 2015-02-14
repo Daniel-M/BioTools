@@ -1,53 +1,19 @@
-//#ifndef OMP_H
-	//#include "omp.h"
-	//#define OMP_H
-//#endif
-
-//#define Debug(N) std::cout << "\n * Debug " << N << std::endl
-
 #include "headers.hpp"
+//#define Debug(N) std::cout << "\n * Debug " << N << std::endl
 //#include "mesh.hpp"
 
 mesh::mesh() : mesh(2,{10,10},{0,0}, {1,1})
 {
-	//itMeshDim = 2;
-
-	////sMeshFile = "NewMesh.msh";
-	////sMeshXML = "NewMesh.xml";
-	
-	//setMeshName("NewMesh");
-	
-	//inNodesOnDim.push_back(0);
-	//inNodesOnDim.push_back(0);
-
-	//ptRectangleLowA = {0,5};
-	//ptRectangleHighB = {0,5};
-
-	//itNumberOfNodes = 0;
-	
-	//for(int i(0);i<itMeshDim;i++)
-	//{
-		//ptDeltaOnDim.push_back(0);
-	//}
-		
-	std::cout << itMeshDim << "-D Empy Mesh Created" << std::endl;
+	std::cout << "Standard mesh created:" << std::endl;
+	std::cout << *this << std::endl;
 }
 
-void mesh::setMeshName(std::string sMeshName_)
-{
-	sMeshName = sMeshName_;
-	sMeshFile = sMeshName + ".msh";
-	sMeshXML = sMeshName + ".xml";
-}
+
 
 mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName)
 {
-	//mesh(iDim,inNodesOnDim_,ptRangeA, ptRangeB);
 	setMeshName(sMeshName);
-	//sMeshFile = "NewMesh.msh";
-	//sMeshXML = "NewMesh.xml";
-	//setMeshName("NewMesh");
-
+	
 	ptRectangleLowA = ptRangeA;
 	ptRectangleHighB = ptRangeB;
 	
@@ -101,10 +67,11 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 	/* Sepparated for due to the OMP implementation. when running parallel threads the std::cout output some times does have sense
 	 * e.g. "hello" -> "Hloel" or similar as a result of parallel execution
 	 */
-	for(int i =0;i<itMeshDim;i++)
+/*	for(int i =0;i<itMeshDim;i++)
 	{
 		std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
-	}
+	}*/
+
 	/* When storing nodes, the mapping is as follows
 	 * 
 	 *       ***********RangeB(c,d)
@@ -298,329 +265,90 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 
 mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) : mesh(iDim,inNodesOnDim_,ptRangeA, ptRangeB,"NewMesh")
 {
-	//mesh(iDim,inNodesOnDim_,ptRangeA, ptRangeB,"NewMesh");
-	
-	////sMeshFile = "NewMesh.msh";
-	////sMeshXML = "NewMesh.xml";
-	//setMeshName("NewMesh");
-
-	//ptRectangleLowA = ptRangeA;
-	//ptRectangleHighB = ptRangeB;
-	
-	///* Set the dimension of the mesh if not setted already */
-	//itMeshDim = iDim;
-	///* Initialize number of nodes as 1 */
-	//itNumberOfNodes = 1;
-
-	//inNodesOnDim = inNodesOnDim_;
-
-	///* Multiply the number of nodes on each dimension so the total amount of nodes is calculated
-	 //* ex: Consider a 2D mesh with nx=5, ny=10
-	 //* 		numberofnodes=1; // Then inside the for
-	 //* 		numberofnodes=numberofnodes*nx*ny
-	 //*  The number of nodes is then 50.
-	 //*  But the indices are zero based, so everithing runs on nx-1 and ny-1 in the loops below.
-	 //* Stores dimensions on private variable inNodesOnDim
-	 //*/
-	//#pragma omp parallel for
-	////for(int i(0);i<itMeshDim;i++)
-	//for(int i =0;i<itMeshDim;i++)
-	//{
-		////inNodesOnDim.push_back(inNodesOnDim_.at(i));
-		//itNumberOfNodes*=(inNodesOnDim.at(i));
-	//}	
-
-	
-	///* Calculates the required delta on each dimension by using the limits ptRangeA and ptRangeB
-	 //* when RangeA and RangeB define the points joining a rectangle's diagonal
-	 //* RangeA always is assume to be the lower while RangeB the higher point as the diagram below
-	 //*
-	 //*       ***********RangeB(c,d)
-	 //*       *                    *
-	 //*     ^ *                    *
-	 //*     | *                    *
-	 //*     y *                    *
-	 //*       *                    *
-	 //*       RangeA(a,b)***********
-	 //*		 x -->
-	 //*  
-	 //*  On x the ranges are (c-a)/nx i.e (RangeB(1)-RangeA(1))
-	 //*  On y the ranges are (d-b)/nx i.e (RangeB(2)-RangeA(2))
-	 //*/
-	//#pragma omp parallel for
-	////for(int i(0);i<itMeshDim;i++)
-	//for(int i =0;i<itMeshDim;i++)
-	//{
-		//ptDeltaOnDim.push_back(fabs(ptRangeB[i]-ptRangeA[i])/(inNodesOnDim[i]-1));
-		////std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
-	//}
-	///* Sepparated for due to the OMP implementation. when running parallel threads the std::cout output some times does have sense
-	 //* e.g. "hello" -> "Hloel" or similar as a result of parallel execution
-	 //*/
-	//for(int i =0;i<itMeshDim;i++)
-	//{
-		//std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
-	//}
-	///* When storing nodes, the mapping is as follows
-	 //* 
-	 //*       ***********RangeB(c,d)
-	 //*    ny *                    *
-	 //*   ... *                    *
-	 //*     3 *                    *
-	 //*     2 *                    *
-	 //*     1 *                    *
-	 //*     0 *                    *
-	 //*     ^ *                    *
-	 //*     | *                    *
-	 //*       *                    *
-	 //*     j *                    *
-	 //*       RangeA(a,b)***********
-	 //*		 i --> 0,1,2,3...,nx
-	//*/  
-
-
-	///* Creating the bondary nodes */
-
-	////Debug("antes del parallel");
-
-	////#pragma omp parallel
-//{
-	//int j(0),i(0);
-	//point_t ndcoord(2);
-	//ndcoord = ptRangeA;
-	
-	//index_t iIndexNode(2);
-	//node bNode;
-
-
-	////Debug("Dentro de parallel antes de for 1");
-	///* first j=0, and i=0->(nx-1) zero based nx nodes */
-	////#pragma omp parallel for
-	//#pragma omp for ordered schedule(dynamic)
-	//for(i = 0;i<inNodesOnDim[0];i++)
-	//{
-	  ////ndcoordx=ndcoordx + deltaX
-	  ////ndcoordy=ndcoordy
-	  //iIndexNode[0] = i;
-	  //iIndexNode[1] = j;
-	  //ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
-	  //bNode.setNode(ndcoord,iIndexNode,0); 
-
-	  //vBoundaryMesh.push_back(bNode);
-
-	  ////Debug("dentro for 1");
-
-	//}
-	
-
-	////Debug("Antes de for 2");
-	//i = inNodesOnDim[0]-1;
-
-	//////Debug(1);
-	
-	///* ncoord = (a+N*dx,b) = (c,b) then
-	 //i=(nx-1) from above, and j=0->(ny-1) */
-	////#pragma omp parallel for
-	//#pragma omp for ordered schedule(dynamic)
-	//for(j = 1;j<inNodesOnDim[1];j++)
-	//{
-	  ////ndcoordx=ndcoordx
-	  ////ndcoordy=ndcoordy + deltaY
-	  //index_t iIndexNode(2);
-	  //iIndexNode[0] = i;
-	  //iIndexNode[1] = j;
-	  //ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
-	  //bNode.setNode(ndcoord,iIndexNode,0); 
- 
-	  //vBoundaryMesh.push_back(bNode);
-	////Debug("Dentro for 2");
-	//}
-	
-	////Debug("antes for 3");
-	//j = inNodesOnDim[1]-1;
-
-	//////Debug(2);
-
-	///* ncoord = (a+nx*dx,b+ny*dy) = (c,d) then
-	 //j=(ny-1) from above, and i=(nx-1)-> 0 */
-	////#pragma omp parallel for
-	//#pragma omp for ordered schedule(dynamic)
-	//for(i=inNodesOnDim[0]-2;i>=0;i--)
-	//{
-	  ////ndcoordx=ndcoordx - deltaX
-	  ////ndcoordy=ndcoordy
-	  //index_t iIndexNode(2);
-	  //iIndexNode[0] = i;
-	  //iIndexNode[1] = j;
-	  //ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
-	  //bNode.setNode(ndcoord,iIndexNode,0); 
-		
-	  //vBoundaryMesh.push_back(bNode);
-////Debug("Dentro de for 3");
-	//}
-////Debug("Antes for 4");
-	//i = 0;
-	//ndcoord[1] = ptRangeB[1];
-	//////Debug(3);
-
-	///* ncoord = (a,b+ny*dy) = (a,d) then
-	 //i=0 from above, and j=(ny-1)->1 cuz node(i=0,j=0) is already defined */
-	////#pragma omp parallel for
-	//#pragma omp for ordered schedule(dynamic)
-	//for(j = inNodesOnDim[1]-2;j> 0;j--)
-	//{
-	  ///* ndcoordx=ndcoordx
-	     //ndcoordy=ndcoordy - deltaY */
-	  //index_t iIndexNode(2);
-	  //iIndexNode[0] = i;
-	  //iIndexNode[1] = j;
-	  //ndcoord[1]-= ptDeltaOnDim[1];
-	  //bNode.setNode(ndcoord,iIndexNode,0); 
-	  	
-	  //vBoundaryMesh.push_back(bNode);
-////Debug("Dentro for 4");
-	//}
-
-	
-	//////Debug(4);
-	
-	///* Finally create the inner nodes by using nested for
-	 //* valid OpenMP nested for is as
-	 //* for
-	 //* {
-	 //* 	   for
-	 //* 	   {
-	 //* 	  	  code here
-	 //* 	   }
-	 //*  dont put code here
-	 //* }
-	 //* 		*/
-
-	////Debug("antes nested for");
-	//if(itNumberOfNodes != vBoundaryMesh.size())
-	//{
-		//ndcoord = ptRangeA + ptDeltaOnDim;
-		///* ncoord = (a,b+dy) = (a,d) then
-		   //i=0,j=1 from above */
-		//for(i = 1;i<inNodesOnDim[0]-1;i++)
-		//{
-			////#pragma omp parallel for
-////Debug("dentro for outter");
-			//#pragma omp for ordered schedule(dynamic)
-			//for(j = 1;j<inNodesOnDim[1]-1;j++)
-			//{	
-				////index_t iIndexNode(2);
-				////iIndexNode[0] = i;
-				////iIndexNode[1] = j;
-				//index_t iIndexNode(2);
-				//iIndexNode.push_back(i);
-				//iIndexNode.push_back(j);
-				////ndcoord[1]= ptRangeB[1] - j*ptDeltaOnDim[1];
-				//ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
-				//bNode.setNode(ndcoord,iIndexNode,0); 
-				
-				//vInnerMesh.push_back(bNode);
-				////Debug("Dentro del for nested");
-			//}
-			
-			////Debug("Dentro del for outter despues del nested");
-			//ndcoord[0]+= ptDeltaOnDim[0];
-			//ndcoord[1] = ptRangeA[1];
-		//}
-	//}
-
-//}
-	//itBoundaryNodes = vBoundaryMesh.size();	
-	//itInnerNodes = vInnerMesh.size();	
-  ///*	
-	//std::cout << "Boundary nodes:\n";
-	
-	//for(int i(0); i < vBoundaryMesh.size();i++)
-	//{
-	  //std::cout << vBoundaryMesh[i] << std::endl;
-	//}
-	
-	//std::cout << "\n\nInner nodes:\n";
-
-
-	//for(int i(0); i < vInnerMesh.size();i++)
-	//{
-	  //std::cout << vInnerMesh[i] << std::endl;
-	//}
-  //*/
-	//std::cout << itMeshDim << "-D Mesh Created with " << itNumberOfNodes << " nodes"  << std::endl;
 
 }
 
-mesh::mesh(std::string sFileName)
-{
-	//try{
-	read_xml(sFileName,prtrXML);
+//mesh::mesh(std::string sFileName)
+//{
+	////try{
+	//read_xml(sFileName,prtrXML);
 
-	itMeshDim = prtrXML.get("mesh.dimension",0);
-	itNumberOfNodes = prtrXML.get("mesh.nnodes",0);
-	itBoundaryNodes = prtrXML.get("mesh.bnodes",0);
-	itInnerNodes = prtrXML.get("mesh.inodes",0);
+	//itMeshDim = prtrXML.get("mesh.dimension",0);
+	//itNumberOfNodes = prtrXML.get("mesh.nnodes",0);
+	//itBoundaryNodes = prtrXML.get("mesh.bnodes",0);
+	//itInnerNodes = prtrXML.get("mesh.inodes",0);
 	
-	boost::property_tree::ptree	prtrDims = prtrXML.get_child("mesh.nodesdimensions");
+	//boost::property_tree::ptree	prtrDims = prtrXML.get_child("mesh.nodesdimensions");
+	////for(const auto& tree : prtrDims)
+	////{
+		//////inNodesOnDim.push_back(tree.second.get("",0));
+		////inNodesOnDim.push_back(tree.second.get<int_t>(""));
+	////}
+	//int i(0);
 	//for(const auto& tree : prtrDims)
 	//{
-		////inNodesOnDim.push_back(tree.second.get("",0));
-		//inNodesOnDim.push_back(tree.second.get<int_t>(""));
+		////inNodesOnDim.push_back(tree.second.get<int_t>(NumberToString(i)));
+		//inNodesOnDim.push_back(tree.second.get(NumberToString(i),1));
+		//i++;
 	//}
-	int i(0);
-	for(const auto& tree : prtrDims)
-	{
-		//inNodesOnDim.push_back(tree.second.get<int_t>(NumberToString(i)));
-		inNodesOnDim.push_back(tree.second.get(NumberToString(i)),1);
-		i++;
-	}
 
 	
-	boost::property_tree::ptree	prtrDeltas = prtrXML.get_child("mesh.deltaondim");
-	for(const auto& tree: prtrDeltas)
-	{
-	  ptDeltaOnDim.push_back(tree.second.get<double>(""));
-	}
-	
-	boost::property_tree::ptree	prtrRangeA = prtrXML.get_child("mesh.pointa");
-	for(const auto& tree: prtrRangeA)
-	{
-		ptRectangleLowA.push_back(tree.second.get<double>(""));
-	}
-	
-	boost::property_tree::ptree	prtrRangeB = prtrXML.get_child("mesh.pointb");
-	for(const auto& tree: prtrRangeB)
-	{
-		ptRectangleHighB.push_back(tree.second.get<double>(""));
-	}	
-	sMeshFile = prtrXML.get<std::string>("mesh.meshfile");
-	sMeshXML = prtrXML.get<std::string>("mesh.meshxml");
-
-	std::cout << "Mesh on xml file : " << sFileName << " successfully read" <<  std::endl;
-	std::cout << "Mesh file " << sMeshFile << std::endl;
-	std::cout << "Mesh Dimension " << itMeshDim << std::endl;
-	std::cout << "Number of nodes " << itNumberOfNodes << std::endl;
-	std::cout << "Number of boundary nodes " << itBoundaryNodes << std::endl;
-	std::cout << "Number of inner nodes " << itInnerNodes << std::endl;
-
-	//for(int i(0);i< inNodesOnDim.size();i++)
+	//boost::property_tree::ptree	prtrDeltas = prtrXML.get_child("mesh.deltaondim");
+	//for(const auto& tree: prtrDeltas)
 	//{
-		//std::cout << "Number of nodes on dim " << i << " is " << inNodesOnDim[i] << std::endl;
-		std::cout << "Number of nodes on dim " << inNodesOnDim << std::endl;
+	  //ptDeltaOnDim.push_back(tree.second.get<double>(""));
+	//}
+	
+	//boost::property_tree::ptree	prtrRangeA = prtrXML.get_child("mesh.pointa");
+	//for(const auto& tree: prtrRangeA)
+	//{
+		//ptRectangleLowA.push_back(tree.second.get<double>(""));
+	//}
+	
+	//boost::property_tree::ptree	prtrRangeB = prtrXML.get_child("mesh.pointb");
+	//for(const auto& tree: prtrRangeB)
+	//{
+		//ptRectangleHighB.push_back(tree.second.get<double>(""));
+	//}	
+
+	//sMeshFile = prtrXML.get<std::string>("mesh.meshfile");
+	//sMeshXML = prtrXML.get<std::string>("mesh.meshxml");
+
+	//if(itMeshDim == 0 || itNumberOfNodes == 0 || (ptRectangleLowA.size() != itMeshDim) || (ptRectangleHighB.size() != itMeshDim))
+	//{
+		//std::cout << "Bad format on " << sFileName << " bad dimension, number of nodes or limiting points" << std::endl;
+	//}
+	//else if( (inNodesOnDim.size() != itMeshDim) && (ptDeltaOnDim.size() != itMeshDim))
+	//{
+		//std::cout << "Bad format on " << sFileName << " check nodes on dimensions or deltas on dimensions" << std::endl;
+	//}
+	//else if( (inNodesOnDim.size() == itMeshDim) && (ptDeltaOnDim.size() != itMeshDim))
+	//{
+		////std::cout << "Bad format on " << sFileName << " " << std::endl;
+		//for(int i(0);i<itMeshDim;i++)
+		//{
 		//}
-
-
-	//for(int i(0);i< ptDeltaOnDim.size();i++)
+	//}
+	//else if( (inNodesOnDim.size() != itMeshDim) && (ptDeltaOnDim.size() == itMeshDim))
 	//{
-	//std::cout << "Delta on dim " << i << " is " << ptDeltaOnDim[i] << std::endl;
-	std::cout << "Delta on dims " << ptDeltaOnDim << std::endl;
-	  //}
-	  
-	std::cout << "Low point " << ptRectangleLowA <<  std::endl;
-
-	std::cout << "High point " <<  ptRectangleHighB << std::endl;
-}
+		////std::cout << "Bad format on " << sFileName << "" << std::endl;
+	//}
+	//else if(itBoundaryNodes == 0 || itInnerNodes == 0)
+	//{
+	//}
+	
+		////std::cout << *this << std::endl;
+		//std::cout << "Mesh on xml file: " << sFileName << " successfully read" <<  std::endl;
+		//std::cout << "Mesh file: " << sMeshFile << std::endl;
+		//std::cout << "Mesh Dimension: " << itMeshDim << std::endl;
+		//std::cout << "Number of nodes: " << itNumberOfNodes << std::endl;
+		//std::cout << "Number of boundary nodes: " << itBoundaryNodes << std::endl;
+		//std::cout << "Number of inner nodes: " << itInnerNodes << std::endl;
+		//std::cout << "Number of nodes on dim: " << inNodesOnDim << std::endl;
+		//std::cout << "Delta on dims: " << ptDeltaOnDim << std::endl;
+		//std::cout << "Low point: " << ptRectangleLowA <<  std::endl;
+		//std::cout << "High point: " <<  ptRectangleHighB << std::endl;
+//}
 
 
 
@@ -654,14 +382,16 @@ int_t mesh::createMeshFile(std::string sFileName)
 
 	if(sFileStream.is_open())
 	{
-		sMeshFile = sFileName;
+		//sMeshFile = sFileName;
 
 		/* Creates an XML file with all the relevant data of the mesh.
 		 * The XML file is parsed thanks to libboost property tree
 		 */
 	
 		//createMeshXML(sFileName+".xml");
-		createMeshXML(sMeshXML);
+		//createMeshXML(sMeshXML);
+		std::cout << "Boundary mesh size " << vBoundaryMesh.size() << std::endl;
+		std::cout << "Inner mesh size " << vInnerMesh.size() << std::endl;
 		
 		for(int i(0); i < vBoundaryMesh.size();i++)
 		{
@@ -701,6 +431,7 @@ int_t mesh::createMeshFile(std::string sFileName)
 	}
 	else
 	{
+		std::cout <<  "Mesh file " << sFileName << "could not be created" << std::endl;
 		return 1;
 	}
 
@@ -749,15 +480,10 @@ int_t mesh::createMeshFile(std::string sFileName)
 int_t mesh::createMeshPNG()
 {
 	
-	//if(sMeshFile == "NewMesh.msh")
-	//if(fexist0(sMeshFile) == false)
 	if(std::ifstream(sMeshFile).good() == false)
 	{
 		std::cout << "Creating mesh file prior plotting" << std::endl;
 
-		//sMeshFile = "Mesh.msh";
-		
-		//createMeshFile(sMeshFile);
 		createMeshFile();
 		
 		std::cout << "Plotting Mesh..." << std::endl;
@@ -765,7 +491,7 @@ int_t mesh::createMeshPNG()
 		//mglDrawData(sMeshFile,ptRectangleLowA,ptRectangleHighB);
 		mglDrawData(sMeshName,ptRectangleLowA,ptRectangleHighB);
 
-		std::cout << "Mesh file " << sMeshFile << "-mgl.png created" << std::endl;
+		std::cout << "Mesh file " << sMeshFile << "_mgl.png created" << std::endl;
 
 	}
 	else
@@ -775,9 +501,43 @@ int_t mesh::createMeshPNG()
 		//mglDrawData(sMeshFile,ptRectangleLowA,ptRectangleHighB);
 		mglDrawData(sMeshName,ptRectangleLowA,ptRectangleHighB);
 
-		std::cout << "Mesh file " << sMeshFile << "-mgl.png created" << std::endl;
+		std::cout << "Mesh file " << sMeshFile << "_mgl.png created" << std::endl;
 
 	}
 	
 	return 0;
+}
+
+/*!\brief Sets the name for the mesh.
+ *
+ * Sets the _std::string_ name for the mesh. This name is used to
+ * determine the msh mesh file and the xml file associated with the mess.
+ *
+ * \param sMeshName_ Name of the mesh
+ */
+void mesh::setMeshName(std::string sMeshName_)
+{
+	sMeshName = sMeshName_;
+	sMeshFile = sMeshName + ".msh";
+	sMeshXML = sMeshName + ".xml";
+}
+
+/*!\brief ostream operator for the mesh.
+ *
+ * Overloads the ostream operator for mesh objects, so the information
+ * of the mesh is displayed by standard output (std::cout).
+ */
+std::ostream& operator<<(std::ostream& outStream, mesh& cMesh)
+{
+		std::cout << "Mesh XML file: " << cMesh.sMeshXML <<  std::endl;
+		std::cout << "Mesh file: " << cMesh.sMeshFile << std::endl;
+		std::cout << "Mesh Dimensions: " << cMesh.itMeshDim << std::endl;
+		std::cout << "Number of nodes: " << cMesh.itNumberOfNodes << std::endl;
+		std::cout << "Number of boundary nodes: " << cMesh.itBoundaryNodes << std::endl;
+		std::cout << "Number of inner nodes: " << cMesh.itInnerNodes << std::endl;
+		std::cout << "Number of nodes on each dimension: " << cMesh.inNodesOnDim << std::endl;
+		std::cout << "Delta on each dimension: " << cMesh.ptDeltaOnDim << std::endl;
+		std::cout << "Low point: " << cMesh.ptRectangleLowA <<  std::endl;
+		std::cout << "High point: " <<  cMesh.ptRectangleHighB << std::endl;
+
 }

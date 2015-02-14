@@ -1,4 +1,6 @@
 //#include "headers.hpp"
+//#include "mesh.cpp"
+//#include "pTreeXML.cpp"
 
 //int_t node::sitNumberOfNodes=0;
 
@@ -32,24 +34,33 @@ class mesh
 	//mesh(){ itNumberOfNodes=0;}
 
 	public:
+	/* Mesh constructors */
 	mesh();
 	mesh(int_t iDim,index_t inNodesOnDim,point_t ptRangeA, point_t ptRangeB);
 	mesh(int_t iDim,index_t inNodesOnDim,point_t ptRangeA, point_t ptRangeB,std::string sMeshName);
 	mesh(std::string sFileName);
-	//mesh(int_t iDim,point_t ptDeltaOnDim,point_t ptRangeA, point_t ptRangeB);
 
-	//int_t createMeshFile(std::string sFileName);
+	/* Int_t return methods */
 	int_t createMeshPNG();
 	int_t createMeshFile();
 	int_t createMeshXML();
 	int_t createMeshXML(std::string sFileName);
 	int_t createMeshFile(std::string sFileName);
-	//int_t createMeshPNG();
 
+	/* void return methods */
 	void setMeshName(std::string sMeshName_);
 	void push_backIN(node cNode);
 	void push_backBN(node cNode);
 
+
+	/* Friend methods */
+	/*!\brief Friend function to send nodes to streams 
+	 * 
+	 * Nodes are displayed as
+	 * [node_number][node_indices](node_coordinates) node_value
+	 *
+	 * */
+	friend	std::ostream& operator<<(std::ostream& outStream, mesh& cMesh);
 	//friend	void pTreeXML(node& nod);
 };
 

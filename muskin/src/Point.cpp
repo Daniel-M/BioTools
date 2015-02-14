@@ -69,9 +69,10 @@ int main(void)
 	//std::cout << "RangeA" <<  pa << std::endl;
 	//std::cout << "RangeB" << pb << std::endl;
 
-	//index_t ia={40,50};
+	index_t ia={40,50};
 
 	//mesh aMesh(2,ia,pa,pb,"aMesh");
+	//aMesh.createMeshXML();
 	//aMesh.createMeshFile();
 	//aMesh.createMeshPNG();
 
@@ -89,8 +90,11 @@ int main(void)
 
 	//eMesh.createMeshPNG();
 
-	mesh fMesh("NewMesh.xml");
+	mesh fMesh("aMesh.xml");
+	//mesh fMesh(2,ia,pa,pb,"aMesh");
 	fMesh.createMeshPNG();
+	//fMesh.createMeshFile("lordtod.msh");
+	//fMesh.createMeshFile();
 	exit(0);
 
 }
