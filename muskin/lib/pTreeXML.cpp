@@ -13,19 +13,35 @@
 
 std::ostream& operator<<(std::ostream& outStream, boost::property_tree::ptree& prTree)
 {
- 
+
+	/* Ideas:
+	 * Construrir un vector que mapee <string:string> y posteriormente barrer el vector en cada pareja
+	 * para obtener la información necesaria... es importante escanear 
+	 */
+	/* Top Level of tree : Level 0*/
     BOOST_FOREACH( boost::property_tree::ptree::value_type const& rowPair, prTree.get_child( "" ) ) 
     {
         outStream << rowPair.first << ": " << std::endl;
- 
+ 		
+		/* Level 1 */
         BOOST_FOREACH( boost::property_tree::ptree::value_type const& itemPair, rowPair.second ) 
         {
             outStream << "\t" << itemPair.first << " -> " << itemPair.second.get_value<std::string>() << " ; ";
- 
+ 			
+			/* Level 2*/
             BOOST_FOREACH( boost::property_tree::ptree::value_type const& node, itemPair.second ) 
             {
                 outStream << "\t" << node.first << "|" << node.second.get_value<std::string>() << " , ";
-				
+			
+				/* Level 3 ¿if any?  This could be a recursive function
+				 * Something as 
+				 * 	func(x)
+				 * 	{
+				 * 		// do stuff here
+				 * 		func(x);
+				 * 	}
+				 *	I've done that sh*t before. 
+				 * */
 				BOOST_FOREACH( boost::property_tree::ptree::value_type const& node1, node.second ) 
 				{
 					outStream << node1.second.get_value<std::string>() << " | ";
