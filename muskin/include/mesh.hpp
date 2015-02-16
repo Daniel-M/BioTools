@@ -39,6 +39,7 @@ class mesh
 	mesh();
 	mesh(int_t iDim,index_t inNodesOnDim,point_t ptRangeA, point_t ptRangeB);
 	mesh(int_t iDim,index_t inNodesOnDim,point_t ptRangeA, point_t ptRangeB,std::string sMeshName);
+	mesh(boost::property_tree::ptree prTree);
 	mesh(std::string sFileName);
 
 	/* Int_t return methods */

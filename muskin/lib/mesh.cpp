@@ -268,87 +268,155 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) 
 
 }
 
-//mesh::mesh(std::string sFileName)
-//{
-	////try{
-	//read_xml(sFileName,prTree);
 
-	//itMeshDim = prTree.get("mesh.dimension",0);
-	//itNumberOfNodes = prTree.get("mesh.nnodes",0);
-	//itBoundaryNodes = prTree.get("mesh.bnodes",0);
-	//itInnerNodes = prTree.get("mesh.inodes",0);
-	
-	//boost::property_tree::ptree	prtrDims = prTree.get_child("mesh.nodesdimensions");
-	////for(const auto& tree : prtrDims)
-	////{
-		//////inNodesOnDim.push_back(tree.second.get("",0));
-		////inNodesOnDim.push_back(tree.second.get<int_t>(""));
-	////}
-	//int i(0);
-	//for(const auto& tree : prtrDims)
-	//{
-		////inNodesOnDim.push_back(tree.second.get<int_t>(NumberToString(i)));
-		//inNodesOnDim.push_back(tree.second.get(NumberToString(i),1));
-		//i++;
-	//}
+mesh::mesh(boost::property_tree::ptree prTree)
+{
+	/* Get the values from pTree readed */
+    //boost::property_tree::read_json( JSON_PATH, pt );
 
-	
-	//boost::property_tree::ptree	prtrDeltas = prTree.get_child("mesh.deltaondim");
-	//for(const auto& tree: prtrDeltas)
-	//{
-	  //ptDeltaOnDim.push_back(tree.second.get<double>(""));
-	//}
-	
-	//boost::property_tree::ptree	prtrRangeA = prTree.get_child("mesh.pointa");
-	//for(const auto& tree: prtrRangeA)
-	//{
-		//ptRectangleLowA.push_back(tree.second.get<double>(""));
-	//}
-	
-	//boost::property_tree::ptree	prtrRangeB = prTree.get_child("mesh.pointb");
-	//for(const auto& tree: prtrRangeB)
-	//{
-		//ptRectangleHighB.push_back(tree.second.get<double>(""));
-	//}	
+	//std::cout << pt << std::endl;
 
-	//sMeshFile = prTree.get<std::string>("mesh.meshfile");
-	//sMeshXML = prTree.get<std::string>("mesh.meshxml");
+	//std::vector<std::string> vValues;
 
-	//if(itMeshDim == 0 || itNumberOfNodes == 0 || (ptRectangleLowA.size() != itMeshDim) || (ptRectangleHighB.size() != itMeshDim))
-	//{
-		//std::cout << "Bad format on " << sFileName << " bad dimension, number of nodes or limiting points" << std::endl;
-	//}
-	//else if( (inNodesOnDim.size() != itMeshDim) && (ptDeltaOnDim.size() != itMeshDim))
-	//{
-		//std::cout << "Bad format on " << sFileName << " check nodes on dimensions or deltas on dimensions" << std::endl;
-	//}
-	//else if( (inNodesOnDim.size() == itMeshDim) && (ptDeltaOnDim.size() != itMeshDim))
-	//{
-		////std::cout << "Bad format on " << sFileName << " " << std::endl;
-		//for(int i(0);i<itMeshDim;i++)
-		//{
-		//}
-	//}
-	//else if( (inNodesOnDim.size() != itMeshDim) && (ptDeltaOnDim.size() == itMeshDim))
-	//{
-		////std::cout << "Bad format on " << sFileName << "" << std::endl;
-	//}
-	//else if(itBoundaryNodes == 0 || itInnerNodes == 0)
-	//{
-	//}
+	std::string sPathBuffer;
+	std::string sBuffer;
+
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshName;
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sMeshName = prTree.get(sPathBuffer,"NewMesh");
+	sPathBuffer.clear();
 	
-		////std::cout << *this << std::endl;
-		//std::cout << "Mesh on xml file: " << sFileName << " successfully read" <<  std::endl;
-		//std::cout << "Mesh file: " << sMeshFile << std::endl;
-		//std::cout << "Mesh Dimension: " << itMeshDim << std::endl;
-		//std::cout << "Number of nodes: " << itNumberOfNodes << std::endl;
-		//std::cout << "Number of boundary nodes: " << itBoundaryNodes << std::endl;
-		//std::cout << "Number of inner nodes: " << itInnerNodes << std::endl;
-		//std::cout << "Number of nodes on dim: " << inNodesOnDim << std::endl;
-		//std::cout << "Delta on dims: " << ptDeltaOnDim << std::endl;
-		//std::cout << "Low point: " << ptRectangleLowA <<  std::endl;
-		//std::cout << "High point: " <<  ptRectangleHighB << std::endl;
-//}
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshDim;
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sBuffer = prTree.get(sPathBuffer,"2");
+	itMeshDim = StringToNumber<int_t>(sBuffer);
+	sPathBuffer.clear();
+/*	
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshNN;
+	itNumberOfNodes = StringToNumber<int>(prTree.get(sPathBuffer,"100"));
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sPathBuffer.clear();
+	
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshBN;
+	itBoundaryNodes = StringToNumber<int>(prTree.get(sPathBuffer,"-1"));
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sPathBuffer.clear();
+	
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshIN;
+	itInnerNodes = StringToNumber<int>(prTree.get(sPathBuffer,"-1"));
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sPathBuffer.clear();
+	
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pFiles;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshXML;
+	sMeshXML = prTree.get(sPathBuffer,sMeshName + ".xml");
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sPathBuffer.clear();
+	
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pFiles;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshJSON;
+	sMeshXML = prTree.get(sPathBuffer,sMeshName + ".json");
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sPathBuffer.clear();
+
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pFiles;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshFile;
+	sMeshFile = prTree.get(sPathBuffer,sMeshName + ".msh");
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	sPathBuffer.clear();
+
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshND;
+	sPathBuffer+=".";
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+*/	
+	for(int j(0);j<2;j++)
+	{
+		//std::cout << sPathBuffer + NumberToString(j) << "\n";
+		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
+		//inNodesOnDim.push_back(StringToNumber<int>(prTree.get(sPathBuffer + NumberToString(j),"-1")));
+	}
+	sPathBuffer.clear();
+	
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshDD;
+	sPathBuffer+=".";
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	
+	for(int j(0);j<2;j++)
+	{
+		//std::cout << sPathBuffer + NumberToString(j) << "\n";
+		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
+		//ptDeltaOnDim.push_back(StringToNumber<double>(prTree.get(sPathBuffer + NumberToString(j),"-1.0")));
+	}
+
+	sPathBuffer.clear();
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshPA;
+	sPathBuffer+=".";
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	
+	for(int j(0);j<2;j++)
+	{
+		//std::cout << sPathBuffer + NumberToString(j) << "\n";
+		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
+		//ptRectangleLowA.push_back(StringToNumber<double>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
+	}	
+	sPathBuffer.clear();
+	
+	sPathBuffer=_pMesh;
+	sPathBuffer+=".";
+	sPathBuffer+=_pMeshPB;
+	sPathBuffer+=".";
+	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
+	//sPathBuffer.clear();
+	
+	for(int j(0);j<2;j++)
+	{
+		//std::cout << sPathBuffer + NumberToString(j) << "\n";
+		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
+		//ptRectangleHighB.push_back(StringToNumber<double>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
+	}
+	sPathBuffer.clear();
+	
+	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
+	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
+	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
+	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
+	//vValues.push_back(prTree.get<std::string>(_pMesh +"."+ _pMeshName));
+	
+	
+
+	//std::cout << "\n\nVector values: " << std::endl;
+
+	//for(int i(0);i<vValues.size();i++)
+	//{
+		//std::cout << vValues[i] << std::endl;
+	//}
+}
+
 
 
 

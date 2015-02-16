@@ -90,11 +90,11 @@ int main(void)
 
 	//eMesh.createMeshPNG();
 
-	mesh fMesh("aMesh.xml"), eMesh("aMesh.json");
+	mesh fMesh("aMesh.xml"), eMesh("aMesh");
 	//mesh fMesh(2,ia,pa,pb,"aMesh");
 	//fMesh.createMeshJSON();
 	//fMesh.createMeshXML();
-	//fMesh.createMeshPNG();
+	eMesh.createMeshPNG();
 	//fMesh.createMeshFile("lordtod.msh");
 	//fMesh.createMeshFile();
 	exit(0);

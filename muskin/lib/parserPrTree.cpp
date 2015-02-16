@@ -3,28 +3,28 @@
 
 /* The statements beggingin with "_p" are #define on typedef.hpp and used as parsing statements */
 
-/*!\brief Creates json parsed file with the information about the mesh object
+/*!\brief Creates JSON parsed file with the information about the mesh object
  *
- * Creates json parsed file with the information about the mesh object.
+ * Creates JSON parsed file with the information about the mesh object.
  * This method (re)creates the property tree prior parsing to a JSON file
- * using the standard name of the json file for the mesh object
+ * using the standard name of the JSON file for the mesh object
  * 
  */
 void mesh::createMeshJSON()
 {
 	createPropertyTree();
-	write_json(sMeshJSON,prTreeMesh);
+	boost::property_tree::write_json(sMeshJSON,prTreeMesh);
 	//createMeshJSON(sMeshName + "." + _pMeshJSON);
 }
 
 
-/*!\brief Creates json parsed file with the information about the mesh object
+/*!\brief Creates JSON parsed file with the information about the mesh object
  *
- * Creates json parsed file with the information about the mesh object.
+ * Creates JSON parsed file with the information about the mesh object.
  * This method (re)creates the property tree prior parsing to a JSON file whose name is
  * passed as an argument.
  * 
- * \param sFileName Name of the destination json file
+ * \param sFileName Name of the destination JSON file
  *
  */
 void mesh::createMeshJSON(std::string sFileName)
@@ -37,31 +37,31 @@ void mesh::createMeshJSON(std::string sFileName)
 	sPath+= _pMeshJSON;
 	prTreeMesh.put(sPath,sFileName);
 
-	write_json(sFileName,prTreeMesh);
+	boost::property_tree::write_json(sFileName,prTreeMesh);
 }
 
 
-/*!\brief Creates xml parsed file with the information about the mesh object
+/*!\brief Creates XML parsed file with the information about the mesh object
  *
- * Creates xml parsed file with the information about the mesh object.
+ * Creates XML parsed file with the information about the mesh object.
  * This method (re)creates the property tree prior parsing to a XML file
- * using the standard name of the xml file for the mesh object
+ * using the standard name of the XML file for the mesh object
  * 
  */
 void mesh::createMeshXML()
 {
 	createPropertyTree();
-	write_xml(sMeshXML,prTreeMesh);
+	boost::property_tree::write_xml(sMeshXML,prTreeMesh);
 }
 
 
-/*!\brief Creates xml parsed file with the information about the mesh object
+/*!\brief Creates XML parsed file with the information about the mesh object
  *
- * Creates xml parsed file with the information about the mesh object.
+ * Creates XML parsed file with the information about the mesh object.
  * This method (re)creates the property tree prior parsing to a XML file whose name is
  * passed as an argument.
  * 
- * \param sFileName Name of the destination xml file
+ * \param sFileName Name of the destination XML file
  *
  */
 void mesh::createMeshXML(std::string sFileName)
@@ -72,16 +72,16 @@ void mesh::createMeshXML(std::string sFileName)
 	sPath+= _pMeshXML;
 	prTreeMesh.put(sPath,sFileName);
 	
-	write_xml(sFileName,prTreeMesh);
+	boost::property_tree::write_xml(sFileName,prTreeMesh);
 }
 
 
 /*! \brief creates the libboost property tree of the mesh in memory prior parsing
  *
  * The property tree is a container that can be used to parse
- * info,json or xml specifications of mesh objects.
+ * info,JSON or XML specifications of mesh objects.
  * This method creates a libboost property tree of the mesh object in memory prior parsing
- * to a info, json or xml.
+ * to a info, JSON or XML.
  */
 void mesh::createPropertyTree()
 {
@@ -166,7 +166,7 @@ void mesh::createPropertyTree()
 /*!\brief Get libboost property tree of the mesh.
  * 
  * The property tree is a container that can be used to parse
- * info,json or xml specifications of mesh objects.
+ * INFO,JSON or XML specifications of mesh objects.
  * This method returns the associated property tree of the mesh object.
  * The property tree is recreated on each run of this method by calling
  * the method mesh::createPropertyTree()
@@ -176,8 +176,164 @@ void mesh::createPropertyTree()
 boost::property_tree::ptree mesh::getPropertyTree()
 {
 	createPropertyTree();
-	
 	return prTreeMesh;
 }
 
+
+/**\brief This function overloads the libboost::ptree::operator<< to stream \a libboost::ptree
+ * 
+ * This function overloads the libboost::ptree::operator<< to provide streaming for \a libboost::ptree
+ *
+ * \param[in] outStream stream data type.
+ * \param[in] prTree boost::property_tree::ptree container.
+ * \return A ostream consisting of the information contained on the property tree
+ */
+//std::ostream& operator<<(std::ostream& outStream, boost::property_tree::ptree& prTree)
+std::ostream& operator<<(std::ostream& outStream, boost::property_tree::ptree& prTree)
+{
+	/* This function has a depth of 3 levels on the property tree, it works fine for
+	 * the libmesh property trees. In order to get a better version a self-recursive function
+	 * must be implemented. something like
+	 *
+	 * f(x)
+	 * {
+	 * 		//some code
+	 * 		f(x);
+	 * }
+	 */
+	std::vector< std::pair<std::string,std::string> > vpFieldsPairsV;
+	std::pair<std::string,std::string> pFieldsPair;
+ 
+    BOOST_FOREACH( boost::property_tree::ptree::value_type const& rowPair, prTree.get_child( "" ) ) 
+    {
+		//std::cout << rowPair.first << ": " << std::endl;
+
+		pFieldsPair = std::make_pair(rowPair.first,rowPair.second.get_value<std::string>());
+		vpFieldsPairsV.push_back(pFieldsPair);
+
+ 
+        BOOST_FOREACH( boost::property_tree::ptree::value_type const& itemPair, rowPair.second ) 
+        {
+			//std::cout << "\t" << itemPair.first << " ->";
+ 
+            pFieldsPair = std::make_pair(itemPair.first,itemPair.second.get_value<std::string>());
+			vpFieldsPairsV.push_back(pFieldsPair);
+
+			BOOST_FOREACH( boost::property_tree::ptree::value_type const& node, itemPair.second ) 
+            {
+				//std::cout << node.second.get_value<std::string>() << " , ";
+				
+				pFieldsPair = std::make_pair(node.first,node.second.get_value<std::string>());
+				vpFieldsPairsV.push_back(pFieldsPair);
+
+				BOOST_FOREACH( boost::property_tree::ptree::value_type const& node1, node.second ) 
+				{
+					//std::cout << node1.second.get_value<std::string>() << " ; ";
+					pFieldsPair = std::make_pair(node1.first,node1.second.get_value<std::string>());
+					vpFieldsPairsV.push_back(pFieldsPair);
+				}
+			}
+ 
+			//std::cout << std::endl;
+ 
+        }
+ 
+		//std::cout << std::endl;
+    }
+     
+	//std::cout  << "Information read: " << std::endl;
+	//outStream  << "Information read: " << std::endl;
+	
+	for(int i(0);i<vpFieldsPairsV.size();i++)
+	{
+		//std::cout << vpFieldsPairsV[i].first << "\t" << vpFieldsPairsV[i].second << std::endl;
+		outStream << vpFieldsPairsV[i].first << "\t" << vpFieldsPairsV[i].second << std::endl;
+	}
+
+	return outStream;
+}
+
+
+/* The prTreeMesh structure must be like this (json formatted),
+ * The fields indicated with [R] are required while the [O]
+ * means optional.
+ *
+ * {
+ *    "mesh": [R] 
+ *    {
+ *        "name": "aMesh", [R]
+ *        "dimension": "2", [R]
+ *        "numberofnodes": "2000", [R]
+ *        "bnodes": "176", [O]
+ *        "inodes": "1824", [O]
+ *        "files": [O]
+ *        {
+ *            "xml": "aMesh.xml", [O]
+ *            "json": "aMesh.json", [O]
+ *            "meshfile": "aMesh.msh" [O]
+ *        },
+ *        "nodesondim": [O]
+ *        {
+ *            "0": "40",
+ *            "1": "50"
+ *        },
+ *        "deltaondim": [O]
+ *        {
+ *            "0": "0.1025641025641026",
+ *            "1": "0.2040816326530612"
+ *        },
+ *        "pointa": [R]
+ *        {
+ *            "0": "1",
+ *            "1": "0"
+ *        },
+ *        "pointb": [R]
+ *        {
+ *            "0": "5",
+ *            "1": "10"
+ *        }
+ *    }
+ *}
+ */ 
+  
+/*! \brief libmesh constructor by pasing the name of a JSON or XML formatted file with information of mesh
+ *
+ * libmesh constructor that reads information of a JSON or XML formatted file. The constructor determines the parsing method
+ * by the file extension XML or JSON.
+ *
+ * \param[in] sFileName \c std::string with the name of the file with extension.
+ */
+mesh::mesh(std::string sFileName)
+{
+	std::string sJSON(".");
+	sJSON+=_pMeshJSON;
+	std::string sXML(".");
+	sXML+=_pMeshXML;
+
+	/* Each conditional searches for the string ".EXTENSION" in the given sFileName. */
+	/* is JSON formatted? */
+	if(sFileName.find(sJSON) < sFileName.size() )
+	{
+		//std::cout << "is json " << sFileName.find(_pMeshJSON) << std::endl;
+		boost::property_tree::read_json(sFileName,prTreeMesh);
+
+		//std::cout << "File: " << sFileName << " contains:\n";
+		std::cout << prTreeMesh  << std::endl;
+	}
+	/* Is XML formatted? */
+	else if(sFileName.find(sXML) < sFileName.size())
+	{
+		//std::cout << "is xml " << sFileName.find(_pMeshXML) << std::endl;
+		boost::property_tree::read_xml(sFileName,prTreeMesh);
+		
+		//std::cout << "File: " << sFileName << " contains:\n";
+		std::cout << prTreeMesh << std::endl;
+	}
+	/* If sFileName does not contain .EXTENSION with .json or .xml the constructor returns an error */
+	else
+	{
+		std::cout << "[EE] Error! Could not load file " << sFileName << std::endl;
+		*this = mesh();
+	}
+}
 
