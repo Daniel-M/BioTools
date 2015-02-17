@@ -71,5 +71,8 @@ class mesh
 	
 	/* Misc methods */
 	boost::property_tree::ptree getPropertyTree();
+
+	node operator[](const index_t inIndex);
+
 };
 

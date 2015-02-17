@@ -610,3 +610,10 @@ std::ostream& operator<<(std::ostream& outStream, mesh& cMesh)
 		std::cout << "High point: " <<  cMesh.ptRectangleHighB << std::endl;
 
 }
+
+node mesh::operator[](const index_t inIndex)
+{
+	
+
+	return;
+}
