@@ -7,7 +7,7 @@ int main(void)
 {
 	////Point p;
 	point_t v,t;
-	index_t a={1,0,1};	
+	index_t a={0,1};	
 
 	for(int i=0;i<3;i++)
 	{
@@ -66,8 +66,8 @@ int main(void)
 	pb.push_back(5);
 	pb.push_back(10);
 
-	//std::cout << "RangeA" <<  pa << std::endl;
-	//std::cout << "RangeB" << pb << std::endl;
+	std::cout << "RangeA" <<  pa << std::endl;
+	std::cout << "RangeB" << pb << std::endl;
 
 	index_t ia={40,50};
 
@@ -97,6 +97,18 @@ int main(void)
 	//fMesh.createMeshXML();
 	eMesh.createMeshJSON();
 	eMesh.createMeshPNG();
+
+	std::cout << a << std::endl;
+
+	node temp = eMesh[a];
+
+	std::cout << temp << std::endl;
+
+	a={100,0};
+
+	temp = eMesh[a];
+	std::cout << temp << std::endl;
+
 	//fMesh.createMeshFile("lordtod.msh");
 	//fMesh.createMeshFile();
 	exit(0);

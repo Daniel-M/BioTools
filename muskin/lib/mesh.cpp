@@ -117,7 +117,7 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 	  ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
 	  bNode.setNode(ndcoord,iIndexNode,0); 
 
-	  vBoundaryMesh.push_back(bNode);
+	  mBoundaryMesh[iIndexNode] = bNode;
 
 	  //Debug("dentro for 1");
 
@@ -143,7 +143,7 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 	  ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
 	  bNode.setNode(ndcoord,iIndexNode,0); 
  
-	  vBoundaryMesh.push_back(bNode);
+	  mBoundaryMesh[iIndexNode] = bNode;
 	//Debug("Dentro for 2");
 	}
 	
@@ -166,7 +166,7 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 	  ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
 	  bNode.setNode(ndcoord,iIndexNode,0); 
 		
-	  vBoundaryMesh.push_back(bNode);
+	  mBoundaryMesh[iIndexNode] = bNode;
 //Debug("Dentro de for 3");
 	}
 //Debug("Antes for 4");
@@ -188,7 +188,7 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 	  ndcoord[1]-= ptDeltaOnDim[1];
 	  bNode.setNode(ndcoord,iIndexNode,0); 
 	  	
-	  vBoundaryMesh.push_back(bNode);
+	  mBoundaryMesh[iIndexNode] = bNode;
 //Debug("Dentro for 4");
 	}
 
@@ -230,7 +230,7 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 				ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
 				bNode.setNode(ndcoord,iIndexNode,0); 
 				
-				vInnerMesh.push_back(bNode);
+				mInnerMesh[iIndexNode] = bNode;
 				//Debug("Dentro del for nested");
 			}
 			
@@ -611,9 +611,25 @@ std::ostream& operator<<(std::ostream& outStream, mesh& cMesh)
 
 }
 
-node mesh::operator[](const index_t inIndex)
+node mesh::operator[](index_t inIndex)
 {
-	
 
-	return;
+	if(mInnerMesh.count(inIndex) >0)
+	{
+		return mInnerMesh[inIndex];
+	}
+	else if(mBoundaryMesh.count(inIndex) > 0)
+	{
+		return mBoundaryMesh[inIndex];
+	}
+	else
+	{
+		//std::cout << "[EE] Index " << inIndex << " out of the range of the mesh" << std::endl;
+		std::cout << "[EE] Index ";
+		std::cout << inIndex;
+		std::cout << " out of the range of the mesh" << std::endl;
+
+		node bNode({0,0},{0,0},0);
+		return bNode;
+	}
 }

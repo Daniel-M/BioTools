@@ -94,7 +94,7 @@ point_t operator-(const point_t vtLHSVector,const point_t vtRHSVector)
 	}
 }
 
-
+/*
 std::ostream& operator<<(std::ostream& outStream, index_t& index)
 {
 	//outStream << "[" << index.size() << "][";
@@ -108,4 +108,4 @@ std::ostream& operator<<(std::ostream& outStream, index_t& index)
 	outStream << index[index.size()-1] << "]";
 
 	return outStream;
-}
+}*/

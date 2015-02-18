@@ -28,6 +28,8 @@ class mesh
 	
 	std::vector<node> vBoundaryMesh;
 	std::vector<node> vInnerMesh;
+	std::map<index_t,node> mBoundaryMesh;
+	std::map<index_t,node> mInnerMesh;
 
 	boost::property_tree::ptree prTreeMesh;
 
@@ -72,7 +74,8 @@ class mesh
 	/* Misc methods */
 	boost::property_tree::ptree getPropertyTree();
 
-	node operator[](const index_t inIndex);
+	//node operator[](const index_t inIndex);
+	node operator[](index_t inIndex);
 
 };
 
