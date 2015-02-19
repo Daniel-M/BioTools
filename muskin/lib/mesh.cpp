@@ -2,14 +2,27 @@
 //#define Debug(N) std::cout << "\n * Debug " << N << std::endl
 //#include "mesh.hpp"
 
+/*! This standard constructor creates a standard 2D mesh with 100 nodes 
+ *	The created mesh is defined on the rectangle defined by the diagonal (0,0) to (1,1)
+ *	with 10 indexes along each dimension which makes 100 nodes.
+ *
+ *	The name of the mesh created with this constructor is set to \a NewMesh.
+ *	This name is used to create all the .json,.xml,.msh related to the mesh object.
+ * */
 mesh::mesh() : mesh(2,{10,10},{0,0}, {1,1})
 {
 	std::cout << "Standard mesh created:" << std::endl;
 	std::cout << *this << std::endl;
 }
 
+/*! This constructor obtains all the parameters provided on the mesh object call and gives the automatic name of \a NewMesh.
+ * This name is used to create all the .json,.xml,.msh related to the mesh object.*/
+mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) : mesh(iDim,inNodesOnDim_,ptRangeA, ptRangeB,"NewMesh")
+{
+}
 
-
+/*!This constructor obtains all parameters provided to create the mesh.
+ * This name is used to create all the .json,.xml,.msh related to the mesh object.*/
 mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName)
 {
 	setMeshName(sMeshName);
@@ -263,12 +276,7 @@ mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,s
 
 }
 
-mesh::mesh(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) : mesh(iDim,inNodesOnDim_,ptRangeA, ptRangeB,"NewMesh")
-{
-
-}
-
-
+/*! This constructor reads a boost::property_tree with all the data that specifies the mesh object.*/
 mesh::mesh(boost::property_tree::ptree prTree)
 {
 	/* Get the values from pTree readed */
@@ -417,31 +425,135 @@ mesh::mesh(boost::property_tree::ptree prTree)
 	//}
 }
 
+/* The prTreeMesh structure must be like this (json formatted),
+ * The fields indicated with [R] are required while the [O]
+ * means optional.
+ *
+ * {
+ *    "mesh": [R] 
+ *    {
+ *        "name": "aMesh", [R]
+ *        "dimension": "2", [R]
+ *        "numberofnodes": "2000", [R]
+ *        "bnodes": "176", [O]
+ *        "inodes": "1824", [O]
+ *        "files": [O]
+ *        {
+ *            "xml": "aMesh.xml", [O]
+ *            "json": "aMesh.json", [O]
+ *            "meshfile": "aMesh.msh" [O]
+ *        },
+ *        "nodesondim": [O]
+ *        {
+ *            "0": "40",
+ *            "1": "50"
+ *        },
+ *        "deltaondim": [O]
+ *        {
+ *            "0": "0.1025641025641026",
+ *            "1": "0.2040816326530612"
+ *        },
+ *        "pointa": [R]
+ *        {
+ *            "0": "1",
+ *            "1": "0"
+ *        },
+ *        "pointb": [R]
+ *        {
+ *            "0": "5",
+ *            "1": "10"
+ *        }
+ *    }
+ *}
+ */ 
 
-
-
-void mesh::push_backIN(node cNode)
+// /*! \brief libmesh constructor by pasing the name of a JSON or XML formatted file with information of mesh
+ /*!
+ * Constructor that reads information of a JSON or XML formatted file.
+ * The constructor determines the parsing method by the file extension XML or JSON.
+ *
+// * \param sFileName \c std::string with the name of the file with extension.
+ */
+mesh::mesh(std::string sFileName)
 {
-	vBoundaryMesh.push_back(cNode);
-    itNumberOfNodes++;
+	std::string sJSON(".");
+	sJSON+=_pMeshJSON;
+	std::string sXML(".");
+	sXML+=_pMeshXML;
 
-	std::cout << "Inner Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+	/* Each conditional searches for the string ".EXTENSION" in the given sFileName. */
+	/* is JSON formatted? */
+	if(sFileName.find(sJSON) < sFileName.size() )
+	{
+		//std::cout << "is json " << sFileName.find(_pMeshJSON) << std::endl;
+		boost::property_tree::read_json(sFileName,prTreeMesh);
+
+		//std::cout << "File: " << sFileName << " contains:\n";
+		std::cout << prTreeMesh  << std::endl;
+	}
+	/* Is XML formatted? */
+	else if(sFileName.find(sXML) < sFileName.size())
+	{
+		//std::cout << "is xml " << sFileName.find(_pMeshXML) << std::endl;
+		boost::property_tree::read_xml(sFileName,prTreeMesh);
+		
+		//std::cout << "File: " << sFileName << " contains:\n";
+		std::cout << prTreeMesh << std::endl;
+	}
+	/* If sFileName does not contain .EXTENSION with .json or .xml the constructor returns an error */
+	else
+	{
+		std::cout << "[EE] Error! Could not load file " << sFileName << std::endl;
+		*this = mesh();
+	}
 }
 
-void mesh::push_backBN(node cNode)
+/*! This method allows the implementation to retrieve the node pointed by the index \c inIndex and to modify it by
+ *  the assignation operator, or send it to streams. It accesses the node object by reference.
+ * */
+node& mesh::operator[](index_t inIndex)
 {
-	vInnerMesh.push_back(cNode);
-    itNumberOfNodes++;
 
-	itNumberOfNodes = 0;
-	std::cout << "Boundary Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+	if(mInnerMesh.count(inIndex) > 0)
+	{
+		return mInnerMesh[inIndex];
+	}
+	else if(mBoundaryMesh.count(inIndex) > 0)
+	{
+		return mBoundaryMesh[inIndex];
+	}
+	else
+	{
+		//std::cout << "[EE] Index " << inIndex << " out of the range of the mesh" << std::endl;
+		std::cout << "[EE] Index ";
+		std::cout << inIndex;
+		std::cout << " out of the range of the mesh" << std::endl;
+
+		//node bNode({0,0},{0,0},0);
+		return mBoundaryMesh[{0,0}];
+	}
 }
 
+
+/*!The mesh file created consists of columns representing the points that determine the mesh.
+ * The name of the file is set by the mesh member sMeshFile which is also stored on the property tree.
+ * The first nodes that are stored on the file are the boundary nodes following are the inner nodes.
+ * The boundary/inner information about the nodes is determined at the moment of creating the mesh and can only
+ * be retrieved by looking at the fields mesh.bnodes mesh.inodes on the property tree of the JSON or XML formatted file associated with the mesh.
+ * Without those specifications is impossible to determine if the node is inner or boundary \a a \a priori.
+ * */
 int_t mesh::createMeshFile()
 {
 	createMeshFile(sMeshFile);
 }
 
+/*!The mesh file created consists of columns representing the points that determine the mesh.
+ * The name of the file is set by the argument and the sMeshFile member of mesh is ignored.
+ * The first nodes that are stored on the file are the boundary nodes following are the inner nodes.
+ * The boundary/inner information about the nodes is determined at the moment of creating the mesh and can only
+ * be retrieved by looking at the fields mesh.bnodes mesh.inodes on the property tree of the JSON or XML formatted file associated with the mesh.
+ * Without those specifications is impossible to determine if the node is inner or boundary \a a \a priori.
+ * */
 int_t mesh::createMeshFile(std::string sFileName)
 {
 	std::ofstream sFileStream;
@@ -505,46 +617,10 @@ int_t mesh::createMeshFile(std::string sFileName)
 
 }
 
-//int_t mesh::createMeshXML()
-//{
-	//createMeshXML(sMeshXML);
-//}
-
-
-//int_t mesh::createMeshXML(std::string sFileName)
-//{
-	//sMeshXML = sFileName;
-	//prTree.put("mesh.meshxml",sMeshXML);
-	//prTree.put("mesh.meshfile",sMeshFile);
-	//prTree.put("mesh.dimension",itMeshDim);
-	//prTree.put("mesh.nnodes",itNumberOfNodes);
-	//prTree.put("mesh.bnodes",itBoundaryNodes);
-	//prTree.put("mesh.inodes",itInnerNodes);
-
-
-	//for(int i(0); i < inNodesOnDim.size();i++)
-	//{
-		//prTree.put("mesh.nodesdimensions."+NumberToString(i),inNodesOnDim[i]);
-	//}
-
-	//for(int i(0); i < ptDeltaOnDim.size();i++)
-	//{
-		//prTree.put("mesh.deltaondim."+NumberToString(i),ptDeltaOnDim[i]);
-	//}
-
-	//for(int i(0); i < ptRectangleLowA.size();i++)
-	//{
-		//prTree.put("mesh.pointa."+NumberToString(i),ptRectangleLowA[i]);
-	//}
-	
-	//for(int i(0); i < ptRectangleHighB.size();i++)
-	//{
-		//prTree.put("mesh.pointb."+NumberToString(i),ptRectangleHighB[i]);
-	//}
-	
-	//write_xml(sFileName,prTree);
-//}
-
+/*! In order to create the PNG file mesh calls the MathGL library. The Generated has a size of 1200x900 pixels and 
+ *	shows all the nodes on the range of the mesh. The Name of the PNG is given by the mesh member sMeshName so the 
+ *	file will be \c sMeshName_mgl.png.
+ * */
 int_t mesh::createMeshPNG()
 {
 	
@@ -576,12 +652,176 @@ int_t mesh::createMeshPNG()
 	return 0;
 }
 
-/*!\brief Sets the name for the mesh.
- *
+/* The statements beggingin with "_p" are #define on typedef.hpp and used as parsing statements */
+
+// /*!\brief Creates JSON parsed file with the information about the mesh object
+/*!
+ * Creates JSON parsed file with the information about the mesh object.
+ * This method creates or overwrites the property tree prior parsing to a JSON file
+ * using the standard name of the JSON file for the mesh object
+ */
+void mesh::createMeshJSON()
+{
+	createPropertyTree();
+	boost::property_tree::write_json(sMeshJSON,prTreeMesh);
+	//createMeshJSON(sMeshName + "." + _pMeshJSON);
+}
+
+// /*!\brief Creates JSON parsed file with the information about the mesh object
+/*!
+ * Creates JSON parsed file with the information about the mesh object.
+ * This method (re)creates the property tree prior parsing to a JSON file whose name is
+ * passed as an argument.
+ */
+void mesh::createMeshJSON(std::string sFileName)
+{
+	//sMeshJSON = sFileName;
+
+	createPropertyTree();
+	std::string sPath(_pMesh);
+	sPath+= ".file.";
+	sPath+= _pMeshJSON;
+	prTreeMesh.put(sPath,sFileName);
+
+	boost::property_tree::write_json(sFileName,prTreeMesh);
+}
+
+// /*!\brief Creates XML parsed file with the information about the mesh object
+/*!
+ * Creates XML parsed file with the information about the mesh object.
+ * This method (re)creates the property tree prior parsing to a XML file
+ * using the standard name of the XML file for the mesh object
+ * 
+ */
+void mesh::createMeshXML()
+{
+	createPropertyTree();
+	boost::property_tree::write_xml(sMeshXML,prTreeMesh);
+}
+
+// *!\brief Creates XML parsed file with the information about the mesh object
+/*!
+ * Creates XML parsed file with the information about the mesh object.
+ * This method (re)creates the property tree prior parsing to a XML file whose name is
+ * passed as an argument.
+ */
+void mesh::createMeshXML(std::string sFileName)
+{
+	createPropertyTree();
+	std::string sPath(_pMesh);
+	sPath+= ".file.";
+	sPath+= _pMeshXML;
+	prTreeMesh.put(sPath,sFileName);
+	
+	boost::property_tree::write_xml(sFileName,prTreeMesh);
+}
+
+// /*! \brief creates the libboost property tree of the mesh in memory prior parsing
+/*!
+ * The property tree is a container that can be used to parse
+ * info,JSON or XML specifications of mesh objects.
+ * This method creates a libboost property tree of the mesh object in memory prior parsing
+ * to a info, JSON or XML.
+ */
+void mesh::createPropertyTree()
+{
+	/* The libboost::property_tree.clear() statements are used to clear the memory of the libboost property tree
+	 * This is used to avoid creating more variables and recycling the old-ones.
+	 * */
+
+	//prTreeMesh.clear();
+	boost::property_tree::ptree prSubTree;
+	boost::property_tree::ptree arrayElement;
+	boost::property_tree::ptree prChildTree;
+
+	/* Basic Properties of the Mesh*/
+	prSubTree.add(_pMeshName,sMeshName);
+	prSubTree.add(_pMeshDim,itMeshDim);
+	prSubTree.add(_pMeshNN,itNumberOfNodes);
+	prSubTree.add(_pMeshBN,itBoundaryNodes);
+	prSubTree.add(_pMeshIN,itInnerNodes);
+
+	/* putting the associated files in subtree "files" */
+	arrayElement.put_value(sMeshXML);
+	prChildTree.push_back(std::make_pair(_pMeshXML,arrayElement));
+	arrayElement.put_value(sMeshJSON);
+	prChildTree.push_back(std::make_pair(_pMeshJSON,arrayElement));
+	arrayElement.put_value(sMeshFile);
+	prChildTree.push_back(std::make_pair(_pMeshFile,arrayElement));
+
+	/* add files subtree */
+	prSubTree.add_child(boost::property_tree::ptree::path_type("files"),prChildTree);
+	arrayElement.clear();
+	prChildTree.clear();
+
+	/* iterate over the number of nodes on each dim*/
+	for(int i(0); i < inNodesOnDim.size();i++)
+	{
+		arrayElement.put_value(inNodesOnDim[i]);
+		prChildTree.push_back(std::make_pair(NumberToString(i),arrayElement));
+	}
+
+	prSubTree.add_child(boost::property_tree::ptree::path_type(_pMeshND),prChildTree);
+	arrayElement.clear();
+	prChildTree.clear();
+
+	/* iterate over the deltas on each dim */
+	for(int i(0); i < ptDeltaOnDim.size();i++)
+	{
+		arrayElement.put_value(ptDeltaOnDim[i]);
+		prChildTree.push_back(std::make_pair(NumberToString(i),arrayElement));
+	}
+
+	prSubTree.add_child(boost::property_tree::ptree::path_type(_pMeshDD),prChildTree);
+	arrayElement.clear();
+	prChildTree.clear();
+
+	/* iterate over the coordinates of PointB*/
+	for(int i(0); i < ptRectangleLowA.size();i++)
+	{
+		arrayElement.put_value(ptRectangleLowA[i]);
+		prChildTree.push_back(std::make_pair(NumberToString(i),arrayElement));
+	}
+	
+	prSubTree.put_child(boost::property_tree::ptree::path_type(_pMeshPA),prChildTree);
+	arrayElement.clear();
+	prChildTree.clear();
+
+	/* iterate over the coordinates of PointB*/
+	for(int i(0); i < ptRectangleHighB.size();i++)
+	{
+		arrayElement.put_value(ptRectangleHighB[i]);
+		prChildTree.push_back(std::make_pair(NumberToString(i),arrayElement));
+	}
+	/* Add child to subtree */
+	prSubTree.put_child(boost::property_tree::ptree::path_type(_pMeshPB),prChildTree);
+	
+	/* Replace existing property tree with the new by adding the subtree just created*/
+	prTreeMesh.put_child(boost::property_tree::ptree::path_type(_pMesh),prSubTree);
+
+}
+
+void mesh::push_backIN(node cNode)
+{
+	vBoundaryMesh.push_back(cNode);
+    itNumberOfNodes++;
+
+	std::cout << "Inner Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+}
+
+void mesh::push_backBN(node cNode)
+{
+	vInnerMesh.push_back(cNode);
+    itNumberOfNodes++;
+
+	itNumberOfNodes = 0;
+	std::cout << "Boundary Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+}
+
+// *!\brief Sets the name for the mesh.
+/*!
  * Sets the _std::string_ name for the mesh. This name is used to
  * determine the msh mesh file and the xml file associated with the mess.
- *
- * \param sMeshName_ Name of the mesh
  */
 void mesh::setMeshName(std::string sMeshName_)
 {
@@ -591,45 +831,36 @@ void mesh::setMeshName(std::string sMeshName_)
 	sMeshXML = sMeshName + ".xml";
 }
 
-/*!\brief ostream operator for the mesh.
- *
+// *!\brief ostream operator for the mesh.
+/*!
  * Overloads the ostream operator for mesh objects, so the information
- * of the mesh is displayed by standard output (std::cout).
+ * of the mesh can displayed by standard output (std::cout) or sent to streams.
  */
 std::ostream& operator<<(std::ostream& outStream, mesh& cMesh)
 {
-		std::cout << "Mesh XML file: " << cMesh.sMeshXML <<  std::endl;
-		std::cout << "Mesh file: " << cMesh.sMeshFile << std::endl;
-		std::cout << "Mesh Dimensions: " << cMesh.itMeshDim << std::endl;
-		std::cout << "Number of nodes: " << cMesh.itNumberOfNodes << std::endl;
-		std::cout << "Number of boundary nodes: " << cMesh.itBoundaryNodes << std::endl;
-		std::cout << "Number of inner nodes: " << cMesh.itInnerNodes << std::endl;
-		std::cout << "Number of nodes on each dimension: " << cMesh.inNodesOnDim << std::endl;
-		std::cout << "Delta on each dimension: " << cMesh.ptDeltaOnDim << std::endl;
-		std::cout << "Low point: " << cMesh.ptRectangleLowA <<  std::endl;
-		std::cout << "High point: " <<  cMesh.ptRectangleHighB << std::endl;
+	std::cout << "Mesh XML file: " << cMesh.sMeshXML <<  std::endl;
+	std::cout << "Mesh file: " << cMesh.sMeshFile << std::endl;
+	std::cout << "Mesh Dimensions: " << cMesh.itMeshDim << std::endl;
+	std::cout << "Number of nodes: " << cMesh.itNumberOfNodes << std::endl;
+	std::cout << "Number of boundary nodes: " << cMesh.itBoundaryNodes << std::endl;
+	std::cout << "Number of inner nodes: " << cMesh.itInnerNodes << std::endl;
+	std::cout << "Number of nodes on each dimension: " << cMesh.inNodesOnDim << std::endl;
+	std::cout << "Delta on each dimension: " << cMesh.ptDeltaOnDim << std::endl;
+	std::cout << "Low point: " << cMesh.ptRectangleLowA <<  std::endl;
+	std::cout << "High point: " <<  cMesh.ptRectangleHighB << std::endl;
 
 }
 
-node mesh::operator[](index_t inIndex)
+// /*!\brief Get libboost property tree of the mesh.
+/*! 
+ * The property tree is a container that can be used to parse
+ * INFO,JSON or XML specifications of mesh objects.
+ * This method returns the associated property tree of the mesh object.
+ * The property tree is recreated on each run of this method by calling
+ * the method mesh::createPropertyTree()
+ */
+boost::property_tree::ptree mesh::getPropertyTree()
 {
-
-	if(mInnerMesh.count(inIndex) >0)
-	{
-		return mInnerMesh[inIndex];
-	}
-	else if(mBoundaryMesh.count(inIndex) > 0)
-	{
-		return mBoundaryMesh[inIndex];
-	}
-	else
-	{
-		//std::cout << "[EE] Index " << inIndex << " out of the range of the mesh" << std::endl;
-		std::cout << "[EE] Index ";
-		std::cout << inIndex;
-		std::cout << " out of the range of the mesh" << std::endl;
-
-		node bNode({0,0},{0,0},0);
-		return bNode;
-	}
+	createPropertyTree();
+	return prTreeMesh;
 }

@@ -31,6 +31,11 @@
 	#define POINT_H
 #endif
 
+#ifndef PARSERPRTREE_H
+	#include "parserPrTree.hpp"
+	#define PARSERPRTREE_H
+#endif
+
 #ifndef MATHGLDRAW_H
 	#include "mglDrawData.hpp"
 	#include<mgl2/mgl.h>

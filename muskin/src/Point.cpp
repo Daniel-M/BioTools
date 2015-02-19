@@ -66,8 +66,8 @@ int main(void)
 	pb.push_back(5);
 	pb.push_back(10);
 
-	std::cout << "RangeA" <<  pa << std::endl;
-	std::cout << "RangeB" << pb << std::endl;
+	//std::cout << "RangeA" <<  pa << std::endl;
+	//std::cout << "RangeB" << pb << std::endl;
 
 	index_t ia={40,50};
 
@@ -91,24 +91,28 @@ int main(void)
 	//eMesh.createMeshPNG();
 
 	//mesh fMesh("aMesh.xml"), eMesh("aMesh");
-	mesh  eMesh("aMesh");
-	//mesh fMesh(2,ia,pa,pb,"aMesh");
-	//fMesh.createMeshJSON();
-	//fMesh.createMeshXML();
+	//mesh  eMesh("aMesh");
+	mesh eMesh(2,ia,pa,pb,"aMesh");
 	eMesh.createMeshJSON();
-	eMesh.createMeshPNG();
+	//eMesh.createMeshPNG();
 
 	std::cout << a << std::endl;
 
-	node temp = eMesh[a];
+	node temp = eMesh[{0,1}];
+
+	std::cout << temp << std::endl;
+	
+	eMesh[{0,1}] = 3.1415;
+	
+	std::cout << eMesh[{0,1}].getValue() << std::endl;
+
+	//eMesh[a] = 3.1415;
+	
+	//temp = eMesh[a];
 
 	std::cout << temp << std::endl;
 
-	a={100,0};
-
-	temp = eMesh[a];
-	std::cout << temp << std::endl;
-
+	
 	//fMesh.createMeshFile("lordtod.msh");
 	//fMesh.createMeshFile();
 	exit(0);
