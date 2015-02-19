@@ -32,8 +32,8 @@
 #endif
 
 #ifndef PARSERPRTREE_H
-	#include "parserPrTree.hpp"
-	#define PARSERPRTREE_H
+#include "parserPrTree.hpp"
+#define PARSERPRTREE_H
 #endif
 
 #ifndef MATHGLDRAW_H

@@ -108,7 +108,7 @@ int main(void)
 
 	//eMesh[a] = 3.1415;
 	
-	//temp = eMesh[a];
+	temp = eMesh[a];
 
 	std::cout << temp << std::endl;
 
