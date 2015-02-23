@@ -1,0 +1,11 @@
+{
+    "name": "NewMesh",
+    "json": "NewMesh.json",
+    "meshfile": "NewMesh.msh",
+    "numberofnodes": "100",
+    "nodesondim":
+    [
+        "10",
+        "10"
+    ]
+}

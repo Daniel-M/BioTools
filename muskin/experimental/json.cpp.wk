@@ -1,0 +1,54 @@
+/*Example JSON file "test1.json":
+
+{
+    "electron": {
+        "pos": [0,0,0],
+        "vel": [0,0,0]
+    },
+
+    "proton": {
+        "pos": [1,0,0],
+        "vel": [0,0.1,0]
+    },
+
+     "proton": {
+        "pos": [-1,0,0],
+        "vel": [0,-0.1,-0.1]
+    }
+}*/
+#include <string>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/foreach.hpp>
+ 
+const std::string JSON_PATH = "test1.json";  
+ 
+int main()  
+{  
+    boost::property_tree::ptree pt;
+    boost::property_tree::read_json( JSON_PATH, pt );
+ 
+    BOOST_FOREACH( boost::property_tree::ptree::value_type const& rowPair, pt.get_child( "" ) ) 
+    {
+        std::cout << rowPair.first << ": " << std::endl;
+ 
+        BOOST_FOREACH( boost::property_tree::ptree::value_type const& itemPair, rowPair.second ) 
+        {
+            std::cout << "\t" << itemPair.first << " ";
+ 
+            BOOST_FOREACH( boost::property_tree::ptree::value_type const& node, itemPair.second ) 
+            {
+                std::cout << node.second.get_value<std::string>() << " ";
+            }
+ 
+            std::cout << std::endl;
+ 
+        }
+ 
+        std::cout << std::endl;
+    }
+     
+    std::cout << std::endl;
+  
+    return 0;  
+}  

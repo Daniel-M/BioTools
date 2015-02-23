@@ -1,0 +1,36 @@
+{
+    "mesh":
+    {
+        "name": "aMesh",
+        "dimension": "2",
+        "numberofnodes": "2000",
+        "bnodes": "176",
+        "inodes": "1824",
+        "files":
+        {
+            "xml": "aMesh.xml",
+            "json": "aMesh.json",
+            "meshfile": "aMesh.msh"
+        },
+        "nodesondim":
+        {
+            "0": "40",
+            "1": "50"
+        },
+        "deltaondim":
+        {
+            "0": "0.1025641025641026",
+            "1": "0.2040816326530612"
+        },
+        "pointa":
+        {
+            "0": "1",
+            "1": "0"
+        },
+        "pointb":
+        {
+            "0": "5",
+            "1": "10"
+        }
+    }
+}
