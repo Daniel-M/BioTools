@@ -43,11 +43,11 @@
 #endif
 
 #ifndef NODE_H
-	#include "node.hpp"
+	#include "node_t.hpp"
 	#define NODE_H
 #endif
 
 #ifndef MESH_H
-	#include "mesh.hpp"
+	#include "mesh_t.hpp"
 	#define MESH_H
 #endif
