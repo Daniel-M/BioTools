@@ -9,6 +9,7 @@
 #include "typedef.hpp"
 
 typedef std::vector< double > state_type;
+typedef void (*system_t)( const point_t&, point_t& , const double /* t */ );
 using namespace boost::numeric::odeint;
 
 double gam = 0.15;
@@ -17,7 +18,8 @@ class Toy
 {
 	private:
 		int_t (*ptrFunction)(double x, double y, double z);
-		void (*ptrSystem)( const state_type&, state_type& , const double /* t */ );
+		system_t ptrSystem;
+		//void (*ptrSystem)( const state_type&, state_type& , const double /* t */ );
 
 	public:
 		Toy();
@@ -25,7 +27,8 @@ class Toy
 		void setFunction(int_t (*ptrFunc)(double x, double y, double z));
 		int_t evalFunction(double x, double y, double z);
 		
-		void setSystem(void (*ptrSys)( const state_type&, state_type& , const double /* t */ ));
+		//void setSystem(void (*ptrSys)( const state_type&, state_type& , const double /* t */ ));
+		void setSystem(system_t ptrSys);
 		void evalSystem(state_type& x, double t, double dt);
 		//state_type evalSystem(state_type& x, double t, double dt);
 };
@@ -49,7 +52,8 @@ int_t Toy::evalFunction(double x, double y, double z)
 	return (*ptrFunction)(x,y,z);
 }
 
-void Toy::setSystem(void (*ptrSys)( const state_type&, state_type& , const double /* t */ ))
+//void Toy::setSystem(void (*ptrSys)( const state_type&, state_type& , const double /* t */ ))
+void Toy::setSystem(system_t ptrSys)
 {
 	ptrSystem = ptrSys;
 }

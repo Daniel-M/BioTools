@@ -42,6 +42,16 @@
 #define MATHGLDRAW_H
 #endif
 
+#ifndef CHEM_T_H
+	#include "chem_t.hpp"
+	#define CHEM_T_H
+#endif
+
+#ifndef VOXEL_H
+	#include "voxel_t.hpp"
+	#define VOXEL_H
+#endif
+
 #ifndef NODE_H
 	#include "node_t.hpp"
 	#define NODE_H

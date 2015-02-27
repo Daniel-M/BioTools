@@ -26,3 +26,8 @@
 	#include <exception>
 #endif
 
+#ifndef LIB_BOOST_ODE_INT__H
+    #include <boost/numeric/odeint.hpp>
+	#define LIB_BOOST_ODE_INT__H
+#endif
+

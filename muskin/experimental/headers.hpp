@@ -42,14 +42,13 @@
 #define MATHGLDRAW_H
 #endif
 
-#ifndef SYSTEM_T_H
-//#include "chem_t.hpp"
-//#include "system_t.hpp"
-	#define SYSTEM_T_H
+#ifndef CHEM_T_H
+	#include "chem_t.hpp"
+	#define CHEM_T_H
 #endif
 
 #ifndef VOXEL_H
-//#include "voxel.hpp"
+	#include "voxel_t.hpp"
 	#define VOXEL_H
 #endif
 

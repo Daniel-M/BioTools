@@ -19,7 +19,9 @@
 
 /* Type Definitions that can be changed in order to assure a better compatibility*/
 typedef int	int_t;
-typedef std::vector<double> point_t;
+
 typedef std::vector<int_t> index_t;
 
-//typedef double system_t;
+typedef std::vector<double> point_t;
+
+typedef void (*system_t)( const point_t&, point_t& , const double /* t */ ); /*!< A Pointer to libboost formated ODE systems. */
