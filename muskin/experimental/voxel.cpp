@@ -6,7 +6,7 @@
 voxel::voxel()
 {
 	itVoxelNumber=0;
-
+	//*ptrMethod = NULL;
 
 }
 

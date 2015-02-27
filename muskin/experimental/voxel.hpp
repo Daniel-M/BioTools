@@ -7,6 +7,8 @@ class voxel
 		std::set<index_t> useIndexes; /*!< The set of indexes that comprise the voxel.*/
 
 		system_t stSystem; /*!< system_t object of the voxel.*/
+		
+		int_t (*ptrMethod)( const std::vector<double>&, std::vector<double>& , const double /* t */ );
 
 
 	public:
@@ -58,7 +60,6 @@ class voxel
 		 * \param stSystem_ The system to be assigned to the voxel.
 		 */
 		void setSystem(system_t stSystem_);
-
 
 		/*!\brief Get the number of the voxel.
 		 * \return The number of the voxel.*/
