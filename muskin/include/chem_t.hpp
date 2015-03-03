@@ -47,4 +47,11 @@ class chem_t
 		 * \param dValue_ the value to be set on the chemical species value.
 		 */
 		double setValue(const double dValue_);
+
+		point_t toDouble(std::vector <chem_t> vcChems);
+
+		
+		friend std::vector< chem_t > toChem_t(point_t ptVector);
+
+		friend	std::ostream& operator<<(std::ostream& outStream, chem_t& cChem);
 };

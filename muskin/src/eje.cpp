@@ -58,7 +58,8 @@ int main(void)
 
 	std::cout << var  << std::endl;
 
-	point_t data(3);
+	//point_t data(3);
+	std::vector<chem_t> data(3);
 	double t(0),dt(0.01);
 	data[0] = 1.0;
 	data[1] = 0.1;
@@ -70,9 +71,10 @@ int main(void)
 
 	while(t < 50)
 	{
-	  v.evalSystem(data,t,dt);
+	  v.evalSystem(data.toDouble(),t,dt);
 	  t+=dt;
-	  std::cout << data << "\n";
+	  //std::cout << data << "\n";
+	  std::cout << data[0] << data[1] << data[2] << "\n";
 	}
 
 	//index_t idx1({1,0,0}),idx2({0,1,0}),idx3({1,0,0}),idx4(idx1+idx2),idx5(idx2+idx3);

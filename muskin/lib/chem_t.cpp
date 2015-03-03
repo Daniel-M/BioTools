@@ -64,9 +64,36 @@ chem_t::operator double()
 {
 	return dValue;
 }
-///*!
- //*/
-//chem_t::()
-//{
-//}
+/*!
+ */
+point_t chem_t::toDouble(std::vector <chem_t> vcChems)
+{
+	point_t vBuffer;
 
+	for(int i(0); i < vcChems.size();i++)
+	{
+		vBuffer.push_back(vcChems[i]);
+	}
+
+	return vBuffer;
+
+}
+//std::vector< chem_t > chem_t::toChem_t(point_t ptVector)
+std::vector< chem_t > toChem_t(point_t ptVector)
+{
+	std::vector < chem_t > vcBuffer(ptVector.size());
+
+	for(int i(0); i < ptVector.size();i++)
+	{
+		vcBuffer[i]=ptVector[i];
+	}
+
+		return vcBuffer;
+
+}
+
+std::ostream& operator<<(std::ostream& outStream, chem_t& cChem)
+{
+	outStream << cChem.getValue();
+	return outStream;
+}

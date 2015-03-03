@@ -110,7 +110,12 @@ void voxel_t::evalSystem(point_t& x, double t, double dt)
 	boost::numeric::odeint::runge_kutta4< point_t > rk; /*!< Calls the \c libboost solver to implement steps */
 	rk.do_step( ptrSystem , x , t , dt ); 
 }
-
+void voxel_t::evalSystem(std::vector<chem_t>& x, double t, double dt)
+{
+	point_t ptBuffer = x.toDouble();
+	evalSystem(ptBuffer,t,dt);
+	x = toChem_t(ptBuffer);
+}
 
 /*! This method gets the number assigned to the voxel_t.
  */

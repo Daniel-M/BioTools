@@ -67,6 +67,7 @@ class voxel_t
 		 * \param[in] dt The time step.
 		 * */
 		void evalSystem(point_t& x, double t, double dt);
+		void evalSystem(std::vector<chem_t>& x, double t, double dt);
 
 		/*!\brief Get the number of the voxel_t.
 		 * \return The number of the voxel_t.*/
