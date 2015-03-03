@@ -48,10 +48,12 @@ class chem_t
 		 */
 		double setValue(const double dValue_);
 
-		point_t toDouble(std::vector <chem_t> vcChems);
-
+		//point_t toDouble(std::vector <chem_t> vcChems);
 		
-		friend std::vector< chem_t > toChem_t(point_t ptVector);
+		//friend std::vector< chem_t > toChem_t(point_t ptVector);
 
 		friend	std::ostream& operator<<(std::ostream& outStream, chem_t& cChem);
 };
+
+point_t toDouble(std::vector <chem_t> vcChems);
+std::vector< chem_t > toChem_t(point_t ptVector);

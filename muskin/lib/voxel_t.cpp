@@ -112,7 +112,7 @@ void voxel_t::evalSystem(point_t& x, double t, double dt)
 }
 void voxel_t::evalSystem(std::vector<chem_t>& x, double t, double dt)
 {
-	point_t ptBuffer = x.toDouble();
+	point_t ptBuffer = toDouble(x);
 	evalSystem(ptBuffer,t,dt);
 	x = toChem_t(ptBuffer);
 }

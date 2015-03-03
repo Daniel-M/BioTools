@@ -71,10 +71,10 @@ int main(void)
 
 	while(t < 50)
 	{
-	  v.evalSystem(data.toDouble(),t,dt);
+	  v.evalSystem(data,t,dt);
 	  t+=dt;
 	  //std::cout << data << "\n";
-	  std::cout << data[0] << data[1] << data[2] << "\n";
+	  std::cout << data[0] << "\t" << data[1] << "\t" << data[2] << "\n";
 	}
 
 	//index_t idx1({1,0,0}),idx2({0,1,0}),idx3({1,0,0}),idx4(idx1+idx2),idx5(idx2+idx3);

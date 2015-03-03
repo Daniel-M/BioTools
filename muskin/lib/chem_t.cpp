@@ -66,7 +66,8 @@ chem_t::operator double()
 }
 /*!
  */
-point_t chem_t::toDouble(std::vector <chem_t> vcChems)
+//point_t chem_t::toDouble(std::vector <chem_t> vcChems)
+point_t toDouble(std::vector <chem_t> vcChems)
 {
 	point_t vBuffer;
 
