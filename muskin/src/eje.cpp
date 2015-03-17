@@ -22,22 +22,28 @@ void system1( const point_t &x , point_t &dxdt , const double /* t */ )
 
 void system2( const point_t &x , point_t &dxdt , const double /* t */ )
 {
-	    dxdt[0] = x[1]+0.01;
+	    dxdt[0] = x[1];
 	    dxdt[1] = -x[0] + 0.15*x[1]-0.02*x[2];
 		dxdt[2]= +x[1] - 0.15*x[0]+0.02*x[2];
 }
 
 void system3( const point_t &x , point_t &dxdt , const double /* t */ )
 {
-	    dxdt[0] = x[1];
-	    dxdt[1] = x[1] - 0.15*x[0]+0.02*x[2];
-		dxdt[2]= -x[0] - 0.15*x[1]+0.02*x[2];
+	    dxdt[0] = x[1]+0.1*x[2];
+	    dxdt[1] = 2*x[1] - 0.5*x[0]+0.03*x[2];
+		dxdt[2]= -x[0] - 0.05*x[1]+0.5*x[2];
 }
 
 int main(void)
 {
 	//voxel_t v;
-	voxel_t v(system1);
+	//voxel_t v(system1);
+	voxel_t v;
+	
+	std::cout << "System " << v.getSystem() << "\n";
+	std::cout << "System " << v.getSystem() << "\n";
+	std::cout << "System " << v.getSystem() << "\n";
+	std::cout << "System " << v.getSystem() << "\n";
 
 	chem_t c;
 
@@ -65,9 +71,63 @@ int main(void)
 	data[1] = 0.1;
 	data[2] = 0.01;
 	
-	//v.setSystem(system1);
+	v.setSystem(system1);
 	
 	//v=system1;
+
+	std::cout << "#System1" << std::endl;
+	std::cout << "System " << v.getSystem() << "\n";
+
+	while(t < 50)
+	{
+	  v.evalSystem(data,t,dt);
+	  t+=dt;
+	  //std::cout << data << "\n";
+	  //std::cout << data[0] << "\t" << data[1] << "\t" << data[2] << "\n";
+	}
+
+
+	std::cout << "System " << v.getSystem() << "\n";
+
+	//v=system2;
+	std::cout << "#System2" << std::endl;
+	v.setSystem(system2);
+	std::cout << "#System2" << std::endl;
+
+	std::cout << "System " << v.getSystem() << "\n";
+
+	t=0;
+	dt=0.01;
+	
+	data.clear();
+
+	data[0] = 1.0;
+	data[1] = 0.1;
+	data[2] = 0.01;
+	
+	std::cout << "#System2" << std::endl;
+
+	while(t < 50)
+	{
+	  std::cout << "#System2-w1" << std::endl;
+	  v.evalSystem(data,t,dt);
+	  std::cout << "#System2-w2" << std::endl;
+	  t+=dt;
+	  //std::cout << data << "\n";
+	  std::cout << data[0] << "\t" << data[1] << "\t" << data[2] << "\n";
+	}
+
+	v.setSystem(system3);
+
+	t=0;
+	
+	data.clear();
+
+	data[0] = 1.0;
+	data[1] = 0.1;
+	data[2] = 0.01;
+	
+	std::cout << "#System3" << std::endl;
 
 	while(t < 50)
 	{
@@ -76,71 +136,4 @@ int main(void)
 	  //std::cout << data << "\n";
 	  std::cout << data[0] << "\t" << data[1] << "\t" << data[2] << "\n";
 	}
-
-	//index_t idx1({1,0,0}),idx2({0,1,0}),idx3({1,0,0}),idx4(idx1+idx2),idx5(idx2+idx3);
-
-	//std::set<index_t> sidx1,sidx2,sidx3;
-
-	//sidx1.insert(idx1);
-	//sidx1.insert(idx2);
-	//sidx1.insert(idx5);
-
-	//sidx2.insert(idx1);
-	//sidx2.insert(idx4);
-	//sidx2.insert(idx3);
-
-	//sidx3.insert(idx4);
-	//sidx3.insert(idx5);
-
-	//voxel_t v1(sidx1,system1),v2(sidx2,system2),v3(sidx3,system3);
-
-	//v1.setSystem(system1);
-	//v2.setSystem(system2);
-	//v3.setSystem(system3);
-
-	//if(v1.count(idx3) > 0 )
-	//{
-	
-		//data.clear();
-		//data[0] = 1.0;
-		//data[1] = 0.1;
-		//data[2] = 0.01;
-		//t=0;
-		//while(t< 100)
-		//{
-		  //v1.evalSystem(data,t,dt);
-		  //t+=dt;
-		  //std::cout << data << "\n";
-		//}
-	//}
-	//else if(v2.count(idx3) > 0 )
-	//{
-		//data.clear();
-		//data[0] = 1.0;
-		//data[1] = 0.1;
-		//data[2] = 0.01;
-
-		//t=0;
-		//while(t< 100)
-		//{
-		  //v2.evalSystem(data,t,dt);
-		  //t+=dt;
-		  //std::cout << data << "\n";
-		//}
-	//}
-	//else if (v3.count(idx3) > 0) 
-	//{
-		//data.clear();
-		//data[0] = 1.0;
-		//data[1] = 0.1;
-		//data[2] = 0.01;
-
-		//t=0;
-		//while(t< 100)
-		//{
-		  //v3.evalSystem(data,t,dt);
-		  //t+=dt;
-		  //std::cout << data << "\n";
-		//}
-	//}
 }

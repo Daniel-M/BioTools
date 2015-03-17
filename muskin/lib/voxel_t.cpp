@@ -97,7 +97,16 @@ void voxel_t::insert(index_t inIndex_)
  */
 void voxel_t::setSystem(system_t ptrSys)
 {
-	ptrSystem = ptrSys;
+
+	if (ptrSystem != NULL)
+	{
+		delete ptrSystem;
+		ptrSystem = ptrSys;
+	}
+	else
+	{
+		ptrSystem = ptrSys;
+	}
 }
 
 /*!
@@ -107,13 +116,20 @@ void voxel_t::setSystem(system_t ptrSys)
  * */
 void voxel_t::evalSystem(point_t& x, double t, double dt)
 {
+	//std::cout << "Lvl 2.1" << std::endl;
 	boost::numeric::odeint::runge_kutta4< point_t > rk; /*!< Calls the \c libboost solver to implement steps */
+	//std::cout << "Lvl 2.2" << std::endl;
 	rk.do_step( ptrSystem , x , t , dt ); 
+	//std::cout << "Lvl 2.3" << std::endl;
 }
+
 void voxel_t::evalSystem(std::vector<chem_t>& x, double t, double dt)
 {
+	//std::cout << "Lvl 3.1" << std::endl;
 	point_t ptBuffer = toDouble(x);
+	//std::cout << "Lvl 3.2" << std::endl;
 	evalSystem(ptBuffer,t,dt);
+	//std::cout << "Lvl 3.3" << std::endl;
 	x = toChem_t(ptBuffer);
 }
 
@@ -136,7 +152,7 @@ int_t voxel_t::count(index_t inIndex_)
  */
 system_t voxel_t::getSystem()
 {
-	return ptrSystem;
+	return *ptrSystem;
 }
 
 ///*!
