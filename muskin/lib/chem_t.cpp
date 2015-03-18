@@ -80,7 +80,8 @@ point_t toDouble(std::vector <chem_t> vcChems)
 
 }
 //std::vector< chem_t > chem_t::toChem_t(point_t ptVector)
-std::vector< chem_t > toChem_t(point_t ptVector)
+//std::vector< chem_t > toChem_t(point_t ptVector)
+chem_vector_t toChem_t(point_t ptVector)
 {
 	std::vector < chem_t > vcBuffer(ptVector.size());
 

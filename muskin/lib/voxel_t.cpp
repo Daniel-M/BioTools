@@ -98,9 +98,10 @@ void voxel_t::insert(index_t inIndex_)
 void voxel_t::setSystem(system_t ptrSys)
 {
 
-	if (ptrSystem != NULL)
+	if (ptrSystem)
 	{
-		delete ptrSystem;
+		//delete ptrSystem;
+		ptrSystem = NULL;
 		ptrSystem = ptrSys;
 	}
 	else

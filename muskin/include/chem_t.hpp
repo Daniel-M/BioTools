@@ -55,5 +55,10 @@ class chem_t
 		friend	std::ostream& operator<<(std::ostream& outStream, chem_t& cChem);
 };
 
+/*! We daclared here this typedef
+ * typedef std::vector<chem_t> chem_vector_t;
+ * and not in the typedef.hpp file in order to prevent malfunction during compilation.*/
+typedef std::vector<chem_t> chem_vector_t;
+
 point_t toDouble(std::vector <chem_t> vcChems);
-std::vector< chem_t > toChem_t(point_t ptVector);
+chem_vector_t toChem_t(point_t ptVector);
