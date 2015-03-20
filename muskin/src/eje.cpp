@@ -22,125 +22,46 @@ void system1( const point_t &x , point_t &dxdt , const double /* t */ )
 
 void system2( const point_t &x , point_t &dxdt , const double /* t */ )
 {
-	    dxdt[0] = x[1]+0.01;
-	    dxdt[1] = -x[0] + 0.15*x[1]-0.02*x[2];
-		dxdt[2]= +x[1] - 0.15*x[0]+0.02*x[2];
-}
-
-void system3( const point_t &x , point_t &dxdt , const double /* t */ )
-{
-	    dxdt[0] = x[1];
-	    dxdt[1] = x[1] - 0.15*x[0]+0.02*x[2];
-		dxdt[2]= -x[0] - 0.15*x[1]+0.02*x[2];
+	    dxdt[0] = x[1]+0.1*x[2];
+	    dxdt[1] = 2*x[1] - 0.5*x[0]+0.03*x[2];
+		dxdt[2]= -x[0] - 0.05*x[1]+0.5*x[2];
 }
 
 int main(void)
 {
-	//voxel_t v;
-	voxel_t v(system1);
+	std::cout << "Welcome to the chem_vector_t and voxel tester\n";
+	double t(0), dt=0.01;
 
-	chem_t c;
-
-	c = 10;
-
-	double var(0);
-
-	var = c.getValue();
-
-	std::cout << var  << std::endl;
+	voxel_t v1(system1),v2(system2);
 	
-	c.setValue(10);
+	std::cout << "Voxel_t variables where defined and initialized\n";
 
-	//var = c.getValue();
+	chem_vector_t data1(3), data2(3);
 	
-	c=11;
-	var = c;
+	std::cout << "chem_vector_t variables where defined\n";
 
-	std::cout << var  << std::endl;
+	data1[0] = 1.0;
+	data1[1] = 0.1;
+	data1[2] = 0.01;
 
-	//point_t data(3);
-	std::vector<chem_t> data(3);
-	double t(0),dt(0.01);
-	data[0] = 1.0;
-	data[1] = 0.1;
-	data[2] = 0.01;
+	data2[0] = 1.0;
+	data2[1] = 0.1;
+	data2[2] = 0.01;
 	
-	//v.setSystem(system1);
-	
-	//v=system1;
+	std::cout << "chem_vector_t variables where initialized\n";
+
+	std::cout << "Variables where defined and initialized\n";
 
 	while(t < 50)
 	{
-	  v.evalSystem(data,t,dt);
+
+	  v1.evalSystem(data1,t,dt);
+	  v2.evalSystem(data2,t,dt);
+
 	  t+=dt;
+	  
 	  //std::cout << data << "\n";
-	  std::cout << data[0] << "\t" << data[1] << "\t" << data[2] << "\n";
+	  //std::cout << data[0] << "\t" << data[1] << "\t" << data[2] << "\n";
+	  std::cout << t << "\t" << data1[0] << "\t" << data1[1] << "\t" << data1[2] << "\t\t" << data2[0] << "\t" << data2[1] << "\t" << data2[2] << "\n";
 	}
-
-	//index_t idx1({1,0,0}),idx2({0,1,0}),idx3({1,0,0}),idx4(idx1+idx2),idx5(idx2+idx3);
-
-	//std::set<index_t> sidx1,sidx2,sidx3;
-
-	//sidx1.insert(idx1);
-	//sidx1.insert(idx2);
-	//sidx1.insert(idx5);
-
-	//sidx2.insert(idx1);
-	//sidx2.insert(idx4);
-	//sidx2.insert(idx3);
-
-	//sidx3.insert(idx4);
-	//sidx3.insert(idx5);
-
-	//voxel_t v1(sidx1,system1),v2(sidx2,system2),v3(sidx3,system3);
-
-	//v1.setSystem(system1);
-	//v2.setSystem(system2);
-	//v3.setSystem(system3);
-
-	//if(v1.count(idx3) > 0 )
-	//{
-	
-		//data.clear();
-		//data[0] = 1.0;
-		//data[1] = 0.1;
-		//data[2] = 0.01;
-		//t=0;
-		//while(t< 100)
-		//{
-		  //v1.evalSystem(data,t,dt);
-		  //t+=dt;
-		  //std::cout << data << "\n";
-		//}
-	//}
-	//else if(v2.count(idx3) > 0 )
-	//{
-		//data.clear();
-		//data[0] = 1.0;
-		//data[1] = 0.1;
-		//data[2] = 0.01;
-
-		//t=0;
-		//while(t< 100)
-		//{
-		  //v2.evalSystem(data,t,dt);
-		  //t+=dt;
-		  //std::cout << data << "\n";
-		//}
-	//}
-	//else if (v3.count(idx3) > 0) 
-	//{
-		//data.clear();
-		//data[0] = 1.0;
-		//data[1] = 0.1;
-		//data[2] = 0.01;
-
-		//t=0;
-		//while(t< 100)
-		//{
-		  //v3.evalSystem(data,t,dt);
-		  //t+=dt;
-		  //std::cout << data << "\n";
-		//}
-	//}
 }

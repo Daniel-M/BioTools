@@ -4,7 +4,8 @@ class voxel_t
 
 		int_t	itVoxelNumber; /*!< The number of the voxel_t.*/
 		
-		std::set<index_t> useIndexes; /*!< The set of indexes that comprise the voxel_t.*/
+		//std::set<index_t> useIndexes; /*!< The set of indexes that comprise the voxel_t.*/
+		index_set_t useIndexes; /*!< The set of indexes that comprise the voxel_t.*/
 
 		system_t ptrSystem; /*!< system_t pointer to the system assigned to the voxel_t. This allows to have many different systems in the same class */
 

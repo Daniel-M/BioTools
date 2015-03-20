@@ -31,6 +31,8 @@ class mesh_t
 	std::map<index_t,node_t> mBoundaryMesh; /*!< Mapping of indexes and node_ts on the boundary region of the mesh_t object. indexes can not be repeated. */
 	std::map<index_t,node_t> mInnerMesh; /*!< Mapping of indexes and node_ts on the inner region of the mesh_t object. indexes can not be repeated. */
 
+	std::vector<voxel_t> vMeshVoxels; /*!< Mapping of the voxel_t inside the mesh */
+
 	boost::property_tree::ptree prTreeMesh; /*!< Property tree containing the configuration of the mesh_t object.*/
 
 
@@ -133,14 +135,16 @@ class mesh_t
 	
 	/*!\brief Friend function to send mesh_t to streams. */
 	friend	std::ostream& operator<<(std::ostream& outStream, mesh_t& cMesh);
-	
+
+	/*!\brief Friend function to iterate along indexes of the  mesh_t.*/
+	friend interate(mesh_t mMesh);
 	
 	/* Misc methods */
 	
 	/*!\brief Gets the actual property tree of the mesh_t object. */
 	boost::property_tree::ptree getPropertyTree();
 
-	
+		
 
 };
 
