@@ -13,14 +13,14 @@
 //#include "chem_t.cpp"
 //#include "voxel_t.cpp"
 
-void system1( const point_t &x , point_t &dxdt , const double /* t */ )
+void system1( const point_t &x , point_t &dxdt , const floating_t /* t */ )
 {
 	    dxdt[0] = x[1];
 	    dxdt[1] = -x[0] - 0.15*x[1]+0.02*x[2];
 		dxdt[2]= -x[1] - 0.15*x[0]+0.02*x[2];
 }
 
-void system2( const point_t &x , point_t &dxdt , const double /* t */ )
+void system2( const point_t &x , point_t &dxdt , const floating_t /* t */ )
 {
 	    dxdt[0] = x[1]+0.1*x[2];
 	    dxdt[1] = 2*x[1] - 0.5*x[0]+0.03*x[2];
@@ -30,7 +30,7 @@ void system2( const point_t &x , point_t &dxdt , const double /* t */ )
 int main(void)
 {
 	std::cout << "Welcome to the chem_vector_t and voxel tester\n";
-	double t(0), dt=0.01;
+	floating_t t(0), dt=0.01;
 
 	voxel_t v1(system1),v2(system2);
 	

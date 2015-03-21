@@ -18,7 +18,7 @@ system_t::system_t()
 
 /*! Calls the solver of \c boost::odeint routines. 
  */
-void system_t::operator()( const std::vector<chem_t> &y , std::vector<double> &f , const double /* t */ )
+void system_t::operator()( const std::vector<chem_t> &y , std::vector<floating_t> &f , const floating_t /* t */ )
 {
 }
 
@@ -31,10 +31,10 @@ system_t& system_t::operator=(const std::vector<chem_t> vcChems_)
 }
 
 
-/*!Overwrites the vector of \c double describing the parameters of the \c system_t object.
+/*!Overwrites the vector of \c floating_t describing the parameters of the \c system_t object.
  * The new set of parameters is passed as the right side operand of =.
  * \sa setParameters */
-system_t& system_t::operator=(const std::vector<double> vdKParameters_)
+system_t& system_t::operator=(const std::vector<floating_t> vdKParameters_)
 {
 }
 
@@ -46,10 +46,10 @@ void system_t::addchem_t(const std::vector<chem_t> cChem_)
 {
 }
 
-/*!Overwrites the vector of \c double describing the parameters of the \c system_t object.
+/*!Overwrites the vector of \c floating_t describing the parameters of the \c system_t object.
  * The new set of parameters is passed as the right side operand of =.
  * \sa operator= */
-void system_t::setParameters(const std::vector<double> vdKParameters_)
+void system_t::setParameters(const std::vector<floating_t> vdKParameters_)
 {
 }
 

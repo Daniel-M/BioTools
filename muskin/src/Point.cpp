@@ -1,6 +1,7 @@
 #include "headers.hpp"
 
 
+int_t mesh_t::siMeshNumber=0;
 int_t node_t::siNumberOfNodes=0;
 
 int main(void)
@@ -41,7 +42,7 @@ int main(void)
 	//std::cout << a << std::endl;
 	//std::cout << v << std::endl;
 	//std::cout << nod1 << std::endl;
-	//double val=10.1;
+	//floating_t val=10.1;
 	//
 	//nod1 = val;
 	//std::cout << nod1 << std::endl;
@@ -112,7 +113,15 @@ int main(void)
 
 	std::cout << temp << std::endl;
 
-	
+
+	//mesh_t other(emesh_t);
+	mesh_t other(0);
+	other = emesh_t;
+	temp = other[a];
+
+	std::cout << "other " << std::endl;
+	std::cout <<  temp << std::endl;
+
 	//fmesh_t.createmesh_tFile("lordtod.msh");
 	//fmesh_t.createmesh_tFile();
 	exit(0);

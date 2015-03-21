@@ -59,11 +59,11 @@ class voxel_t
 		void setSystem(system_t ptrSys);
 		
 		/*!\brief Evaluates the system of the voxel_t on the given time \c t by doing an increment of \c dt.
-		 * \param[in][out] x The vector of values. Uses \c point_t because of the typedef \c std::vector<double>. 
+		 * \param[in][out] x The vector of values. Uses \c point_t because of the typedef \c std::vector<floating_t>. 
 		 * \param[in] t The instant of time to evaluate.
 		 * \param[in] dt The time step.
 		 * */
-		void evalSystem(point_t& x, double t, double dt);
+		void evalSystem(point_t& x, floating_t t, floating_t dt);
 
 		/*!\brief Get the number of the voxel_t.
 		 * \return The number of the voxel_t.*/

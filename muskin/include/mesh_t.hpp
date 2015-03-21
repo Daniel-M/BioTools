@@ -42,7 +42,14 @@ class mesh_t
 	
 	/*!\brief Standard constructor of mesh_t objects. */
 	mesh_t();
+
+	/*!\brief Standard copy constructor.
+	 * \param mRHSMesh The mesh_t whose properties get copied into the new mesh_t object to be created.*/
+	mesh_t(const mesh_t& mRHSMesh);
 	
+	/*!\brief Constructor to create and empty mesh. */
+	mesh_t(int_t iVoid);
+
 	/*!\brief Constructor that automatically assings name to the mesh_t object, the remaining must be provided.
 	 * \param iDim Dimension of the mesh_t.
 	 * \param inNodesOnDim node_ts on each of the dimensions.
@@ -79,7 +86,11 @@ class mesh_t
 	 * \param inIndex Index of the node_t to be referenced from mesh_t. 
 	 * */
 	node_t& operator[](const index_t inIndex);
-	
+
+	/*!\brief assignation operator for mesh_t objects.
+	 * \param mRHSMesh The mesh_t object to be assigned to \c this.
+	 */
+	mesh_t& operator=(const mesh_t& mRHSMesh);
 	
 	/* int_t return methods */
 	
@@ -96,7 +107,7 @@ class mesh_t
 	
 
 	
-	/* double return methods */
+	/* floating_t return methods */
 
 	
 	
@@ -136,8 +147,8 @@ class mesh_t
 	/*!\brief Friend function to send mesh_t to streams. */
 	friend	std::ostream& operator<<(std::ostream& outStream, mesh_t& cMesh);
 
-	/*!\brief Friend function to iterate over indexes of the  mesh_t.*/
-	friend mesh_t interate(mesh_t& mMesh);
+	///*!\brief Friend function to iterate over indexes of the  mesh_t.*/
+	//friend mesh_t IterateFD(mesh_t& mMesh,floating_t dDeltaT);
 	
 	/* Misc methods */
 	

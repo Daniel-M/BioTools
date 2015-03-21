@@ -17,7 +17,7 @@ node_t::node_t()
 	 * \param indices indices of the node_t.
 	 * \param value value stored at the node_t.
 	 * */
-node_t::node_t(point_t coords, index_t indices, double value)
+node_t::node_t(point_t coords, index_t indices, floating_t value)
 {
 	itIndices=indices;
 	ptCoordinates=coords;
@@ -40,15 +40,20 @@ node_t& node_t::operator=(const index_t itIndex_)
 	itIndices = itIndex_;
 }
 
-/*! \brief Overloaded operator= to set the node_t value \c double directly 
+/*! \brief Overloaded operator= to set the node_t value \c floating_t directly 
  *
  * This operator modifies the left-hand side node_t
  *
  * \param dValue_ the value to be assigned into the node_t.
  * */
-node_t& node_t::operator=(const double dValue_)
+node_t& node_t::operator=(const floating_t dValue_)
 {
 	dNodeValue=dValue_;
+}
+
+node_t& node_t::operator+(const node_t RHSNode_)
+{
+	dNodeValue += RHSNode_.dNodeValue;
 }
 
 /*! \brief Returns the dimensions of the node_t e.g. a 2D mesh_t uses 2D node_ts */
@@ -70,7 +75,7 @@ int_t node_t::getNumberOfNodes()
 }
 
 /*! \brief Returns the value stored on the node_t */
-double node_t::getValue()
+floating_t node_t::getValue()
 {
 	return dNodeValue;
 }
@@ -81,7 +86,7 @@ double node_t::getValue()
  * \param indices indices of the node_t.
  * \param value value stored at the node_t. 
  */
-void node_t::setNode(point_t coords, index_t indices, double value)
+void node_t::setNode(point_t coords, index_t indices, floating_t value)
 {
 	itIndices=indices;
 	ptCoordinates=coords;
@@ -98,7 +103,7 @@ void node_t::setNode(point_t coords, index_t indices, double value)
  * \param indices indices of the node_t.
  * \param value value stored at the node_t. 
  */
-void node_t::setValue(double value)
+void node_t::setValue(floating_t value)
 {
 	dNodeValue=value;
 }
@@ -126,7 +131,7 @@ std::ostream& operator<<(std::ostream& outStream, node_t& nod)
 {
   point_t ptBuffer(nod.getCoordinates());
   index_t itBuffer(nod.getIndices());
-  double dBuffer(nod.getValue());
+  floating_t dBuffer(nod.getValue());
 
   outStream  << "[" << nod.getNodeNumber() << "]" <<  itBuffer << ptBuffer << "\t" << dBuffer ;
   

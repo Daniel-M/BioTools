@@ -92,7 +92,7 @@ void voxel_t::insert(index_t inIndex_)
 /*!
  * The system to be assigned to the voxel_t_t is passed as a pointer to a function of the form (x,dx,t) as \c libboost::odeint requires.
  * the \c libboost::odeint systems are functions defined as \c f(x,dxdt,t) where \c x and \c dxdt are std containers as \c std::vectors.
- * In this case the type used is \c point_t which is a \c typedef of \c std::vector<double>.
+ * In this case the type used is \c point_t which is a \c typedef of \c std::vector<floating_t>.
  * \sa operator=
  */
 void voxel_t::setSystem(system_t ptrSys)
@@ -115,7 +115,7 @@ void voxel_t::setSystem(system_t ptrSys)
  *	the binary will trow an error. This method is highly experimental so the behaviour is to certain extent unknown if the system is not previously defined.
  *	\sa set system
  * */
-void voxel_t::evalSystem(point_t& x, double t, double dt)
+void voxel_t::evalSystem(point_t& x, floating_t t, floating_t dt)
 {
 	//std::cout << "Lvl 2.1" << std::endl;
 	boost::numeric::odeint::runge_kutta4< point_t > rk; /*!< Calls the \c libboost solver to implement steps */
@@ -124,7 +124,7 @@ void voxel_t::evalSystem(point_t& x, double t, double dt)
 	//std::cout << "Lvl 2.3" << std::endl;
 }
 
-void voxel_t::evalSystem(std::vector<chem_t>& x, double t, double dt)
+void voxel_t::evalSystem(std::vector<chem_t>& x, floating_t t, floating_t dt)
 {
 	//std::cout << "Lvl 3.1" << std::endl;
 	point_t ptBuffer = toDouble(x);

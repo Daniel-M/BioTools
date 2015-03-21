@@ -94,7 +94,7 @@ class mesh
 	
 
 	
-	/* double return methods */
+	/* floating_t return methods */
 
 	
 	

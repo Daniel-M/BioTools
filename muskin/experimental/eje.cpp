@@ -21,7 +21,7 @@ int main(void)
 
 	//c = 10;
 
-	//double var(0);
+	//floating_t var(0);
 
 	//var = c.getValue();
 

@@ -6,7 +6,7 @@
  * This function overloads the std::vector:operator<< to provide streaming for \a std::vectors
  *
  * \param[in] outStream stream data type.
- * \tparam[in] point_t A vector of \a double expected (typedef point_t).
+ * \tparam[in] point_t A vector of \a floating_t expected (typedef point_t).
  * \return A ostream consisting of the vector size and the vector components separated by commas.
  */
 
@@ -68,8 +68,8 @@ point_t operator+(const point_t vtLHSVector,const point_t vtRHSVector)
  * The sumation takes place component by component.
  * \f[ \vec{s}=\vec{a}-\vec{b} \Longrightarrow s_{i} = a_{i}-b_{i}\f]
  *
- * \tparam[in] vtLHSVector A vector of a template type, \a int,\a float, or\a double expected.
- * \tparam[in] vtRHSVector The other vector of a template type, \a int,\a float, or\a double expected.
+ * \tparam[in] vtLHSVector A vector of a template type, \a int,\a float, or\a floating_t expected.
+ * \tparam[in] vtRHSVector The other vector of a template type, \a int,\a float, or\a floating_t expected.
  * \return A vector whose components are the vtLHSVector and vtRHSVector components substracted
  * \note The vectors size are compared in order to guarantee size matching. Else returns vtLHSVector and an error message to \a std::cout
  * \note This function uses the overloaded operator*, it sums \f$ \vec{s}=\vec{a} + \left(-1*\vec{b}\right)\f$

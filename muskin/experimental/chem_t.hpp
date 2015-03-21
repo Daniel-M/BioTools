@@ -4,9 +4,9 @@ class chem_t
 
 		std::string sChemName; /*!< String that names the chemical complex.*/
 		
-		double dInitialCondition;	/*!< Initial condition of the complex.*/
+		floating_t dInitialCondition;	/*!< Initial condition of the complex.*/
 		
-		double dValue; /*!< The chemical species value.*/
+		floating_t dValue; /*!< The chemical species value.*/
 
 	public:
 			
@@ -16,35 +16,35 @@ class chem_t
 		/*!\brief Constructor. Sets the value of the chemical species to dValue_ the remaining are set to 0 and "".
 		 *\param dValue_ The value to be stored on the chemical species.
 		 */
-		chem_t(double dValue_);
+		chem_t(floating_t dValue_);
 
 		/*!\brief Constructor. Sets the value and initial condition of the chemical species.
 		 * \param dValue_ The value to be stored on the chemical species.
 		 * \param dInitialCondition_ The initial condition to be stored on the chemical species.
 		 */
-		chem_t(double dValue_, double dInitialCondition_);
+		chem_t(floating_t dValue_, floating_t dInitialCondition_);
 
 		/*!\brief Constructor. Sets all the values of the chemical species.
 		 * \param dValue_ The value to be stored on the chemical species.
 		 * \param dInitialCondition_ The initial condition to be stored on the chemical species.
 		 * \param sChemName_ The name of the chemical species.
 		 */
-		chem_t(double dValue_, double dInitialCondition_, std::string sChemName_);
+		chem_t(floating_t dValue_, floating_t dInitialCondition_, std::string sChemName_);
 
 		/*!\brief The assignation operator. Sets the value of the chemical species.
 		 * \param dValue_ The value to be stored on the chemical species value.
 		 */
-		chem_t& operator=(const double dValue_);
+		chem_t& operator=(const floating_t dValue_);
 		
 		/*!\brief Double cast. Returns the value of the chemical species.
 		 */
-		operator double();
+		operator floating_t();
 		
 		/*!\brief Returns the chemical species value.*/
-		double getValue();
+		floating_t getValue();
 		
 		/*!\brief Sets the chemical species value.
 		 * \param dValue_ the value to be set on the chemical species value.
 		 */
-		double setValue(const double dValue_);
+		floating_t setValue(const floating_t dValue_);
 };

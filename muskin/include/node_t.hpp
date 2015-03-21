@@ -9,7 +9,7 @@ class node_t
 	int_t itNodeNumber; /*!< */
 	index_t itIndices; /*!< */
 	point_t ptCoordinates; /*!< */
-	double dNodeValue; /*!< */
+	floating_t dNodeValue; /*!< */
 
 	//node(){};
 
@@ -21,7 +21,7 @@ class node_t
 	/*! \brief Standard node_t constructor */
 	node_t();
 	/*! \brief node_t constructor using the coordinates, indices, and the stored value */
-	node_t(point_t coords, index_t indices, double value);
+	node_t(point_t coords, index_t indices, floating_t value);
 
 	
 	/* Class Operators */
@@ -29,8 +29,10 @@ class node_t
 	/*! \brief Overloaded operator= to set the node_t index \c index_t directly.  */
 	node_t& operator=(const index_t itIndex_);
 	
-	/*! \brief Overloaded operator= to set the node_t value \c double directly  */
-	node_t& operator=(const double dValue_);
+	/*! \brief Overloaded operator= to set the node_t value \c floating_t directly  */
+	node_t& operator=(const floating_t dValue_);
+
+	node_t& operator+(const node_t RHSNode_);
 
 	
 	/* return int_t methods */
@@ -46,10 +48,10 @@ class node_t
 	
 
 	
-	/* return double methods */
+	/* return floating_t methods */
 	
 	/*! \brief Returns the value stored on the node_t */
-	double getValue();
+	floating_t getValue();
 	
 	
 	/* return void methods */
@@ -60,7 +62,7 @@ class node_t
 	 * \param indices indices of the node_t.
 	 * \param value value stored at the node_t. 
 	 */
-	void setNode(point_t coords, index_t indices, double value);
+	void setNode(point_t coords, index_t indices, floating_t value);
 	
 	/*! \brief Set node_t parameters as if where with the constructor
 	 *
@@ -68,7 +70,7 @@ class node_t
 	 * \param indices indices of the node_t.
 	 * \param value value stored at the node_t. 
 	 */
-	void setValue(double value);
+	void setValue(floating_t value);
 
 	
 	/* return index_t methods */

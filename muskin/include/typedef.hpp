@@ -19,8 +19,9 @@
 
 /* Type Definitions that can be changed in order to assure a better compatibility*/
 typedef int	int_t;
+typedef float floating_t;
 
-typedef std::vector<double> point_t;
+typedef std::vector<floating_t> point_t;
 
 typedef std::vector<int_t> index_t;
 
@@ -32,7 +33,7 @@ typedef std::set<index_t> index_set_t;
  * This was done to prevent malfunction during compilation.*/
 
 /*! This typedef creates the type system_t, a pointer to a function of the form 
- * void function(const point_t&, point_t&, const double)
+ * void function(const point_t&, point_t&, const floating_t)
  * the ODE system stored on the voxel_t as needed by the libboost::odeint.
  * This allows to use one single class with many different ODE systems for each voxel_t object. */
-typedef void (*system_t)( const point_t&, point_t& , const double /* t */ ); /*!< A Pointer to libboost formated ODE systems. */
+typedef void (*system_t)( const point_t&, point_t& , const floating_t /* t */ ); /*!< A Pointer to libboost formated ODE systems. */

@@ -8,58 +8,58 @@
 
 #include "typedef.hpp"
 
-typedef std::vector< double > state_type;
-typedef void (*system_t)( const point_t&, point_t& , const double /* t */ );
+typedef std::vector< floating_t > state_type;
+typedef void (*system_t)( const point_t&, point_t& , const floating_t /* t */ );
 using namespace boost::numeric::odeint;
 
-double gam = 0.15;
+floating_t gam = 0.15;
 
 class Toy
 {
 	private:
-		int_t (*ptrFunction)(double x, double y, double z);
+		int_t (*ptrFunction)(floating_t x, floating_t y, floating_t z);
 		system_t ptrSystem;
-		//void (*ptrSystem)( const state_type&, state_type& , const double /* t */ );
+		//void (*ptrSystem)( const state_type&, state_type& , const floating_t /* t */ );
 
 	public:
 		Toy();
-		Toy(int_t (*ptrFunc)(double, double, double));
-		void setFunction(int_t (*ptrFunc)(double x, double y, double z));
-		int_t evalFunction(double x, double y, double z);
+		Toy(int_t (*ptrFunc)(floating_t, floating_t, floating_t));
+		void setFunction(int_t (*ptrFunc)(floating_t x, floating_t y, floating_t z));
+		int_t evalFunction(floating_t x, floating_t y, floating_t z);
 		
-		//void setSystem(void (*ptrSys)( const state_type&, state_type& , const double /* t */ ));
+		//void setSystem(void (*ptrSys)( const state_type&, state_type& , const floating_t /* t */ ));
 		void setSystem(system_t ptrSys);
-		void evalSystem(state_type& x, double t, double dt);
-		//state_type evalSystem(state_type& x, double t, double dt);
+		void evalSystem(state_type& x, floating_t t, floating_t dt);
+		//state_type evalSystem(state_type& x, floating_t t, floating_t dt);
 };
 
 Toy::Toy()
 {
 }
 
-Toy::Toy(int_t (*ptrFunc)(double, double, double))
+Toy::Toy(int_t (*ptrFunc)(floating_t, floating_t, floating_t))
 {
 	ptrFunction = ptrFunc;
 }
 
-void Toy::setFunction(int_t (*ptrFunc)(double , double , double ))
+void Toy::setFunction(int_t (*ptrFunc)(floating_t , floating_t , floating_t ))
 {
 	ptrFunction = ptrFunc;
 }
 
-int_t Toy::evalFunction(double x, double y, double z)
+int_t Toy::evalFunction(floating_t x, floating_t y, floating_t z)
 {
 	return (*ptrFunction)(x,y,z);
 }
 
-//void Toy::setSystem(void (*ptrSys)( const state_type&, state_type& , const double /* t */ ))
+//void Toy::setSystem(void (*ptrSys)( const state_type&, state_type& , const floating_t /* t */ ))
 void Toy::setSystem(system_t ptrSys)
 {
 	ptrSystem = ptrSys;
 }
 
-void Toy::evalSystem(state_type& x,double t, double dt)
-//state_type Toy::evalSystem(state_type& x,double t, double dt)
+void Toy::evalSystem(state_type& x,floating_t t, floating_t dt)
+//state_type Toy::evalSystem(state_type& x,floating_t t, floating_t dt)
 {
 	runge_kutta4< state_type > rk;
 	rk.do_step( ptrSystem , x , t , dt ); 
@@ -72,7 +72,7 @@ void Toy::evalSystem(state_type& x,double t, double dt)
 // ****************************************
 
 
-int_t function1(double x, double y, double z)
+int_t function1(floating_t x, floating_t y, floating_t z)
 {
 	std::cout << " x " << x << std::endl;
 	std::cout << " y " << y << std::endl;
@@ -82,7 +82,7 @@ int_t function1(double x, double y, double z)
 	return 1;
 }
 
-int_t function2(double x, double y, double z)
+int_t function2(floating_t x, floating_t y, floating_t z)
 {
 	std::cout << " 2x " << 2*x << std::endl;
 	std::cout << " 2y " << 2*y << std::endl;
@@ -94,7 +94,7 @@ int_t function2(double x, double y, double z)
 
 
 /* The rhs of x' = f(x) */
-void harmonic_oscillator( const state_type &x , state_type &dxdt , const double /* t */ )
+void harmonic_oscillator( const state_type &x , state_type &dxdt , const floating_t /* t */ )
 {
 	    dxdt[0] = x[1];
 	    dxdt[1] = -x[0] - gam*x[1];
@@ -119,7 +119,7 @@ int main(void)
 
 	object.setSystem(harmonic_oscillator);
 	
-	double t(0),dt(0.01);
+	floating_t t(0),dt(0.01);
 	
 	while(t < 10.0)
 	{

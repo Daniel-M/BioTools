@@ -6,7 +6,7 @@
  * This function overloads the std::vector:operator<< to provide streaming for \a std::vectors
  *
  * \param[in] outStream stream data type.
- * \tparam[in] index_t A vector of \a double expected (typedef index_t).
+ * \tparam[in] index_t A vector of \a floating_t expected (typedef index_t).
  * \return A ostream consisting of the vector size and the vector components separated by commas.
  */
 
@@ -68,8 +68,8 @@ index_t operator+(const index_t inLHIndex,const index_t inRHIndex)
  * The sumation takes place component by component.
  * \f[ \vec{s}=\vec{a}-\vec{b} \Longrightarrow s_{i} = a_{i}-b_{i}\f]
  *
- * \tparam[in] inLHIndex A vector of a template type, \a int,\a float, or\a double expected.
- * \tparam[in] inRHIndex The other vector of a template type, \a int,\a float, or\a double expected.
+ * \tparam[in] inLHIndex A vector of a template type, \a int,\a float, or\a floating_t expected.
+ * \tparam[in] inRHIndex The other vector of a template type, \a int,\a float, or\a floating_t expected.
  * \return A vector whose components are the inLHIndex and inRHIndex components substracted
  * \note The vectors size are compared in order to guarantee size matching. Else returns inLHIndex and an error message to \a std::cout
  * \note This function uses the overloaded operator*, it sums \f$ \vec{s}=\vec{a} + \left(-1*\vec{b}\right)\f$
@@ -104,7 +104,7 @@ bool operator<(const index_t& index1, const index_t& index2)
 	}
 	else
 	{
-		double dNorm1(0),dNorm2(0);
+		floating_t dNorm1(0),dNorm2(0);
 
 		for(int i(0);i < index1.size();i++)
 		{
@@ -131,7 +131,7 @@ bool operator>(const index_t& index1, const index_t& index2)
 	}
 	else
 	{
-		double dNorm1(0),dNorm2(0);
+		floating_t dNorm1(0),dNorm2(0);
 
 		for(int i(0);i < index1.size();i++)
 		{

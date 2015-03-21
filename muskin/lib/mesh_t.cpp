@@ -1,4 +1,5 @@
 #include "headers.hpp"
+#include "iterateFD.hpp"
 //#define Debug(N) std::cout << "\n * Debug " << N << std::endl
 //#include "mesh.hpp"
 
@@ -15,6 +16,63 @@ mesh_t::mesh_t() : mesh_t(2,{10,10},{0,0}, {1,1})
 	std::cout << *this << std::endl;
 }
 
+/*! This standard constructor initializes the mesh_t object by copying all the relevant properties of \c mRHSMesh. 
+ * */
+mesh_t::mesh_t(const mesh_t& mRHSMesh)
+{
+	itMeshDim = mRHSMesh.itMeshDim;
+	itNumberOfNodes = mRHSMesh.itNumberOfNodes;
+	itBoundaryNodes = mRHSMesh.itBoundaryNodes;
+	itInnerNodes = mRHSMesh.itInnerNodes;
+
+	if(siMeshNumber >= 1)
+	{
+		siMeshNumber += 1;
+	}
+	else
+	{
+		siMeshNumber = 1;
+	}
+	
+	sMeshName = mRHSMesh.sMeshName; 
+	sMeshJSON = mRHSMesh.sMeshJSON;
+	sMeshXML  = mRHSMesh.sMeshXML;
+	sMeshFile = mRHSMesh.sMeshFile;
+	                         
+	inNodesOnDim = mRHSMesh.inNodesOnDim;
+                             
+	ptDeltaOnDim = mRHSMesh.ptDeltaOnDim;
+	ptRectangleLowA = mRHSMesh.ptRectangleLowA;
+	ptRectangleHighB = mRHSMesh.ptRectangleHighB;
+	                         
+	mBoundaryMesh = mRHSMesh.mBoundaryMesh;
+	mInnerMesh = mRHSMesh.mInnerMesh;
+                             
+	vMeshVoxels = mRHSMesh.vMeshVoxels; 
+
+	prTreeMesh = mRHSMesh.prTreeMesh;
+
+}
+
+/*! This constructor creates and empty mesh without anything defined. 
+ * This constructor is used when the contents on the mesh are going to be copied from an
+ * existing mesh_t object so avoids using the standard constructor and make innecesary calculations.
+ * This method must be used with caution because can lead to many runtime errors since the object
+ * has null properties.
+ * */
+mesh_t::mesh_t(int_t iVoid)
+{
+	std::cout << "void mesh created" << std::endl;
+	if(siMeshNumber >= 1)
+	{
+		siMeshNumber += 1;
+	}
+	else
+	{
+		siMeshNumber = 1;
+	}
+}
+
 /*! This constructor obtains all the parameters provided on the mesh_t object call and gives the automatic name of \a NewMesh.
  * This name is used to create all the .json,.xml,.msh related to the mesh_t object.*/
 mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) : mesh_t(iDim,inNodesOnDim_,ptRangeA, ptRangeB,"NewMesh")
@@ -25,6 +83,15 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
  * This name is used to create all the .json,.xml,.msh related to the mesh_t object.*/
 mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName)
 {
+	if(siMeshNumber >= 1)
+	{
+		siMeshNumber += 1;
+	}
+	else
+	{
+		siMeshNumber = 1;
+	}
+
 	setMeshName(sMeshName);
 	
 	ptRectangleLowA = ptRangeA;
@@ -376,7 +443,7 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	{
 		//std::cout << sPathBuffer + NumberToString(j) << "\n";
 		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
-		//ptDeltaOnDim.push_back(StringToNumber<double>(prTree.get(sPathBuffer + NumberToString(j),"-1.0")));
+		//ptDeltaOnDim.push_back(StringToNumber<floating_t>(prTree.get(sPathBuffer + NumberToString(j),"-1.0")));
 	}
 
 	sPathBuffer.clear();
@@ -390,7 +457,7 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	{
 		//std::cout << sPathBuffer + NumberToString(j) << "\n";
 		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
-		//ptRectangleLowA.push_back(StringToNumber<double>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
+		//ptRectangleLowA.push_back(StringToNumber<floating_t>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
 	}	
 	sPathBuffer.clear();
 	
@@ -405,7 +472,7 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	{
 		//std::cout << sPathBuffer + NumberToString(j) << "\n";
 		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
-		//ptRectangleHighB.push_back(StringToNumber<double>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
+		//ptRectangleHighB.push_back(StringToNumber<floating_t>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
 	}
 	sPathBuffer.clear();
 	
@@ -508,6 +575,8 @@ mesh_t::mesh_t(std::string sFileName)
 	}
 }
 
+
+
 /*! This method allows the implementation to retrieve the node_t pointed by the index \c inIndex and to modify it by
  *  the assignation operator, or send it to streams. It accesses the node_t object by reference.
  * */
@@ -534,6 +603,39 @@ node_t& mesh_t::operator[](index_t inIndex)
 	}
 }
 
+/*! This operator copies all the relevant data to \c (this) object.
+ * Also prevents self-assignment. */
+mesh_t& mesh_t::operator=(const mesh_t& mRHSMesh)
+{
+	if(this != &mRHSMesh)
+	{
+		itMeshDim = mRHSMesh.itMeshDim;
+		itNumberOfNodes = mRHSMesh.itNumberOfNodes;
+		itBoundaryNodes = mRHSMesh.itBoundaryNodes;
+		itInnerNodes = mRHSMesh.itInnerNodes;
+		//siMeshNumber += 1; 
+		
+		sMeshName = mRHSMesh.sMeshName; 
+		sMeshJSON = mRHSMesh.sMeshJSON;
+		sMeshXML  = mRHSMesh.sMeshXML;
+		sMeshFile = mRHSMesh.sMeshFile;
+								 
+		inNodesOnDim = mRHSMesh.inNodesOnDim;
+								 
+		ptDeltaOnDim = mRHSMesh.ptDeltaOnDim;
+		ptRectangleLowA = mRHSMesh.ptRectangleLowA;
+		ptRectangleHighB = mRHSMesh.ptRectangleHighB;
+								 
+		mBoundaryMesh = mRHSMesh.mBoundaryMesh;
+		mInnerMesh = mRHSMesh.mInnerMesh;
+								 
+		vMeshVoxels = mRHSMesh.vMeshVoxels; 
+
+		prTreeMesh = mRHSMesh.prTreeMesh;
+	}
+
+	return *this;
+}
 
 /*!The mesh_t file created consists of columns representing the points that determine the mesh_t.
  * The name of the file is set by the mesh_t member sMeshFile which is also stored on the property tree.
@@ -577,7 +679,7 @@ int_t mesh_t::createMeshFile(std::string sFileName)
 		{
 			//std::cout << vBoundaryMesh[i] << std::endl;
 		 	point_t ptBuffer(vBoundaryMesh[i].getCoordinates());
-			double dBuffer(vBoundaryMesh[i].getValue());
+			floating_t dBuffer(vBoundaryMesh[i].getValue());
 			
 			for(int j(0);j<ptBuffer.size();j++)
 			{
@@ -591,7 +693,7 @@ int_t mesh_t::createMeshFile(std::string sFileName)
 		for(int i(0); i < vInnerMesh.size();i++)
 		{
 		  	point_t ptBuffer(vInnerMesh[i].getCoordinates());
-			double dBuffer(vInnerMesh[i].getValue());
+			floating_t dBuffer(vInnerMesh[i].getValue());
 			
 
 			for(int j(0);j<ptBuffer.size();j++)
@@ -869,6 +971,6 @@ boost::property_tree::ptree mesh_t::getPropertyTree()
 /*! 
  * Iterate through the mesh_t.
  */
-mesh_t interate(mesh_t& mMesh)
+mesh_t IterateFD(mesh_t& mMesh,floating_t dDeltaT)
 {	
 }
