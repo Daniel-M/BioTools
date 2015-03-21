@@ -136,8 +136,8 @@ class mesh_t
 	/*!\brief Friend function to send mesh_t to streams. */
 	friend	std::ostream& operator<<(std::ostream& outStream, mesh_t& cMesh);
 
-	/*!\brief Friend function to iterate along indexes of the  mesh_t.*/
-	friend interate(mesh_t mMesh);
+	/*!\brief Friend function to iterate over indexes of the  mesh_t.*/
+	friend mesh_t interate(mesh_t& mMesh);
 	
 	/* Misc methods */
 	

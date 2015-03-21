@@ -864,3 +864,11 @@ boost::property_tree::ptree mesh_t::getPropertyTree()
 	createPropertyTree();
 	return prTreeMesh;
 }
+
+
+/*! 
+ * Iterate through the mesh_t.
+ */
+mesh_t interate(mesh_t& mMesh)
+{	
+}
