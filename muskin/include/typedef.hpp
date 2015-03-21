@@ -24,11 +24,8 @@ typedef std::vector<double> point_t;
 
 typedef std::vector<int_t> index_t;
 
-<<<<<<< HEAD
 typedef std::set<index_t> index_set_t;
 
-=======
->>>>>>> f7b5f8290b9e516aee3d669c38a4dc57d70aa161
 /*! On the header chem_t.hpp the typedef:
  * typedef std::vector<chem_t> chem_vector_t;
  * was declared after the statement of the chem_t class.
