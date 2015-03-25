@@ -15,50 +15,6 @@ int main(void)
 	  v.push_back(i);
 	}
 	
-	//t=(-1.23*v)+(2*v); //(v*v);
-
-	////int_t node_t::siNumberOfnode_ts=0;
-
-	//node_t nod1(v,{1,0,0},2.232);
-	//std::cout << "there are " << node_t::getNumberOfnode_ts() << " node_ts created\n";
-	//node_t nod2(2*v,{0,1,0},2.232);
-	//std::cout << "there are " << node_t::getNumberOfnode_ts() << " node_ts created\n";
-	//node_t nod3(3*v,{0,0,1},2.232);
-	//std::cout << "there are " << node_t::getNumberOfnode_ts() << " node_ts created\n";
-	//node_t nod4(t,{1,1,0},2.232);
-	//std::cout << "there are " << node_t::getNumberOfnode_ts() << " node_ts created\n";
-
-	//index_t b={1,0,0}, c={1,1,0};
-
-	//if(b != c)
-	//{
-		//std::cout << "Hey!!, Listen!!" << std::endl;
-	//}
-	//else
-	//{
-		//std::cout << "Hey!!, Dont Listen!!" << std::endl;
-	//}
-
-	//std::cout << a << std::endl;
-	//std::cout << v << std::endl;
-	//std::cout << nod1 << std::endl;
-	//floating_t val=10.1;
-	//
-	//nod1 = val;
-	//std::cout << nod1 << std::endl;
-	//
-	//a={1,1,0};
-	//nod1 = a;
-
-	//std::cout << nod1 << std::endl;
-
-	//std::cout << nod2 << std::endl;
-	//std::cout << nod3 << std::endl;
-	//std::cout << nod4 << std::endl;
-
-	//mesh_t cmesh_t;
-
-	//cmesh_t.push_backBN(nod1);
 
 	point_t pa,pb;
 
@@ -67,35 +23,10 @@ int main(void)
 	pb.push_back(5);
 	pb.push_back(10);
 
-	//std::cout << "RangeA" <<  pa << std::endl;
-	//std::cout << "RangeB" << pb << std::endl;
-
 	index_t ia={40,50};
 
-	//mesh_t amesh_t(2,ia,pa,pb,"amesh_t");
-	//amesh_t.createmesh_tXML();
-	//amesh_t.createmesh_tFile();
-	//amesh_t.createmesh_tPNG();
-
-	//mesh_t bmesh_t(2,ia,pa,pb);
-	//bmesh_t.createmesh_tFile();
-	//bmesh_t.createmesh_tPNG();
-
-	//mesh_t cmesh_t("cmesh_t.xml");
-	//cmesh_t.setmesh_tName("cmesh_t");
-	//cmesh_t.createmesh_tXML();
-	
-	//mesh_t dmesh_t, emesh_t;
-	//dmesh_t.createmesh_tXML();
-	//dmesh_t.createmesh_tPNG();
-
-	//emesh_t.createmesh_tPNG();
-
-	//mesh_t fmesh_t("amesh_t.xml"), emesh_t("amesh_t");
-	//mesh_t  emesh_t("amesh_t");
 	mesh_t emesh_t(2,ia,pa,pb,"amesh_t");
 	emesh_t.createMeshJSON();
-	//emesh_t.createmesh_tPNG();
 
 	std::cout << a << std::endl;
 
@@ -107,24 +38,41 @@ int main(void)
 	
 	std::cout << emesh_t[{0,1}].getValue() << std::endl;
 
-	//emesh_t[a] = 3.1415;
 	
 	temp = emesh_t[a];
 
 	std::cout << temp << std::endl;
 
 
-	//mesh_t other(emesh_t);
 	mesh_t other(0);
 	other = emesh_t;
 	temp = other[a];
+	
+	node_t testsum;
 
-	std::cout << "other " << std::endl;
-	std::cout <<  temp << std::endl;
+	std::cout << "Suma del nodo\n";
+	std::cout << temp << std::endl;
+	std::cout << "Sumas:\n";
+	
+	testsum = temp + temp;
 
-	//fmesh_t.createmesh_tFile("lordtod.msh");
-	//fmesh_t.createmesh_tFile();
+	std::cout << testsum << std::endl;
+	std::cout << temp << std::endl;
+	//std::cout << temp+temp << std::endl;
+	std::cout << "Multiplicación:\n";
+	std::cout << testsum << std::endl;
+	temp = (1.0/3.0)*testsum;
+	std::cout << testsum << std::endl;
+	std::cout << temp << std::endl;
+
+	temp = (1.0/3.0)*testsum + 2*testsum;
+	std::cout << temp << std::endl;
+
+
+	mesh_t testmesh, buffer(0);
+
+	buffer = iterateFD(testmesh,0.001);
+
 	exit(0);
-
 }
 

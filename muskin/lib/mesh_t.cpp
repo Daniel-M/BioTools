@@ -754,6 +754,50 @@ int_t mesh_t::createMeshPNG()
 	return 0;
 }
 
+
+int_t mesh_t::getNodesOnDim(int_t iDim)
+{
+	if(iDim < inNodesOnDim.size())
+	{
+		return inNodesOnDim[iDim];
+	}
+	else
+	{
+		std::cout << "[EE] Wrong node on dim access\n";
+		return -1;
+	}
+}
+
+/* floating_t return methods */
+
+/*!
+ * */
+floating_t mesh_t::getDeltaOnDim(int_t iDim)
+{
+	if(iDim < ptDeltaOnDim.size())
+	{
+		return ptDeltaOnDim[iDim];
+	}
+	else
+	{
+		std::cout << "[EE] Wrong desired delta" << std::endl;
+		return -1;
+	}
+}
+
+index_t mesh_t::getNodesOnDim()
+{
+	return inNodesOnDim;
+}
+/* point_t returning methods */
+
+/*!
+ */
+point_t mesh_t::getDeltaOnDim()
+{
+	return ptDeltaOnDim;
+}
+
 /* The statements beggingin with "_p" are #define on typedef.hpp and used as parsing statements */
 
 // /*!\brief Creates JSON parsed file with the information about the mesh_t object

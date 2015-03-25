@@ -51,9 +51,29 @@ node_t& node_t::operator=(const floating_t dValue_)
 	dNodeValue=dValue_;
 }
 
-node_t& node_t::operator+(const node_t RHSNode_)
+/*! This operator performs sums of the values stored on the nodes without changing the indexes of the nodes.
+ *  This allows the direct sum between node_t objects.
+ * */
+node_t node_t::operator+(const node_t& RHSNode_)
 {
-	dNodeValue += RHSNode_.dNodeValue;
+  node_t nBuffer1(*this),nBuffer2(RHSNode_);
+  nBuffer1.setValue(nBuffer1.getValue() + nBuffer2.getValue());
+
+  return nBuffer1;
+}
+
+/*! This operator performs substraction between the values stored on the nodes without changing the indexes of the nodes.
+//*  This is performed by calling the operator* with -1*node_t and then calling operator+ that performs the sum of the node_t + (-node_t)
+//*  Resulting in the subtraction of the node_t values.
+//*  \sa operator+
+//*  \sa operator*
+ * */
+node_t node_t::operator-(const node_t& RHSNode_)
+{
+  node_t nBuffer1(*this),nBuffer2(RHSNode_);
+  nBuffer1.setValue(nBuffer1.getValue() - nBuffer2.getValue());
+
+  return nBuffer1;
 }
 
 /*! \brief Returns the dimensions of the node_t e.g. a 2D mesh_t uses 2D node_ts */
@@ -137,3 +157,5 @@ std::ostream& operator<<(std::ostream& outStream, node_t& nod)
   
   return outStream;
 }
+
+

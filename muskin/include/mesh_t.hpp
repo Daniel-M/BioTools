@@ -26,8 +26,9 @@ class mesh_t
 	point_t ptRectangleLowA; /*!< Initial point on the rectangle's diagonal that defines the domain of the mesh_t.*/
 	point_t ptRectangleHighB; /*!< Final point on the rectangle's diagonal that defines the domain of the mesh_t.*/
 	
-	std::vector<node_t> vBoundaryMesh; /*!< Temporary vector variable */
-	std::vector<node_t> vInnerMesh; /*!< Temporary vector variable */
+	std::vector<node_t> vBoundaryMesh; /*!< Temporary vector variable should be replaced some way.*/
+	std::vector<node_t> vInnerMesh; /*!< Temporary vector variable should be replaced some way.*/
+
 	std::map<index_t,node_t> mBoundaryMesh; /*!< Mapping of indexes and node_ts on the boundary region of the mesh_t object. indexes can not be repeated. */
 	std::map<index_t,node_t> mInnerMesh; /*!< Mapping of indexes and node_ts on the inner region of the mesh_t object. indexes can not be repeated. */
 
@@ -91,25 +92,48 @@ class mesh_t
 	 * \param mRHSMesh The mesh_t object to be assigned to \c this.
 	 */
 	mesh_t& operator=(const mesh_t& mRHSMesh);
-	
+
+
 	/* int_t return methods */
 	
-	/*!\brief Creates the mesh_t file \c .msh which can be plotted to see the actual geometrical mesh_t.*/
+	/*!\brief Creates the mesh_t file \c .msh which can be plotted to see the actual geometrical mesh_t.
+	 * \return Status of the execution.*/
 	int_t createMeshFile();
 	
 	/*!\brief Creates the mesh_t file \c .msh which can be plotted to see the actual geometrical mesh_t.
 	 * \param sFileName the name of the file to save the coordinates of the node_ts on the mesh_t.
+	 * \return Status of the execution.
 	 * */
 	int_t createMeshFile(std::string sFileName);
 	
-	/*!\brief Creates a PNG with the mesh_t plotted.*/
+	/*!\brief Creates a PNG with the mesh_t plotted.
+	 * \return Status of the execution.*/
 	int_t createMeshPNG();
-	
 
+	int_t getNodesOnDim(int iDim);
+	
 	
 	/* floating_t return methods */
 
-	
+	/*!\brief Returns the delta on the dimension iDim.
+	 * \param iDim The desired dimension to retrieve the Delta.
+	 * \return The delta on the desired dimension
+	 * \sa getDeltaOnDim()
+	 * */
+	floating_t getDeltaOnDim(int_t iDim);
+
+
+	/* index_t return methods */
+
+	index_t getNodesOnDim();
+
+	/* point_t returning methods */
+
+	/*!\brief Returns a vector with the delta on each dimension.
+	 * \return Vector with all the deltas
+	 * \sa getDeltaOnDim(int_t iDim)
+	 * */
+	point_t getDeltaOnDim();
 	
 	/* void return methods */
 	

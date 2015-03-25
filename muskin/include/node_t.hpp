@@ -26,15 +26,30 @@ class node_t
 	
 	/* Class Operators */
 	
-	/*! \brief Overloaded operator= to set the node_t index \c index_t directly.  */
+	/*! \brief Overloaded operator= to set the node_t index \c index_t directly. 
+	 * \param itIndex_ the index to be assigned to the node_t object.*/
 	node_t& operator=(const index_t itIndex_);
 	
-	/*! \brief Overloaded operator= to set the node_t value \c floating_t directly  */
+	/*! \brief Overloaded operator= to set the node_t value \c floating_t directly.
+	 * \param dValue_ the \c floating_t representing the value to be stored on the node_t.*/
 	node_t& operator=(const floating_t dValue_);
 
-	node_t& operator+(const node_t RHSNode_);
+	/*! \brief Overloaded operator+ to sum node_t objects. 
+	 * \param RHSNode_ The node to perform the sum with.*/
+	node_t operator+(const node_t& RHSNode_);
 
+	/*! \brief Overloaded operator- to substract node_t objects. 
+	 * \param RHSNode_ The node to perform the sum with.*/
+	node_t operator-(const node_t& RHSNode_);
 	
+	//template <class Tn>
+	//node_t& operator*(const Tn& RHNumber)
+	//{
+		//dNodeValue *= RHNumber;
+		
+		//return *this;
+	//}
+
 	/* return int_t methods */
 	
 	/*! \brief Returns the dimensions of the node_t e.g. a 2D mesh_t uses 2D node_ts */
@@ -52,6 +67,8 @@ class node_t
 	
 	/*! \brief Returns the value stored on the node_t */
 	floating_t getValue();
+	///*! \brief Returns the value stored on the node_t */
+	//floating_t getValue() const;
 	
 	
 	/* return void methods */
@@ -96,3 +113,14 @@ class node_t
 	 * */
 	friend	std::ostream& operator<<(std::ostream& outStream, node_t& nod);
 };
+
+
+template <class Tn>
+node_t operator*(const Tn& LHNumber,const node_t& RHNode)
+{
+  node_t nBuffer(RHNode);
+  floating_t fValue = nBuffer.getValue() * LHNumber;
+  nBuffer.setValue(fValue);
+
+  return nBuffer;
+}
