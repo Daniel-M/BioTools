@@ -147,11 +147,11 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	/* Sepparated for due to the OMP implementation. when running parallel threads the std::cout output some times does have sense
 	 * e.g. "hello" -> "Hloel" or similar as a result of parallel execution
 	 */
-/*	for(int i =0;i<itMeshDim;i++)
+/**/for(int i =0;i<itMeshDim;i++)
 	{
 		std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
-	}*/
-
+	}
+/**/
 	/* When storing node_ts, the mapping is as follows
 	 * 
 	 *       ***********RangeB(c,d)
@@ -175,7 +175,7 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	//Debug("antes del parallel");
 
 	//#pragma omp parallel
-{
+/*{*/
 	int j(0),i(0);
 	point_t ndcoord(2);
 	ndcoord = ptRangeA;
@@ -320,10 +320,12 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 		}
 	}
 
-}
-	itBoundaryNodes = vBoundaryMesh.size();	
-	itInnerNodes = vInnerMesh.size();	
-  /*	
+/*}*/
+	//itBoundaryNodes = vBoundaryMesh.size();	
+	//itInnerNodes = vInnerMesh.size();	
+	itBoundaryNodes = mBoundaryMesh.size();	
+	itInnerNodes = mInnerMesh.size();	
+  /*
 	std::cout << "Boundary node_ts:\n";
 	
 	for(int i(0); i < vBoundaryMesh.size();i++)
