@@ -25,10 +25,11 @@ std::ostream& operator<<(std::ostream& outStream, index_t& index)
 	return outStream;
 }
 
-/**\brief This function overloads the std::vector::operator* to multiply by numbers, int, float, or double.
+/*!\brief This function overloads the std::vector::operator* to multiply by numbers, int, float, or double.
  *
  * \tparam[in] tNumber number data type.
- * \param[in] index_t A vector of \a floating_t expected (typedef index_t).
+ * \param[in] inRHIndex A vector of \a floating_t expected (typedef index_t).
+ * \return vector with each component multiplied by tNumber. 
  */
 template <class Tn>
 index_t operator*(const Tn tNumber,const index_t inRHIndex)

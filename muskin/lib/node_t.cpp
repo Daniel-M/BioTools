@@ -157,5 +157,3 @@ std::ostream& operator<<(std::ostream& outStream, node_t& nod)
   
   return outStream;
 }
-
-
