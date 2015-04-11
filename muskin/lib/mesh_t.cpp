@@ -348,57 +348,7 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	sBuffer = prTree.get(sPathBuffer,"2"); /*!< Loads the mesh_t Dimensions. If the property is not specified, the dimension is set to 2.*/
 	itMeshDim = StringToNumber<int_t>(sBuffer); /*!< Type casting to int_t.*/
 	sPathBuffer.clear();
-/*	
-	sPathBuffer=_pMesh;
-	sPathBuffer+=".";
-	sPathBuffer+=_pMeshNN;
-	itNumberOfNodes = StringToNumber<int>(prTree.get(sPathBuffer,"100"));
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sPathBuffer.clear();
-*/	
-/*
-	sPathBuffer=_pMesh;
-	sPathBuffer+=".";
-	sPathBuffer+=_pMeshBN;
-	itBoundaryNodes = StringToNumber<int>(prTree.get(sPathBuffer,"-1"));
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sPathBuffer.clear();
-*/	
-/*
-	sPathBuffer=_pMesh;
-	sPathBuffer+=".";
-	sPathBuffer+=_pMeshIN;
-	itInnerNodes = StringToNumber<int>(prTree.get(sPathBuffer,"-1"));
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sPathBuffer.clear();
-	
-	sPathBuffer=_pMesh;
-	sPathBuffer+=".";
-	sPathBuffer+=_pFiles;
-	sPathBuffer+=".";
-	sPathBuffer+=_pMeshXML;
-	sMeshXML = prTree.get(sPathBuffer,sMeshName + ".xml");
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sPathBuffer.clear();
-	
-	sPathBuffer=_pMesh;
-	sPathBuffer+=".";
-	sPathBuffer+=_pFiles;
-	sPathBuffer+=".";
-	sPathBuffer+=_pMeshJSON;
-	sMeshXML = prTree.get(sPathBuffer,sMeshName + ".json");
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sPathBuffer.clear();
 
-	sPathBuffer=_pMesh;
-	sPathBuffer+=".";
-	sPathBuffer+=_pFiles;
-	sPathBuffer+=".";
-	sPathBuffer+=_pMeshFile;
-	sMeshFile = prTree.get(sPathBuffer,sMeshName + ".msh");
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sPathBuffer.clear();
-*/
 	sPathBuffer=_pMesh;
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshND;
@@ -774,7 +724,7 @@ int_t mesh_t::createMeshPNG()
 	return 0;
 }
 
-
+/*! Returns the nodes on dimension iDim.*/
 int_t mesh_t::getNodesOnDim(int_t iDim)
 {
 	if(iDim < inNodesOnDim.size())
@@ -791,6 +741,7 @@ int_t mesh_t::getNodesOnDim(int_t iDim)
 /* floating_t return methods */
 
 /*!
+ * Returns the delta on dimension iDim.
  * */
 floating_t mesh_t::getDeltaOnDim(int_t iDim)
 {
@@ -805,13 +756,15 @@ floating_t mesh_t::getDeltaOnDim(int_t iDim)
 	}
 }
 
+/*! Returns a index_t object with the indices on all dimensions.
+ * */
 index_t mesh_t::getNodesOnDim()
 {
 	return inNodesOnDim;
 }
 /* point_t returning methods */
 
-/*!
+/*! Returns a point_t object with the deltas on all dimensions.
  */
 point_t mesh_t::getDeltaOnDim()
 {
@@ -969,15 +922,16 @@ void mesh_t::createPropertyTree()
 
 
 
-
+/*! Insert a node on the boundary. If the node is already on the boundary of the mesh it does not add it.
+ */
 void mesh_t::push_backBN(node_t cNode)
 {
 
-	if( mBoundaryMesh.count(cNode.getIndices()) == true )
+	if( mBoundaryMesh.count(cNode.getIndices()) == true || mInnerMesh.count(cNode.getIndices()) == true  )
 	{
 		std::cout << "The node is already contained" << std::endl;
 	}
-	else 
+	else
 	{
 		mBoundaryMesh[cNode.getIndices()] = cNode;
 	    itNumberOfNodes++;
@@ -989,9 +943,11 @@ void mesh_t::push_backBN(node_t cNode)
 }
 
 
+/*! Insert a node on the inner region of the mesh_t. If the node is already on the inner region of the mesh it does not add it.
+ */
 void mesh_t::push_backIN(node_t cNode)
 {
-	if( mInnerMesh.count(cNode.getIndices()) == true )
+	if( mBoundaryMesh.count(cNode.getIndices()) == true || mInnerMesh.count(cNode.getIndices()) == true  )
 	{
 		std::cout << "The node is already contained" << std::endl;
 	}
@@ -1003,10 +959,7 @@ void mesh_t::push_backIN(node_t cNode)
 		itNumberOfNodes = 0;
 		std::cout << "Inner node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
 	}
-	//vBoundaryMesh.push_back(cNode);
-    //itNumberOfNodes++;
 
-	//std::cout << "Inner Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
 }
 
 

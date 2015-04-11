@@ -60,5 +60,13 @@ class chem_t
  * and not in the typedef.hpp file in order to prevent malfunction during compilation.*/
 typedef std::vector<chem_t> chem_vector_t;
 
-point_t toDouble(std::vector <chem_t> vcChems);
+/*! \brief Type casting between point_t and chem_vector_t.
+ * \param[in] vcChems a vector of chem_t.
+ * \return a std::vector of floating_t values.*/
+//point_t toDouble(std::vector <chem_t> vcChems);
+point_t toDouble(chem_vector_t vcChems);
+
+/*! \brief Type casting between chem_vector_t and point_t vectors.
+ * \param[in] ptVector A vector of floating_t values.
+ * \return A vector of chem_t with the associated floating_t values.*/
 chem_vector_t toChem_t(point_t ptVector);

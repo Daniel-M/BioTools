@@ -64,10 +64,12 @@ chem_t::operator floating_t()
 {
 	return dValue;
 }
-/*!
+
+/*! This type casting allows the use of the libboost methods for ODE systems and chem_t objects.
+ *  The vector returned has only the values of the concentration of the chem_t elements.
  */
-//point_t chem_t::toDouble(std::vector <chem_t> vcChems)
-point_t toDouble(std::vector <chem_t> vcChems)
+//point_t toDouble(std::vector <chem_t> vcChems)
+point_t toDouble(chem_vector_t  <chem_t> vcChems)
 {
 	point_t vBuffer;
 
@@ -79,8 +81,10 @@ point_t toDouble(std::vector <chem_t> vcChems)
 	return vBuffer;
 
 }
-//std::vector< chem_t > chem_t::toChem_t(point_t ptVector)
-//std::vector< chem_t > toChem_t(point_t ptVector)
+
+/*! This type casting allows the use of the libboost methods for ODE systems and chem_t objects.
+ *  The vector returned has the chem_t objects with values of the concentration extracted from the point_t object.
+ * */
 chem_vector_t toChem_t(point_t ptVector)
 {
 	std::vector < chem_t > vcBuffer(ptVector.size());

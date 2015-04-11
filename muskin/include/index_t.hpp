@@ -25,6 +25,11 @@ std::ostream& operator<<(std::ostream& outStream, index_t& index)
 	return outStream;
 }
 
+/**\brief This function overloads the std::vector::operator* to multiply by numbers, int, float, or double.
+ *
+ * \tparam[in] tNumber number data type.
+ * \param[in] index_t A vector of \a floating_t expected (typedef index_t).
+ */
 template <class Tn>
 index_t operator*(const Tn tNumber,const index_t inRHIndex)
 {
@@ -39,6 +44,13 @@ index_t operator*(const Tn tNumber,const index_t inRHIndex)
 	return inIndexBuffer;
 }
 
+/**\brief This function overloads the std::vector::operator+ to sum index_t objects.
+ *
+ * The summation is taken component by component.
+ *
+ * \param[in] inLHIndex first index_t to be summed at left hand.
+ * \param[in] inRHIndex index_t to be summed at right hand.
+ */
 index_t operator+(const index_t inLHIndex,const index_t inRHIndex)
 {
 	if( inLHIndex.size() == inRHIndex.size())
@@ -94,10 +106,21 @@ index_t operator-(const index_t inLHIndex,const index_t inRHIndex)
 	}
 }
 
-//bool operator<(const index_t& index) const
-bool operator<(const index_t& index1, const index_t& index2)
+
+/*!\brief This function overloads the std::vector::operator< to compare index_t objects.
+ *
+ * This method takes the given index_t objects and treats them as vectors (which they are) and compares
+ * the euclidean norm of them. The result is the comparison between norms.
+ * This method is implemented in order to construct std::maps with index_t keys, useful for storing nodes of the mesh_t.
+ *
+ * \param[in] inLHIndex Left hand object to be compared.
+ * \param[in] inRHIndex Right hand object to be compared.
+ * \return Wether true or false is the vector norm of the indexes is greater than the other.
+ * \note The vectors size are compared in order to guarantee size matching. Else returns inLHIndex and an error message to \a std::cout
+ */
+bool operator<(const index_t& inLHIndex, const index_t& inRHIndex)
 {
-	if(index1.size() != index2.size())
+	if(inLHIndex.size() != inRHIndex.size())
 	{
 		std::cout << "Vector size missmatch" << std::endl;
 		return false;
@@ -106,13 +129,13 @@ bool operator<(const index_t& index1, const index_t& index2)
 	{
 		floating_t dNorm1(0),dNorm2(0);
 
-		for(int i(0);i < index1.size();i++)
+		for(int i(0);i < inLHIndex.size();i++)
 		{
-			dNorm1+=index1.at(i)*index1.at(i);
+			dNorm1+=inLHIndex.at(i)*inLHIndex.at(i);
 		}
-		for(int i(0);i < index2.size();i++)
+		for(int i(0);i < inRHIndex.size();i++)
 		{
-			dNorm2+=index2.at(i)*index2.at(i);
+			dNorm2+=inRHIndex.at(i)*inRHIndex.at(i);
 		}
 
 		return dNorm1<dNorm2;

@@ -1,9 +1,25 @@
 #include "headers.hpp"
 
+/*! \brief Increments or decrements indices.
+ *
+ * This method can take an index like {i,j,k,...}.
+ *
+ * take for example the index {i,j,k}
+ *
+ * passing DeltaIdx({i,j,k},2,1)
+ * would return the index {i,j+1,k}
+ *
+ * passing DeltaIdx({i,j,k},3,-2)
+ * would return the index {i,j,k-2}
+ *
+ *
+ * \param[out] index index_t object that represents the set of indices associated.
+ * \param[in] pos The position of the index to be modified.
+ * \param[in] value The value to be added (or substracted) to the index at pos.*/
 void DeltaIdx(index_t& index,int_t pos,int_t value)
 {
 	index[pos] += value;
-	return ;
+	//return ;
 }
 
 mesh_t IterateFD(mesh_t& mMesh,floating_t dDeltaT)
