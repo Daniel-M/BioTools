@@ -32,15 +32,19 @@ int main(void)
 	std::cout << "PointB" << pb  << std::endl;
 	std::cout << "Nodes IA" << ia  << std::endl;
 	
-	mesh_t emesh(2,ia,pa,pb,"emesh");
+	//mesh_t emesh(2,ia,pa,pb,"emesh");
+	//emesh.createMeshFile();
+	//emesh.createMeshPNG();
+	//emesh.createMeshJSON();
+	//std::cout << emesh << std::endl;
+
+	mesh_t test_mesh("test-mesh.json");
+
+	std::cout << test_mesh << std::endl;
 	
-	//std::cout << emesh << std::endl;
-
-	emesh.createMeshFile();
-	emesh.createMeshPNG();
-	emesh.createMeshJSON();
-
-	//std::cout << emesh << std::endl;
+	test_mesh.createMeshFile();
+	test_mesh.createMeshPNG();
+	test_mesh.createMeshJSON();
 	
 	exit(0);
 }

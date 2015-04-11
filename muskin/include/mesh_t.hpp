@@ -156,11 +156,11 @@ class mesh_t
 	/*!\brief Creates or overwrites the property tree of the mesh_t object.*/
 	void createPropertyTree();
 	
-	/*!\brief */
-	void push_backIN(node_t cNode);
-	
-	/*!\brief */
+	/*!\brief Inserts node into the boundary of the mesh_t.*/
 	void push_backBN(node_t cNode);
+	
+	/*!\brief Inserts node into the inner region of the mesh_t.*/
+	void push_backIN(node_t cNode);
 	
 	/*!\brief Sets the name of the mesh_t object.*/
 	void setMeshName(std::string sMeshName_);

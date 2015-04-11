@@ -105,19 +105,19 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	inNodesOnDim = inNodesOnDim_;
 
 	/* Multiply the number of node_ts on each dimension so the total amount of node_ts is calculated
-	 * ex: Consider a 2D mesh_t with nx=5, ny=10
-	 * 		numberofnode_ts=1; // Then inside the for
-	 * 		numberofnode_ts=numberofnode_ts*nx*ny
+	 * example: Consider a 2D mesh_t with nx=5, ny=10
+	 * 			numberofnode_ts=1; // Then inside the of the for loop
+	 * 			numberofnode_ts=numberofnode_ts*nx*ny
 	 *  The number of node_ts is then 50.
 	 *  But the indices are zero based, so everithing runs on nx-1 and ny-1 in the loops below.
 	 * Stores dimensions on private variable inNodesOnDim
 	 */
 	#pragma omp parallel for
 	//for(int i(0);i<itMeshDim;i++)
-	for(int i =0;i<itMeshDim;i++)
+	for(int i = 0; i < itMeshDim; i++)
 	{
 		//inNodesOnDim.push_back(inNodesOnDim_.at(i));
-		itNumberOfNodes*=(inNodesOnDim.at(i));
+		itNumberOfNodes *= (inNodesOnDim.at(i));
 	}	
 
 	
@@ -126,11 +126,11 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	 * RangeA always is assume to be the lower while RangeB the higher point as the diagram below
 	 *
 	 *       ***********RangeB(c,d)
-	 *       *                    *
-	 *     ^ *                    *
-	 *     | *                    *
-	 *     y *                    *
-	 *       *                    *
+	 *       *         +          *
+	 *     ^ *       +            *
+	 *     | *     +              *
+	 *     y *   +                *
+	 *       * +                  *
 	 *       RangeA(a,b)***********
 	 *		 x -->
 	 *  
@@ -139,7 +139,7 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	 */
 	#pragma omp parallel for
 	//for(int i(0);i<itMeshDim;i++)
-	for(int i =0;i<itMeshDim;i++)
+	for(int i = 0; i < itMeshDim; i++)
 	{
 		ptDeltaOnDim.push_back(fabs(ptRangeB[i]-ptRangeA[i])/(inNodesOnDim[i]-1));
 		//std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
@@ -147,24 +147,24 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	/* Sepparated for due to the OMP implementation. when running parallel threads the std::cout output some times does have sense
 	 * e.g. "hello" -> "Hloel" or similar as a result of parallel execution
 	 */
-/**/for(int i =0;i<itMeshDim;i++)
+/* for(int i =0; i < itMeshDim; i++)
 	{
 		std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
 	}
-/**/
+*/
 	/* When storing node_ts, the mapping is as follows
 	 * 
 	 *       ***********RangeB(c,d)
-	 *    ny *                    *
+	 *    ny *                  + *
 	 *   ... *                    *
-	 *     3 *                    *
+	 *     3 *              +     *
 	 *     2 *                    *
-	 *     1 *                    *
+	 *     1 *           +        *
 	 *     0 *                    *
-	 *     ^ *                    *
+	 *     ^ *       +            *
 	 *     | *                    *
-	 *       *                    *
-	 *     j *                    *
+	 *       *   +                *
+	 *     j * +                  *
 	 *       RangeA(a,b)***********
 	 *		 i --> 0,1,2,3...,nx
 	*/  
@@ -188,7 +188,7 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	/* first j=0, and i=0->(nx-1) zero based nx node_ts */
 	//#pragma omp parallel for
 	#pragma omp for ordered schedule(dynamic)
-	for(i = 0;i<inNodesOnDim[0];i++)
+	for(i = 0; i < inNodesOnDim[0]; i++)
 	{
 	  //ndcoordx=ndcoordx + deltaX
 	  //ndcoordy=ndcoordy
@@ -213,7 +213,7 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	 i=(nx-1) from above, and j=0->(ny-1) */
 	//#pragma omp parallel for
 	#pragma omp for ordered schedule(dynamic)
-	for(j = 1;j<inNodesOnDim[1];j++)
+	for(j = 1; j < inNodesOnDim[1]; j++)
 	{
 	  //ndcoordx=ndcoordx
 	  //ndcoordy=ndcoordy + deltaY
@@ -321,26 +321,9 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	}
 
 /*}*/
-	//itBoundaryNodes = vBoundaryMesh.size();	
-	//itInnerNodes = vInnerMesh.size();	
 	itBoundaryNodes = mBoundaryMesh.size();	
-	itInnerNodes = mInnerMesh.size();	
-  /*
-	std::cout << "Boundary node_ts:\n";
-	
-	for(int i(0); i < vBoundaryMesh.size();i++)
-	{
-	  std::cout << vBoundaryMesh[i] << std::endl;
-	}
-	
-	std::cout << "\n\nInner nodes:\n";
+	itInnerNodes = mInnerMesh.size();
 
-
-	for(int i(0); i < vInnerMesh.size();i++)
-	{
-	  std::cout << vInnerMesh[i] << std::endl;
-	}
-  */
 	std::cout << itMeshDim << "-D Mesh Created with " << itNumberOfNodes << " nodes"  << std::endl;
 
 }
@@ -349,11 +332,6 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 mesh_t::mesh_t(boost::property_tree::ptree prTree)
 {
 	/* Get the values from pTree readed */
-    //boost::property_tree::read_json( JSON_PATH, pt );
-
-	//std::cout << pt << std::endl;
-
-	//std::vector<std::string> vValues;
 
 	std::string sPathBuffer;
 	std::string sBuffer;
@@ -361,16 +339,14 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	sPathBuffer=_pMesh;
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshName;
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sMeshName = prTree.get(sPathBuffer,"NewMesh");
+	sMeshName = prTree.get(sPathBuffer,"NewMesh"); /*!< Loads the mesh_t name. If the property name is not specified, the name "NewMesh" is used as defaulti.*/
 	sPathBuffer.clear();
 	
 	sPathBuffer=_pMesh;
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshDim;
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	sBuffer = prTree.get(sPathBuffer,"2");
-	itMeshDim = StringToNumber<int_t>(sBuffer);
+	sBuffer = prTree.get(sPathBuffer,"2"); /*!< Loads the mesh_t Dimensions. If the property is not specified, the dimension is set to 2.*/
+	itMeshDim = StringToNumber<int_t>(sBuffer); /*!< Type casting to int_t.*/
 	sPathBuffer.clear();
 /*	
 	sPathBuffer=_pMesh;
@@ -379,14 +355,16 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	itNumberOfNodes = StringToNumber<int>(prTree.get(sPathBuffer,"100"));
 	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
 	sPathBuffer.clear();
-	
+*/	
+/*
 	sPathBuffer=_pMesh;
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshBN;
 	itBoundaryNodes = StringToNumber<int>(prTree.get(sPathBuffer,"-1"));
 	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
 	sPathBuffer.clear();
-	
+*/	
+/*
 	sPathBuffer=_pMesh;
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshIN;
@@ -420,18 +398,16 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	sMeshFile = prTree.get(sPathBuffer,sMeshName + ".msh");
 	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
 	sPathBuffer.clear();
-
+*/
 	sPathBuffer=_pMesh;
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshND;
 	sPathBuffer+=".";
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-*/	
-	for(int j(0);j<2;j++)
+	
+	for(int j(0);j<2;j++) /*!< Load nodes on each dimension. if missing fills vector with -1.*/
 	{
 		//std::cout << sPathBuffer + NumberToString(j) << "\n";
-		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
-		//inNodesOnDim.push_back(StringToNumber<int>(prTree.get(sPathBuffer + NumberToString(j),"-1")));
+		inNodesOnDim.push_back(StringToNumber<int>(prTree.get(sPathBuffer + NumberToString(j),"-1")));
 	}
 	sPathBuffer.clear();
 	
@@ -439,27 +415,23 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshDD;
 	sPathBuffer+=".";
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
 	
-	for(int j(0);j<2;j++)
+	for(int j(0);j<2;j++) /*!< Load delta on each dimension. if missing fills vector with -1.0.*/
 	{
 		//std::cout << sPathBuffer + NumberToString(j) << "\n";
-		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
-		//ptDeltaOnDim.push_back(StringToNumber<floating_t>(prTree.get(sPathBuffer + NumberToString(j),"-1.0")));
+		ptDeltaOnDim.push_back(StringToNumber<floating_t>(prTree.get(sPathBuffer + NumberToString(j),"-1.0")));
 	}
-
 	sPathBuffer.clear();
+
 	sPathBuffer=_pMesh;
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshPA;
 	sPathBuffer+=".";
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
 	
-	for(int j(0);j<2;j++)
+	for(int j(0);j<2;j++) /*!< Loads the Low Point A.*/
 	{
 		//std::cout << sPathBuffer + NumberToString(j) << "\n";
-		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
-		//ptRectangleLowA.push_back(StringToNumber<floating_t>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
+		ptRectangleLowA.push_back(StringToNumber<floating_t>( prTree.get(sPathBuffer + NumberToString(j),NumberToString(j) ) ));
 	}	
 	sPathBuffer.clear();
 	
@@ -467,31 +439,76 @@ mesh_t::mesh_t(boost::property_tree::ptree prTree)
 	sPathBuffer+=".";
 	sPathBuffer+=_pMeshPB;
 	sPathBuffer+=".";
-	//vValues.push_back(prTree.get(sPathBuffer,"-1"));
-	//sPathBuffer.clear();
 	
-	for(int j(0);j<2;j++)
+	for(int j(0);j<2;j++) /*!< Loads the High Point B.*/
 	{
 		//std::cout << sPathBuffer + NumberToString(j) << "\n";
-		//vValues.push_back(prTree.get(sPathBuffer + NumberToString(j),"-1"));
-		//ptRectangleHighB.push_back(StringToNumber<floating_t>(prTree.get(sPathBuffer + NumberToString(j),NumberToString(j))));
+		ptRectangleHighB.push_back(StringToNumber<floating_t>( prTree.get( sPathBuffer + NumberToString(j),NumberToString(j) ) ));
 	}
 	sPathBuffer.clear();
-	
-	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
-	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
-	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
-	//vValues.push_back(prTree.get(_pMesh +"."+ _pMeshName));
-	//vValues.push_back(prTree.get<std::string>(_pMesh +"."+ _pMeshName));
-	
-	
 
-	//std::cout << "\n\nVector values: " << std::endl;
+	/* Refinement of the prTree with the addecuate values.*/ 
+	
+	if( (ptRectangleLowA[0] == ptRectangleHighB[0]) && (ptRectangleLowA[1] == ptRectangleHighB[1]) )
+	{
+		std::cout << "[EE] Check the bounding box limits. I'm using the default limits instead." << std::endl;
 
-	//for(int i(0);i<vValues.size();i++)
-	//{
-		//std::cout << vValues[i] << std::endl;
-	//}
+		ptRectangleLowA[0] == 0 ;
+		ptRectangleLowA[1] == 0 ;
+		ptRectangleHighB[0] == 1 ;
+		ptRectangleHighB[1] == 1 ;
+
+	}
+
+
+	if( (ptDeltaOnDim[0] < 0.0) && (inNodesOnDim[0] < 0) )
+	{
+		std::cout << "[EE] Check the nodes on each dimension or/and the delta on each dimension. I'm using the default values instead." << std::endl;
+		
+		itNumberOfNodes = 1;
+			
+		for(int i(0); i < itMeshDim; i++)
+		{
+			inNodesOnDim[i] = 10;
+			ptDeltaOnDim[i] = (ptRectangleHighB[i] - ptRectangleLowA[i])/inNodesOnDim[i];
+			itNumberOfNodes *= (inNodesOnDim.at(i));
+		}
+
+		
+	}
+	else if( (ptDeltaOnDim[0] > 0.0) && (inNodesOnDim[0] < 0) )
+	{
+		std::cout << "[II] Nodes on each dimension not given, using deltas to calculate number of nodes." << std::endl;
+		
+		itNumberOfNodes = 1;
+			
+		for(int i(0); i < itMeshDim; i++)
+		{
+			inNodesOnDim[i] = (ptRectangleHighB[i] - ptRectangleLowA[i])/ptDeltaOnDim[i];
+			itNumberOfNodes *= (inNodesOnDim.at(i));
+		}
+
+
+	}
+	else if( (ptDeltaOnDim[0] < 0.0) && (inNodesOnDim[0] > 0) )
+	{
+		std::cout << "[II] Delta on each dimension not given. Using nodes on each dimension to calculate the delta." << std::endl;
+		
+		itNumberOfNodes = 1;
+			
+		for(int i(0); i < itMeshDim; i++)
+		{
+			ptDeltaOnDim[i] = (ptRectangleHighB[i] - ptRectangleLowA[i])/inNodesOnDim[i];
+			itNumberOfNodes *= (inNodesOnDim.at(i));
+		}
+
+
+	}
+
+	createPropertyTree();
+
+	*this = mesh_t(itMeshDim,inNodesOnDim,ptRectangleLowA,ptRectangleHighB,sMeshName);
+
 }
 
 /* The prTreeMesh structure must be like this (json formatted),
@@ -558,7 +575,9 @@ mesh_t::mesh_t(std::string sFileName)
 		boost::property_tree::read_json(sFileName,prTreeMesh);
 
 		//std::cout << "File: " << sFileName << " contains:\n";
-		std::cout << prTreeMesh  << std::endl;
+		//std::cout << prTreeMesh  << std::endl;
+
+		*this = mesh_t(prTreeMesh);
 	}
 	/* Is XML formatted? */
 	else if(sFileName.find(sXML) < sFileName.size())
@@ -567,7 +586,9 @@ mesh_t::mesh_t(std::string sFileName)
 		boost::property_tree::read_xml(sFileName,prTreeMesh);
 		
 		//std::cout << "File: " << sFileName << " contains:\n";
-		std::cout << prTreeMesh << std::endl;
+		//std::cout << prTreeMesh << std::endl;
+	
+		*this = mesh_t(prTreeMesh);
 	}
 	/* If sFileName does not contain .EXTENSION with .json or .xml the constructor returns an error */
 	else
@@ -666,22 +687,19 @@ int_t mesh_t::createMeshFile(std::string sFileName)
 
 	if(sFileStream.is_open())
 	{
-		//sMeshFile = sFileName;
-
-		/* Creates an XML file with all the relevant data of the mesh_t.
-		 * The XML file is parsed thanks to libboost property tree
-		 */
+		std::cout << "Boundary mesh size " << mBoundaryMesh.size() << std::endl;
+		std::cout << "Inner mesh size " << mInnerMesh.size() << std::endl;
 	
-		//createMeshXML(sFileName+".xml");
-		//createMeshXML(sMeshXML);
-		std::cout << "Boundary mesh size " << vBoundaryMesh.size() << std::endl;
-		std::cout << "Inner mesh size " << vInnerMesh.size() << std::endl;
-		
-		for(int i(0); i < vBoundaryMesh.size();i++)
+		//std::map<index_t,node_t>::iterator mBoundaryMeshIterator;
+		//std::map<index_t,node_t>::iterator mInnerMeshIterator;
+
+
+
+		for(std::map<index_t,node_t>::iterator mBoundaryMeshIterator = mBoundaryMesh.begin(); mBoundaryMeshIterator != mBoundaryMesh.end(); ++mBoundaryMeshIterator)
 		{
 			//std::cout << vBoundaryMesh[i] << std::endl;
-		 	point_t ptBuffer(vBoundaryMesh[i].getCoordinates());
-			floating_t dBuffer(vBoundaryMesh[i].getValue());
+		 	point_t ptBuffer(mBoundaryMeshIterator->second.getCoordinates());
+			floating_t dBuffer(mBoundaryMeshIterator->second.getValue());
 			
 			for(int j(0);j<ptBuffer.size();j++)
 			{
@@ -692,10 +710,10 @@ int_t mesh_t::createMeshFile(std::string sFileName)
 			sFileStream << std::endl;
 		}
 
-		for(int i(0); i < vInnerMesh.size();i++)
+		for(std::map<index_t,node_t>::iterator mInnerMeshIterator = mInnerMesh.begin(); mInnerMeshIterator != mInnerMesh.end(); ++mInnerMeshIterator)
 		{
-		  	point_t ptBuffer(vInnerMesh[i].getCoordinates());
-			floating_t dBuffer(vInnerMesh[i].getValue());
+		  	point_t ptBuffer(mInnerMeshIterator->second.getCoordinates());
+			floating_t dBuffer(mInnerMeshIterator->second.getValue());
 			
 
 			for(int j(0);j<ptBuffer.size();j++)
@@ -765,7 +783,7 @@ int_t mesh_t::getNodesOnDim(int_t iDim)
 	}
 	else
 	{
-		std::cout << "[EE] Wrong node on dim access\n";
+		std::cout << "[EE] Wrong node on dim access.\n";
 		return -1;
 	}
 }
@@ -782,7 +800,7 @@ floating_t mesh_t::getDeltaOnDim(int_t iDim)
 	}
 	else
 	{
-		std::cout << "[EE] Wrong desired delta" << std::endl;
+		std::cout << "[EE] Wrong desired delta." << std::endl;
 		return -1;
 	}
 }
@@ -949,22 +967,49 @@ void mesh_t::createPropertyTree()
 
 }
 
-void mesh_t::push_backIN(node_t cNode)
-{
-	vBoundaryMesh.push_back(cNode);
-    itNumberOfNodes++;
 
-	std::cout << "Inner Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
-}
+
 
 void mesh_t::push_backBN(node_t cNode)
 {
-	vInnerMesh.push_back(cNode);
-    itNumberOfNodes++;
 
-	itNumberOfNodes = 0;
-	std::cout << "Boundary Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+	if( mBoundaryMesh.count(cNode.getIndices()) == true )
+	{
+		std::cout << "The node is already contained" << std::endl;
+	}
+	else 
+	{
+		mBoundaryMesh[cNode.getIndices()] = cNode;
+	    itNumberOfNodes++;
+
+		itNumberOfNodes = 0;
+		std::cout << "Boundary Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+	}
+
 }
+
+
+void mesh_t::push_backIN(node_t cNode)
+{
+	if( mInnerMesh.count(cNode.getIndices()) == true )
+	{
+		std::cout << "The node is already contained" << std::endl;
+	}
+	else
+	{
+		mInnerMesh[cNode.getIndices()] = cNode;
+	    itNumberOfNodes++;
+
+		itNumberOfNodes = 0;
+		std::cout << "Inner node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+	}
+	//vBoundaryMesh.push_back(cNode);
+    //itNumberOfNodes++;
+
+	//std::cout << "Inner Node inserted on mesh. " << itNumberOfNodes << " nodes stored on mesh" << std::endl;
+}
+
+
 
 // *!\brief Sets the name for the mesh_t.
 /*!
@@ -986,8 +1031,10 @@ void mesh_t::setMeshName(std::string sMeshName_)
  */
 std::ostream& operator<<(std::ostream& outStream, mesh_t& cMesh)
 {
+	std::cout << "Mesh Name: " << cMesh.sMeshName <<  std::endl;
+	std::cout << "Mesh JSON file: " << cMesh.sMeshJSON <<  std::endl;
 	std::cout << "Mesh XML file: " << cMesh.sMeshXML <<  std::endl;
-	std::cout << "Mesh file: " << cMesh.sMeshFile << std::endl;
+	std::cout << "Mesh File: " << cMesh.sMeshFile << std::endl;
 	std::cout << "Mesh Dimensions: " << cMesh.itMeshDim << std::endl;
 	std::cout << "Number of nodes: " << cMesh.itNumberOfNodes << std::endl;
 	std::cout << "Number of boundary nodes: " << cMesh.itBoundaryNodes << std::endl;
