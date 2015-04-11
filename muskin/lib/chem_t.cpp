@@ -69,7 +69,7 @@ chem_t::operator floating_t()
  *  The vector returned has only the values of the concentration of the chem_t elements.
  */
 //point_t toDouble(std::vector <chem_t> vcChems)
-point_t toDouble(chem_vector_t  <chem_t> vcChems)
+point_t toDouble(chem_vector_t vcChems)
 {
 	point_t vBuffer;
 
