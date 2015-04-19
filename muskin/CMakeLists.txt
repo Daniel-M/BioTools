@@ -12,7 +12,7 @@ IF(DOXYGEN_FOUND)
 ADD_CUSTOM_TARGET(doc
 	${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-	COMMENT "Generating API documentation with Doxygen" VERBATIM
+	COMMENT "Generating documentation for MusKin with Doxygen" VERBATIM
 )
 ENDIF(DOXYGEN_FOUND)
 
@@ -26,9 +26,13 @@ ADD_DEFINITIONS( --std=c++11)
 
 ADD_EXECUTABLE(point src/Point)
 ADD_EXECUTABLE(exp src/eje)
+ADD_EXECUTABLE(mesh_template src/mesh_template)
 
 TARGET_LINK_LIBRARIES(point node)
 TARGET_LINK_LIBRARIES(point mesh)
 TARGET_LINK_LIBRARIES(point mgl)
 TARGET_LINK_LIBRARIES(point iteratefd)
+TARGET_LINK_LIBRARIES(mesh_template node)
+TARGET_LINK_LIBRARIES(mesh_template mesh)
+TARGET_LINK_LIBRARIES(mesh_template mgl)
 TARGET_LINK_LIBRARIES(exp voxel)
