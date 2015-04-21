@@ -1,5 +1,5 @@
 #include "headers.hpp"
-#include "iterateFD.hpp"
+//#include "iterateFD.hpp"
 //#define Debug(N) std::cout << "\n * Debug " << N << std::endl
 //#include "mesh.hpp"
 
@@ -75,13 +75,21 @@ mesh_t::mesh_t(int_t iVoid)
 
 /*! This constructor obtains all the parameters provided on the mesh_t object call and gives the automatic name of \a NewMesh.
  * This name is used to create all the .json,.xml,.msh related to the mesh_t object.*/
-mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) : mesh_t(iDim,inNodesOnDim_,ptRangeA, ptRangeB,"NewMesh")
+mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB) : mesh_t(iDim, inNodesOnDim_, ptRangeA, ptRangeB, "NewMesh")
 {
 }
 
-/*!This constructor obtains all parameters provided to create the mesh_t.
+/*!This constructor obtains almost all parameters provided to create the mesh_t.
  * This name is used to create all the .json,.xml,.msh related to the mesh_t object.*/
-mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName)
+mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName) : mesh_t(iDim, inNodesOnDim_, ptRangeA, ptRangeB, sMeshName, 0)
+{
+}
+
+	
+/*!This constructor obtains all parameters provided to create the mesh_t.
+ * The values on the nodes are set by fValue.
+ * This name is used to create all the .json,.xml,.msh related to the mesh_t object.*/
+mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName,floating_t fValue)
 {
 	if(siMeshNumber >= 1)
 	{
@@ -190,16 +198,16 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	#pragma omp for ordered schedule(dynamic)
 	for(i = 0; i < inNodesOnDim[0]; i++)
 	{
-	  //ndcoordx=ndcoordx + deltaX
-	  //ndcoordy=ndcoordy
-	  iIndexNode[0] = i;
-	  iIndexNode[1] = j;
-	  ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
-	  bNode.setNode(ndcoord,iIndexNode,0); 
+		//ndcoordx=ndcoordx + deltaX
+		//ndcoordy=ndcoordy
+		iIndexNode[0] = i;
+		iIndexNode[1] = j;
+		ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
+		bNode.setNode(ndcoord,iIndexNode,fValue); 
 
-	  mBoundaryMesh[iIndexNode] = bNode;
+		mBoundaryMesh[iIndexNode] = bNode;
 
-	  //Debug("dentro for 1");
+	//Debug("dentro for 1");
 
 	}
 	
@@ -215,15 +223,15 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	#pragma omp for ordered schedule(dynamic)
 	for(j = 1; j < inNodesOnDim[1]; j++)
 	{
-	  //ndcoordx=ndcoordx
-	  //ndcoordy=ndcoordy + deltaY
-	  index_t iIndexNode(2);
-	  iIndexNode[0] = i;
-	  iIndexNode[1] = j;
-	  ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
-	  bNode.setNode(ndcoord,iIndexNode,0); 
- 
-	  mBoundaryMesh[iIndexNode] = bNode;
+		//ndcoordx=ndcoordx
+		//ndcoordy=ndcoordy + deltaY
+		index_t iIndexNode(2);
+		iIndexNode[0] = i;
+		iIndexNode[1] = j;
+		ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
+		bNode.setNode(ndcoord,iIndexNode,fValue); 
+	 
+		mBoundaryMesh[iIndexNode] = bNode;
 	//Debug("Dentro for 2");
 	}
 	
@@ -244,7 +252,7 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	  iIndexNode[0] = i;
 	  iIndexNode[1] = j;
 	  ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
-	  bNode.setNode(ndcoord,iIndexNode,0); 
+	  bNode.setNode(ndcoord,iIndexNode,fValue); 
 		
 	  mBoundaryMesh[iIndexNode] = bNode;
 //Debug("Dentro de for 3");
@@ -262,13 +270,13 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	{
 	  /* ndcoordx=ndcoordx
 	     ndcoordy=ndcoordy - deltaY */
-	  index_t iIndexNode(2);
-	  iIndexNode[0] = i;
-	  iIndexNode[1] = j;
-	  ndcoord[1]-= ptDeltaOnDim[1];
-	  bNode.setNode(ndcoord,iIndexNode,0); 
-	  	
-	  mBoundaryMesh[iIndexNode] = bNode;
+		index_t iIndexNode(2);
+		iIndexNode[0] = i;
+		iIndexNode[1] = j;
+		ndcoord[1]-= ptDeltaOnDim[1];
+		bNode.setNode(ndcoord,iIndexNode,fValue); 
+	
+		mBoundaryMesh[iIndexNode] = bNode;
 //Debug("Dentro for 4");
 	}
 
@@ -288,7 +296,10 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	 * 		*/
 
 	//Debug("antes nested for");
-	if(itNumberOfNodes != vBoundaryMesh.size())
+	//if(itNumberOfNodes != vBoundaryMesh.size())
+	
+
+	if(itNumberOfNodes != mBoundaryMesh.size())
 	{
 		ndcoord = ptRangeA + ptDeltaOnDim;
 		/* ncoord = (a,b+dy) = (a,d) then
@@ -300,16 +311,20 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 			#pragma omp for ordered schedule(dynamic)
 			for(j = 1;j<inNodesOnDim[1]-1;j++)
 			{	
-				//index_t iIndexNode(2);
-				//iIndexNode[0] = i;
-				//iIndexNode[1] = j;
 				index_t iIndexNode(2);
-				iIndexNode.push_back(i);
-				iIndexNode.push_back(j);
+				iIndexNode[0] = i;
+				iIndexNode[1] = j;
+				//index_t iIndexNode(2);
+				//iIndexNode.push_back(i);
+				//iIndexNode.push_back(j);
+				
 				//ndcoord[1]= ptRangeB[1] - j*ptDeltaOnDim[1];
 				ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
-				bNode.setNode(ndcoord,iIndexNode,0); 
+				bNode.setNode(ndcoord,iIndexNode,fValue); 
 				
+				//std::cout << iIndexNode << std::endl;
+				//std::cout << bNode << std::endl;
+
 				mInnerMesh[iIndexNode] = bNode;
 				//Debug("Dentro del for nested");
 			}
@@ -324,7 +339,7 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 	itBoundaryNodes = mBoundaryMesh.size();	
 	itInnerNodes = mInnerMesh.size();
 
-	std::cout << itMeshDim << "-D Mesh Created with " << itNumberOfNodes << " nodes"  << std::endl;
+	std::cout << itMeshDim << "-D Mesh Created with " << itNumberOfNodes << " nodes, with the default value " << fValue << std::endl;
 
 }
 
@@ -975,6 +990,66 @@ void mesh_t::setMeshName(std::string sMeshName_)
 	sMeshFile = sMeshName + ".msh";
 	sMeshJSON = sMeshName + ".json";
 	sMeshXML = sMeshName + ".xml";
+}
+
+
+void mesh_t::coutMesh()
+{
+	std::cout << "Boundary mesh size " << mBoundaryMesh.size() << std::endl;
+	std::cout << "Inner mesh size " << mInnerMesh.size() << std::endl;
+
+	std::cout << "Boundary nodes" << std::endl;
+
+	for(std::map<index_t,node_t>::iterator mBoundaryMeshIterator = mBoundaryMesh.begin(); mBoundaryMeshIterator != mBoundaryMesh.end(); ++mBoundaryMeshIterator)
+	{
+		//std::cout << vBoundaryMesh[i] << std::endl;
+		point_t ptBuffer(mBoundaryMeshIterator->second.getCoordinates());
+		index_t idxBuffer(mBoundaryMeshIterator->first);
+		floating_t dBuffer(mBoundaryMeshIterator->second.getValue());
+	
+		std::cout << idxBuffer << "\t";
+
+		for(int j(0);j<ptBuffer.size();j++)
+		{
+			std::cout << ptBuffer[j] << "\t";
+		}
+
+		//sFileStream << "\t" << dBuffer << std::endl;
+		std::cout << "\t" << dBuffer << std::endl;
+	}
+
+	std::cout << "Inner nodes" << std::endl;
+
+	for(std::map<index_t,node_t>::iterator mInnerMeshIterator = mInnerMesh.begin(); mInnerMeshIterator != mInnerMesh.end(); ++mInnerMeshIterator)
+	{
+		point_t ptBuffer(mInnerMeshIterator->second.getCoordinates());
+		index_t idxBuffers(mInnerMeshIterator->first);
+		floating_t dBuffer(mInnerMeshIterator->second.getValue());
+		
+		std::cout << idxBuffers << "\t" ;
+
+		for(int j(0);j<ptBuffer.size();j++)
+		{
+			std::cout << ptBuffer[j] << "\t";
+		}
+
+		//sFileStream << "\t" << dBuffer << std::endl;
+		std::cout << "\t" << dBuffer  << std::endl;
+	}
+
+}
+
+
+/*! */
+std::map<index_t,node_t> mesh_t::getBoundaryMesh()
+{
+	return mBoundaryMesh;
+}
+
+/*! */
+std::map<index_t,node_t> mesh_t::getInnerMesh()
+{
+	return mInnerMesh;
 }
 
 // *!\brief ostream operator for the mesh_t.

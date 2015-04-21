@@ -26,8 +26,8 @@ class mesh_t
 	point_t ptRectangleLowA; /*!< Initial point on the rectangle's diagonal that defines the domain of the mesh_t.*/
 	point_t ptRectangleHighB; /*!< Final point on the rectangle's diagonal that defines the domain of the mesh_t.*/
 	
-	std::vector<node_t> vBoundaryMesh; /*!< Temporary vector variable should be replaced some way.*/
-	std::vector<node_t> vInnerMesh; /*!< Temporary vector variable should be replaced some way.*/
+	//std::vector<node_t> vBoundaryMesh; /*!< Temporary vector variable should be replaced some way.*/
+	//std::vector<node_t> vInnerMesh; /*!< Temporary vector variable should be replaced some way.*/
 
 	std::map<index_t,node_t> mBoundaryMesh; /*!< Mapping of indexes and node_ts on the boundary region of the mesh_t object. indexes can not be repeated. */
 	std::map<index_t,node_t> mInnerMesh; /*!< Mapping of indexes and node_ts on the inner region of the mesh_t object. indexes can not be repeated. */
@@ -61,7 +61,7 @@ class mesh_t
 	mesh_t(int_t iDim,index_t inNodesOnDim,point_t ptRangeA, point_t ptRangeB);
 	
 	/*!\brief Constructor. All related information must be provided.
-	* \param iDim Dimension of the mesh_t.
+	 * \param iDim Dimension of the mesh_t.
 	 * \param inNodesOnDim node_ts on each of the dimensions.
 	 * \param ptRangeA coordinates of the first point of the diagonal.
 	 * \param ptRangeB coordinates of the second point of the diagonal.
@@ -69,6 +69,17 @@ class mesh_t
 	 * \return mesh_t object.
 	 * */
 	mesh_t(int_t iDim,index_t inNodesOnDim,point_t ptRangeA, point_t ptRangeB,std::string sMeshName);
+
+	/*!\brief Constructor.Almost all related information must be provided.
+	 * \param iDim Dimension of the mesh_t.
+	 * \param inNodesOnDim node_ts on each of the dimensions.
+	 * \param ptRangeA coordinates of the first point of the diagonal.
+	 * \param ptRangeB coordinates of the second point of the diagonal.
+	 * \param sMeshName Name of the mesh_t.
+	 * \param fValue default value to assign to nodes.
+	 * \return mesh_t object.
+	 * */
+	mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName,floating_t fValue);
 	
 	/*!\brief Constructor that uses a property tree to build the mesh_t.
 	 * \param prTree Property Tree containing all the information of the mesh_t to be created.
@@ -165,14 +176,24 @@ class mesh_t
 	/*!\brief Sets the name of the mesh_t object.*/
 	void setMeshName(std::string sMeshName_);
 
+	/*!\brief Print nodes on standard output using.*/
+	void coutMesh();
+
+	/* Map returning methods */
+	
+	/*!\brief Gets the boundary map of the mesh_t object.*/
+	std::map<index_t,node_t> getBoundaryMesh();
+	
+	/*!\brief Gets inner map of the mesh_t object.*/
+	std::map<index_t,node_t> getInnerMesh();
 
 	/* Friend methods */
 	
 	/*!\brief Friend function to send mesh_t to streams. */
 	friend	std::ostream& operator<<(std::ostream& outStream, mesh_t& cMesh);
 
-	///*!\brief Friend function to iterate over indexes of the  mesh_t.*/
-	//friend mesh_t IterateFD(mesh_t& mMesh,floating_t dDeltaT);
+	/*!\brief Friend function to iterate over indexes of the  mesh_t.*/
+	friend mesh_t IterateFDCartesian(mesh_t& mMesh,floating_t dDeltaT);
 	
 	/* Misc methods */
 	

@@ -26,26 +26,26 @@ int main(void)
 */
 	pa = {0,0};
 	pb = {1,0.5};
-	ia = {50,50};
+	ia = {5,5};
 
-	std::cout << "PointA" << pa << std::endl;
-	std::cout << "PointB" << pb  << std::endl;
-	std::cout << "Nodes IA" << ia  << std::endl;
+	//std::cout << "PointA" << pa << std::endl;
+	//std::cout << "PointB" << pb  << std::endl;
+	//std::cout << "Nodes IA" << ia  << std::endl;
 	
-	mesh_t emesh(2,ia,pa,pb,"emesh");
+	mesh_t bmesh;
+
+	mesh_t emesh(2,ia,pa,pb,"emesh",3);
+	std::cout << emesh << std::endl;
+
 	emesh.createMeshFile();
 	emesh.createMeshPNG();
 	emesh.createMeshJSON();
-	std::cout << emesh << std::endl;
 
-	mesh_t test_mesh("mesh.json");
+	bmesh = IterateFDCartesian(emesh,0.05);
 
-	std::cout << test_mesh << std::endl;
-	
-	test_mesh.createMeshFile();
-	test_mesh.createMeshPNG();
-	test_mesh.createMeshJSON();
-	
+	emesh.coutMesh();
+	bmesh.coutMesh();
+
 	exit(0);
 }
 
