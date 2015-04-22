@@ -343,6 +343,270 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 
 }
 
+
+
+mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName, condition_t ptrInitCond)
+{
+
+	ptrInitialCondition = NULL;
+	ptrInitialCondition = ptrInitCond;
+
+	if(siMeshNumber >= 1)
+	{
+		siMeshNumber += 1;
+	}
+	else
+	{
+		siMeshNumber = 1;
+	}
+
+	setMeshName(sMeshName);
+	
+	ptRectangleLowA = ptRangeA;
+	ptRectangleHighB = ptRangeB;
+	
+	/* Set the dimension of the mesh_t if not setted already */
+	itMeshDim = iDim;
+	/* Initialize number of node_ts as 1 */
+	itNumberOfNodes = 1;
+
+	inNodesOnDim = inNodesOnDim_;
+
+	/* Multiply the number of node_ts on each dimension so the total amount of node_ts is calculated
+	 * example: Consider a 2D mesh_t with nx=5, ny=10
+	 * 			numberofnode_ts=1; // Then inside the of the for loop
+	 * 			numberofnode_ts=numberofnode_ts*nx*ny
+	 *  The number of node_ts is then 50.
+	 *  But the indices are zero based, so everithing runs on nx-1 and ny-1 in the loops below.
+	 * Stores dimensions on private variable inNodesOnDim
+	 */
+	#pragma omp parallel for
+	//for(int i(0);i<itMeshDim;i++)
+	for(int i = 0; i < itMeshDim; i++)
+	{
+		//inNodesOnDim.push_back(inNodesOnDim_.at(i));
+		itNumberOfNodes *= (inNodesOnDim.at(i));
+	}	
+
+	
+	/* Calculates the required delta on each dimension by using the limits ptRangeA and ptRangeB
+	 * when RangeA and RangeB define the points joining a rectangle's diagonal
+	 * RangeA always is assume to be the lower while RangeB the higher point as the diagram below
+	 *
+	 *       ***********RangeB(c,d)
+	 *       *         +          *
+	 *     ^ *       +            *
+	 *     | *     +              *
+	 *     y *   +                *
+	 *       * +                  *
+	 *       RangeA(a,b)***********
+	 *		 x -->
+	 *  
+	 *  On x the ranges are (c-a)/nx i.e (RangeB(1)-RangeA(1))
+	 *  On y the ranges are (d-b)/nx i.e (RangeB(2)-RangeA(2))
+	 */
+	#pragma omp parallel for
+	//for(int i(0);i<itMeshDim;i++)
+	for(int i = 0; i < itMeshDim; i++)
+	{
+		ptDeltaOnDim.push_back(fabs(ptRangeB[i]-ptRangeA[i])/(inNodesOnDim[i]-1));
+		//std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
+	}
+	/* Sepparated for due to the OMP implementation. when running parallel threads the std::cout output some times does have sense
+	 * e.g. "hello" -> "Hloel" or similar as a result of parallel execution
+	 */
+/* for(int i =0; i < itMeshDim; i++)
+	{
+		std::cout << "Delta on Dim " << i << " is (" << ptRangeB[i] << " - " << ptRangeA[i] << ")/" << inNodesOnDim[i]-1 << " = " <<  ptDeltaOnDim[i] << std::endl;
+	}
+*/
+	/* When storing node_ts, the mapping is as follows
+	 * 
+	 *       ***********RangeB(c,d)
+	 *    ny *                  + *
+	 *   ... *                    *
+	 *     3 *              +     *
+	 *     2 *                    *
+	 *     1 *           +        *
+	 *     0 *                    *
+	 *     ^ *       +            *
+	 *     | *                    *
+	 *       *   +                *
+	 *     j * +                  *
+	 *       RangeA(a,b)***********
+	 *		 i --> 0,1,2,3...,nx
+	*/  
+
+
+	/* Creating the bondary node_ts */
+
+	//Debug("antes del parallel");
+
+	//#pragma omp parallel
+/*{*/
+	int j(0),i(0);
+	point_t ndcoord(2);
+	ndcoord = ptRangeA;
+	
+	index_t iIndexNode(2);
+	node_t bNode;
+
+
+	//Debug("Dentro de parallel antes de for 1");
+	/* first j=0, and i=0->(nx-1) zero based nx node_ts */
+	//#pragma omp parallel for
+	#pragma omp for ordered schedule(dynamic)
+	for(i = 0; i < inNodesOnDim[0]; i++)
+	{
+		//ndcoordx=ndcoordx + deltaX
+		//ndcoordy=ndcoordy
+		iIndexNode[0] = i;
+		iIndexNode[1] = j;
+		ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
+		bNode.setNode(ndcoord,iIndexNode,fValue); 
+
+		mBoundaryMesh[iIndexNode] = bNode;
+
+	//Debug("dentro for 1");
+
+	}
+	
+
+	//Debug("Antes de for 2");
+	i = inNodesOnDim[0]-1;
+
+	////Debug(1);
+	
+	/* ncoord = (a+N*dx,b) = (c,b) then
+	 i=(nx-1) from above, and j=0->(ny-1) */
+	//#pragma omp parallel for
+	#pragma omp for ordered schedule(dynamic)
+	for(j = 1; j < inNodesOnDim[1]; j++)
+	{
+		//ndcoordx=ndcoordx
+		//ndcoordy=ndcoordy + deltaY
+		index_t iIndexNode(2);
+		iIndexNode[0] = i;
+		iIndexNode[1] = j;
+		ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
+		bNode.setNode(ndcoord,iIndexNode,fValue); 
+	 
+		mBoundaryMesh[iIndexNode] = bNode;
+	//Debug("Dentro for 2");
+	}
+	
+	//Debug("antes for 3");
+	j = inNodesOnDim[1]-1;
+
+	////Debug(2);
+
+	/* ncoord = (a+nx*dx,b+ny*dy) = (c,d) then
+	 j=(ny-1) from above, and i=(nx-1)-> 0 */
+	//#pragma omp parallel for
+	#pragma omp for ordered schedule(dynamic)
+	for(i=inNodesOnDim[0]-2;i>=0;i--)
+	{
+	  //ndcoordx=ndcoordx - deltaX
+	  //ndcoordy=ndcoordy
+	  index_t iIndexNode(2);
+	  iIndexNode[0] = i;
+	  iIndexNode[1] = j;
+	  ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
+	  bNode.setNode(ndcoord,iIndexNode,fValue); 
+		
+	  mBoundaryMesh[iIndexNode] = bNode;
+//Debug("Dentro de for 3");
+	}
+//Debug("Antes for 4");
+	i = 0;
+	ndcoord[1] = ptRangeB[1];
+	////Debug(3);
+
+	/* ncoord = (a,b+ny*dy) = (a,d) then
+	 i=0 from above, and j=(ny-1)->1 cuz node_t(i=0,j=0) is already defined */
+	//#pragma omp parallel for
+	#pragma omp for ordered schedule(dynamic)
+	for(j = inNodesOnDim[1]-2;j> 0;j--)
+	{
+	  /* ndcoordx=ndcoordx
+	     ndcoordy=ndcoordy - deltaY */
+		index_t iIndexNode(2);
+		iIndexNode[0] = i;
+		iIndexNode[1] = j;
+		ndcoord[1]-= ptDeltaOnDim[1];
+		bNode.setNode(ndcoord,iIndexNode,fValue); 
+	
+		mBoundaryMesh[iIndexNode] = bNode;
+//Debug("Dentro for 4");
+	}
+
+	
+	////Debug(4);
+	
+	/* Finally create the inner node_ts by using nested for
+	 * valid OpenMP nested for is as
+	 * for
+	 * {
+	 * 	   for
+	 * 	   {
+	 * 	  	  code here
+	 * 	   }
+	 *  dont put code here
+	 * }
+	 * 		*/
+
+	//Debug("antes nested for");
+	//if(itNumberOfNodes != vBoundaryMesh.size())
+	
+
+	if(itNumberOfNodes != mBoundaryMesh.size())
+	{
+		ndcoord = ptRangeA + ptDeltaOnDim;
+		/* ncoord = (a,b+dy) = (a,d) then
+		   i=0,j=1 from above */
+		for(i = 1;i<inNodesOnDim[0]-1;i++)
+		{
+			//#pragma omp parallel for
+//Debug("dentro for outter");
+			#pragma omp for ordered schedule(dynamic)
+			for(j = 1;j<inNodesOnDim[1]-1;j++)
+			{	
+				index_t iIndexNode(2);
+				iIndexNode[0] = i;
+				iIndexNode[1] = j;
+				//index_t iIndexNode(2);
+				//iIndexNode.push_back(i);
+				//iIndexNode.push_back(j);
+				
+				//ndcoord[1]= ptRangeB[1] - j*ptDeltaOnDim[1];
+				ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
+				bNode.setNode(ndcoord,iIndexNode,fValue); 
+				
+				//std::cout << iIndexNode << std::endl;
+				//std::cout << bNode << std::endl;
+
+				mInnerMesh[iIndexNode] = bNode;
+				//Debug("Dentro del for nested");
+			}
+			
+			//Debug("Dentro del for outter despues del nested");
+			ndcoord[0]+= ptDeltaOnDim[0];
+			ndcoord[1] = ptRangeA[1];
+		}
+	}
+
+/*}*/
+	itBoundaryNodes = mBoundaryMesh.size();	
+	itInnerNodes = mInnerMesh.size();
+
+	std::cout << itMeshDim << "-D Mesh Created with " << itNumberOfNodes << " nodes, with the default value " << fValue << std::endl;
+
+
+}
+
+
+
+
 /*! This constructor reads a boost::property_tree with all the data that specifies the mesh_t object.*/
 mesh_t::mesh_t(boost::property_tree::ptree prTree)
 {

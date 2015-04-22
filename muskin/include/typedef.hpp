@@ -37,3 +37,8 @@ typedef std::set<index_t> index_set_t;
  * the ODE system stored on the voxel_t as needed by the libboost::odeint.
  * This allows to use one single class with many different ODE systems for each voxel_t object. */
 typedef void (*system_t)( const point_t&, point_t& , const floating_t /* t */ ); /*!< A Pointer to libboost formated ODE systems. */
+
+/*! This typedef creates the type condition_t, a pointer to a function of the form 
+ * double function(const point_t&)
+ * This function is used to create the initial condition for the mesh using a given function.*/
+typedef double (*condition_t)( const point_t& ); /*!< A Pointer to initial condition functions. */

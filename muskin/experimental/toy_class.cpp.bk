@@ -1,0 +1,98 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <set>
+#include <map>
+
+#include <boost/numeric/odeint.hpp>
+
+#include "typedef.hpp"
+
+typedef std::vector< double > state_type;
+using namespace boost::numeric::odeint;
+
+double gam = 0.15;
+
+class Toy
+{
+	private:
+		int_t (*ptrFunction)(double x, double y, double z);
+		void (*ptrSys);
+
+	public:
+		Toy();
+		Toy(int_t (*ptrFunc)(double, double, double));
+		void setFunction(int_t (*ptrFunc)(double x, double y, double z));
+		int_t evalFunction(double x, double y, double z);
+		
+		void setSystem(void (*ptrSys));
+		void evalSystem(state_type);
+};
+
+Toy::Toy()
+{
+}
+
+Toy::Toy(int_t (*ptrFunc)(double, double, double))
+{
+	ptrFunction = ptrFunc;
+}
+
+void Toy::setFunction(int_t (*ptrFunc)(double , double , double ))
+{
+	ptrFunction = ptrFunc;
+}
+
+int_t Toy::evalFunction(double x, double y, double z)
+{
+	return (*ptrFunction)(x,y,z);
+}
+
+int_t function1(double x, double y, double z)
+{
+	std::cout << " x " << x << std::endl;
+	std::cout << " y " << y << std::endl;
+	std::cout << " z " << z << std::endl;
+	std::cout << "Hey MOFO, it worked!" << std::endl;
+
+	return 1;
+}
+
+int_t function2(double x, double y, double z)
+{
+	std::cout << " 2x " << 2*x << std::endl;
+	std::cout << " 2y " << 2*y << std::endl;
+	std::cout << " 2z " << 2*z << std::endl;
+	std::cout << "Hey MOFO, it worked!" << std::endl;
+
+	return 1;
+}
+
+
+/* The rhs of x' = f(x) */
+void harmonic_oscillator( const state_type &x , state_type &dxdt , const double /* t */ )
+{
+	    dxdt[0] = x[1];
+	    dxdt[1] = -x[0] - gam*x[1];
+}
+
+
+
+
+int main(void)
+{
+	Toy object(function1);
+	object.evalFunction(1,2,3);
+
+	object.setFunction(function2);
+	object.evalFunction(1,2,3);
+	
+	state_type x(2);
+	x[0] = 1.0; // start at x=1.0, p=0.0
+	x[1] = 0.0;
+
+	object.setSystem(harmonic_oscillator);
+	//object.evalSystem(harmonic_oscillator,x);
+
+
+}

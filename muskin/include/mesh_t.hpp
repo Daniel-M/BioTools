@@ -36,6 +36,7 @@ class mesh_t
 
 	boost::property_tree::ptree prTreeMesh; /*!< Property tree containing the configuration of the mesh_t object.*/
 
+	condition_t ptrInitialCondition; /*!< Initial condition for the mesh.*/
 
 	public:
 	
@@ -80,6 +81,17 @@ class mesh_t
 	 * \return mesh_t object.
 	 * */
 	mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName,floating_t fValue);
+
+	/*!\brief Constructor.Almost all related information must be provided.
+	 * \param iDim Dimension of the mesh_t.
+	 * \param inNodesOnDim node_ts on each of the dimensions.
+	 * \param ptRangeA coordinates of the first point of the diagonal.
+	 * \param ptRangeB coordinates of the second point of the diagonal.
+	 * \param sMeshName Name of the mesh_t.
+	 * \param ptrInitCond pointer to function that determines initial condition.
+	 * \return mesh_t object.
+	 * */
+	mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName, condition_t ptrInitCond);
 	
 	/*!\brief Constructor that uses a property tree to build the mesh_t.
 	 * \param prTree Property Tree containing all the information of the mesh_t to be created.
