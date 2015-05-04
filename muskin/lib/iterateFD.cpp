@@ -248,7 +248,7 @@ namespace Cylindrical_Coordinates
 				fdOnZ = coeff2*Cartesian_Coordinates::FDSecondOrder(idxIJ,mMesh,0); /*!< Coordinates should be (z,r) so the vertical axis represents radial dimension */
 
 
-				mBufferMesh[idxIJ] = mMesh[idxIJ] + dDeltaT*( fdOnX + fdOnY);
+				mBufferMesh[idxIJ] = mMesh[idxIJ] + dDeltaT*( fdOnR + fdOnZ);
 
 			}
 		}
