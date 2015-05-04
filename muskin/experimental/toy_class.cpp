@@ -9,7 +9,7 @@
 #include "typedef.hpp"
 
 typedef void (*system_t)( const point_t&, point_t& , const floating_t /* t */ );
-typedef double (*condition_t)( const point_t& ); /*!< A Pointer to initial condition functions. */
+typedef double (*function_t)( const point_t& ); /*!< A Pointer to initial condition functions. */
 using namespace boost::numeric::odeint;
 
 floating_t gam = 0.15;
@@ -111,7 +111,7 @@ void harmonic_oscillator( const std::vector<double> &x , std::vector<double> &dx
 int main(void)
 {
 
-	//condition_t = func; 
+	//function_t = func; 
 
 	//Toy object(function1);
 	//object.evalFunction(1,2,3);

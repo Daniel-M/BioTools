@@ -81,13 +81,13 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 
 /*!This constructor obtains almost all parameters provided to create the mesh_t.
  * This name is used to create all the .json,.xml,.msh related to the mesh_t object.*/
-mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName) : mesh_t(iDim, inNodesOnDim_, ptRangeA, ptRangeB, sMeshName, 0)
+mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName) : mesh_t(iDim, inNodesOnDim_, ptRangeA, ptRangeB, sMeshName, 0.0)
 {
 }
 
 	
 /*!This constructor obtains all parameters provided to create the mesh_t.
- * The values on the nodes are set by fValue.
+ * The values on the nodes are set by fValue which means that all have the same value.
  * This name is used to create all the .json,.xml,.msh related to the mesh_t object.*/
 mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName,floating_t fValue)
 {
@@ -344,9 +344,17 @@ mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRang
 }
 
 
-
-mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName, condition_t ptrInitCond)
+/*! This constructor takes advantage of a pointer to a function that depends on the coordinates of each of the node_t of the mesh.
+ * This method is pretty powerful for defining inhomogeneous concentration gradients. To use this constructor you must define a fuction as
+ * \c floating_t \c function(const point_t& pt)
+ * Where \c pt is the coordinates of the point of the node. To call this costructor just call something like this
+ * \c mesh_t \c mesh(intDimension,indexOnDim,PointA,PointB,"meshName",function);
+ * So the initial condition is called when building the mesh.
+ * */
+mesh_t::mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName, function_t ptrInitCond)
 {
+
+	double fValue;
 
 	ptrInitialCondition = NULL;
 	ptrInitialCondition = ptrInitCond;
@@ -463,6 +471,7 @@ mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::
 		iIndexNode[0] = i;
 		iIndexNode[1] = j;
 		ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
+		fValue = (*ptrInitialCondition)(ndcoord);
 		bNode.setNode(ndcoord,iIndexNode,fValue); 
 
 		mBoundaryMesh[iIndexNode] = bNode;
@@ -489,6 +498,7 @@ mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::
 		iIndexNode[0] = i;
 		iIndexNode[1] = j;
 		ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
+		fValue = (*ptrInitialCondition)(ndcoord);
 		bNode.setNode(ndcoord,iIndexNode,fValue); 
 	 
 		mBoundaryMesh[iIndexNode] = bNode;
@@ -506,15 +516,16 @@ mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::
 	#pragma omp for ordered schedule(dynamic)
 	for(i=inNodesOnDim[0]-2;i>=0;i--)
 	{
-	  //ndcoordx=ndcoordx - deltaX
-	  //ndcoordy=ndcoordy
-	  index_t iIndexNode(2);
-	  iIndexNode[0] = i;
-	  iIndexNode[1] = j;
-	  ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
-	  bNode.setNode(ndcoord,iIndexNode,fValue); 
+	  	//ndcoordx=ndcoordx - deltaX
+	  	//ndcoordy=ndcoordy
+	  	index_t iIndexNode(2);
+	  	iIndexNode[0] = i;
+	  	iIndexNode[1] = j;
+	  	ndcoord[0] =  ptRangeA[0] + i*ptDeltaOnDim[0];
+		fValue = (*ptrInitialCondition)(ndcoord);
+	  	bNode.setNode(ndcoord,iIndexNode,fValue); 
 		
-	  mBoundaryMesh[iIndexNode] = bNode;
+	  	mBoundaryMesh[iIndexNode] = bNode;
 //Debug("Dentro de for 3");
 	}
 //Debug("Antes for 4");
@@ -534,6 +545,7 @@ mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::
 		iIndexNode[0] = i;
 		iIndexNode[1] = j;
 		ndcoord[1]-= ptDeltaOnDim[1];
+		fValue = (*ptrInitialCondition)(ndcoord);
 		bNode.setNode(ndcoord,iIndexNode,fValue); 
 	
 		mBoundaryMesh[iIndexNode] = bNode;
@@ -580,6 +592,7 @@ mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::
 				
 				//ndcoord[1]= ptRangeB[1] - j*ptDeltaOnDim[1];
 				ndcoord[1] = ptRangeA[1] + j*ptDeltaOnDim[1];
+				fValue = (*ptrInitialCondition)(ndcoord);
 				bNode.setNode(ndcoord,iIndexNode,fValue); 
 				
 				//std::cout << iIndexNode << std::endl;
@@ -889,8 +902,8 @@ mesh_t& mesh_t::operator=(const mesh_t& mRHSMesh)
 	return *this;
 }
 
-/*!The mesh_t file created consists of columns representing the points that determine the mesh_t.
- * The name of the file is set by the mesh_t member sMeshFile which is also stored on the property tree.
+/*!The mesh_t file created consists of columns representing the points that determine the mesh_t and the final column represents the values at the corresponding nodes.
+ * The name of the file is set by the argument and the sMeshFile member of mesh_t is ignored.
  * The first node_ts that are stored on the file are the boundary node_ts following are the inner node_ts.
  * The boundary/inner information about the node_ts is determined at the moment of creating the mesh_t and can only
  * be retrieved by looking at the fields mesh.bnodes mesh.inodes on the property tree of the JSON or XML formatted file associated with the mesh_t.
@@ -967,6 +980,81 @@ int_t mesh_t::createMeshFile(std::string sFileName)
 	}
 
 }
+
+
+int_t mesh_t::createMeshValuesFile()
+{
+	createMeshValuesFile(sMeshFile);
+}
+	
+/*!The mesh_t file created consists of columns representing the points that determine the mesh_t and the final column represents the values at the corresponding nodes.
+ * The name of the file is set by the argument and the sMeshFile member of mesh_t is ignored.
+ * The first node_ts that are stored on the file are the boundary node_ts following are the inner node_ts.
+ * The boundary/inner information about the node_ts is determined at the moment of creating the mesh_t and can only
+ * be retrieved by looking at the fields mesh.bnodes mesh.inodes on the property tree of the JSON or XML formatted file associated with the mesh_t.
+ * Without those specifications is impossible to determine if the node_t is inner or boundary \a a \a priori.
+ * */
+int_t mesh_t::createMeshValuesFile(std::string sFileName)
+{
+	std::ofstream sFileStream;
+
+	sFileStream.open(sFileName.c_str());
+
+	if(sFileStream.is_open())
+	{
+		//std::cout << "Boundary mesh size " << mBoundaryMesh.size() << std::endl;
+		//std::cout << "Inner mesh size " << mInnerMesh.size() << std::endl;
+	
+		//std::map<index_t,node_t>::iterator mBoundaryMeshIterator;
+		//std::map<index_t,node_t>::iterator mInnerMeshIterator;
+
+
+
+		for(std::map<index_t,node_t>::iterator mBoundaryMeshIterator = mBoundaryMesh.begin(); mBoundaryMeshIterator != mBoundaryMesh.end(); ++mBoundaryMeshIterator)
+		{
+			//std::cout << vBoundaryMesh[i] << std::endl;
+		 	point_t ptBuffer(mBoundaryMeshIterator->second.getCoordinates());
+			floating_t dBuffer(mBoundaryMeshIterator->second.getValue());
+			
+			for(int j(0);j<ptBuffer.size();j++)
+			{
+				sFileStream << ptBuffer[j] << "\t";
+			}
+
+			sFileStream << "\t" << dBuffer << std::endl;
+			sFileStream << std::endl;
+		}
+
+		for(std::map<index_t,node_t>::iterator mInnerMeshIterator = mInnerMesh.begin(); mInnerMeshIterator != mInnerMesh.end(); ++mInnerMeshIterator)
+		{
+		  	point_t ptBuffer(mInnerMeshIterator->second.getCoordinates());
+			floating_t dBuffer(mInnerMeshIterator->second.getValue());
+			
+
+			for(int j(0);j<ptBuffer.size();j++)
+			{
+				sFileStream << ptBuffer[j] << "\t";
+			}
+
+			sFileStream << "\t" << dBuffer << std::endl;
+			sFileStream << std::endl;
+		}
+
+		sFileStream.close();
+
+		std::cout <<  "Mesh file " << sFileName << " created" << std::endl;
+
+		return 0;
+	}
+	else
+	{
+		std::cout <<  "Mesh file " << sFileName << "could not be created" << std::endl;
+		return 1;
+	}
+
+
+}
+
 
 /*! In order to create the PNG file mesh_t calls the MathGL library. The Generated has a size of 1200x900 pixels and 
  *	shows all the node_ts on the range of the mesh_t. The Name of the PNG is given by the mesh_t member sMeshName so the 

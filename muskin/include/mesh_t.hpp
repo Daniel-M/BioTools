@@ -36,7 +36,7 @@ class mesh_t
 
 	boost::property_tree::ptree prTreeMesh; /*!< Property tree containing the configuration of the mesh_t object.*/
 
-	condition_t ptrInitialCondition; /*!< Initial condition for the mesh.*/
+	function_t ptrInitialCondition; /*!< Initial condition for the mesh.*/
 
 	public:
 	
@@ -91,7 +91,7 @@ class mesh_t
 	 * \param ptrInitCond pointer to function that determines initial condition.
 	 * \return mesh_t object.
 	 * */
-	mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName, condition_t ptrInitCond);
+	mesh_t(int_t iDim,index_t inNodesOnDim_,point_t ptRangeA, point_t ptRangeB,std::string sMeshName, function_t ptrInitCond);
 	
 	/*!\brief Constructor that uses a property tree to build the mesh_t.
 	 * \param prTree Property Tree containing all the information of the mesh_t to be created.
@@ -128,6 +128,16 @@ class mesh_t
 	 * \return Status of the execution.
 	 * */
 	int_t createMeshFile(std::string sFileName);
+
+	/*!\brief Creates the mesh_t file \c .msh which can be plotted to see the actual values on the nodes of the mesh_t.
+	 * \return Status of the execution.*/
+	int_t createMeshValuesFile();
+	
+	/*!\brief Creates the mesh_t file \c .msh which can be plotted to see the actual values on the nodes of the mesh_t.
+	 * \param sFileName the name of the file to save the coordinates of the node_ts on the mesh_t.
+	 * \return Status of the execution.
+	 * */
+	int_t createMeshValuesFile(std::string sFileName);
 	
 	/*!\brief Creates a PNG with the mesh_t plotted.
 	 * \return Status of the execution.*/

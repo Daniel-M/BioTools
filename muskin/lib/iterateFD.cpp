@@ -16,19 +16,6 @@
  * \param[out] index index_t object that represents the set of indices associated.
  * \param[in] pos The position of the index to be modified.
  * \param[in] value The value to be added (or substracted) to the index at pos.*/
-//void DeltaIdx(index_t& index,int_t pos,int_t value)
-//{
-	//if( index.size() > pos )
-	//{
-		//index[pos] += value;
-	//}
-	//else
-	//{
-		//std::cout << "[EE] IterateFD DeltaIdx outbounds" << std::endl;
-	//}
-	////return ;
-//}
-
 index_t DeltaIdx(index_t& index,int_t pos,int_t value)
 {
 	index_t bIndex(index);
@@ -46,118 +33,229 @@ index_t DeltaIdx(index_t& index,int_t pos,int_t value)
 	
 }
 
-mesh_t IterateFDCartesian(mesh_t& mMesh,floating_t dDeltaT)
+namespace Cartesian_Coordinates
 {
-	mesh_t mBufferMesh(mMesh);
-	
-	std::map<index_t,node_t> mBufferBoundary(mMesh.getBoundaryMesh());
-	std::map<index_t,node_t> mBufferInner(mMesh.getInnerMesh());
-	std::map<index_t,node_t>::iterator mIterator;
-
-	std::cout << "Size of boundary " << mBufferBoundary.size() << std::endl;
-	std::cout << "Size of Inner " <<mBufferInner.size() << std::endl;
-; 	
-
-	double coeff1(1.0/pow(mMesh.getDeltaOnDim(0),2)), coeff2(1.0/pow(mMesh.getDeltaOnDim(1),2));
-	//int_t indexX1, indexX2; /*!< Buffer for the indexes */
-
-	index_t idxIJ, idxIJI, idxIJJ, idxIIJ, idxJIJ; /*!< idxIJ = i,j idxIJI = i+1,j idxIJJ = i,j+1 idxIIJ = i-1,j idxJIJ = i,j-1*/
-	
-	node_t fdOnX, fdOnY; /*!< Transitional nodes to store iterations on each dimension */
-	node_t nnBuffer; /*!< Buffer node to store the result of the iteration */
-
-	idxIJ = {1,1}; /*!< Initial node.*/
-
-    idxIJI = DeltaIdx(idxIJ,0,1);  /*!< i+1,j   */ 
-    idxIIJ = DeltaIdx(idxIJ,0,-1); /*!< i-1,j   */ 
-    idxIJJ = DeltaIdx(idxIJ,1,1);  /*!< i  ,j+1 */
-    idxJIJ = DeltaIdx(idxIJ,1,-1); /*!< i  ,j-1 */
-			
-	std::cout << idxIJ << "\t" <<  idxIJI << "\t" <<  idxIIJ << "\t" <<   idxIJJ << "\t" <<   idxJIJ << std::endl; 
-	
-	//mBufferMesh.coutMesh();
-
-	std::cout << "Iteration Process started..." << std::endl;
-
-
-	for(int i(1); i < mMesh.getNodesOnDim(0)-1; i++)
+	node_t FDFirstOrderForward(index_t idxIJ, mesh_t& mMesh,int_t IdXPos) 
 	{
-		for(int j(1); j < mMesh.getNodesOnDim(1)-1; j++)
-		{
-
-			idxIJ = {i,j};
-
-			idxIJI = DeltaIdx(idxIJ,0,1);  /*!< i+1,j   */ 
-			idxIIJ = DeltaIdx(idxIJ,0,-1); /*!< i-1,j   */ 
-			idxIJJ = DeltaIdx(idxIJ,1,1);  /*!< i  ,j+1 */
-			idxJIJ = DeltaIdx(idxIJ,1,-1); /*!< i  ,j-1 */
-			
-			fdOnX = coeff1*(mMesh[idxIJI] - 2*mMesh[idxIJ] + mMesh[idxIIJ]);
-			fdOnY = coeff2*(mMesh[idxIJJ] - 2*mMesh[idxIJ] + mMesh[idxJIJ]);
+		index_t idxIJI; /*!< idxIJ = i,j idxIJI = i+1,j idxIIJ = i-1,j idxIJJ = i,j+1  idxJIJ = i,j-1*/
 		
-			mBufferMesh[idxIJ] = mMesh[idxIJ] + dDeltaT*( fdOnX + fdOnY);
+		idxIJI = DeltaIdx(idxIJ,IdXPos,1);  /*!< i+1,j This uses IdXPos to determine wich index to iterate.*/ 
+
 			
-			std::cout << idxIJ << "\t" <<  idxIJI << "\t" <<  idxIIJ << "\t" <<   idxIJJ << "\t" <<   idxJIJ << std::endl; 
-			std::cout << "values mMesh[ij] " << mMesh[idxIJ].getValue() << std::endl;
-			std::cout << "values mMesh[i+1 j] " << mMesh[idxIJI].getValue() << std::endl;
-			std::cout << "values mMesh[i-1 j] " << mMesh[idxIIJ].getValue() << std::endl;
-			std::cout << "values mMesh[i j+1] " << mMesh[idxIJJ].getValue() << std::endl;
-			std::cout << "values mMesh[i j-1] " << mMesh[idxJIJ].getValue() << std::endl;
-			std::cout << "\n value dDeltaT " <<  dDeltaT << std::endl;
-			std::cout << "\n value " <<  coeff1 << std::endl;
-			std::cout << "\n value " <<  coeff2 << std::endl;
+		if( (idxIJ[IdXPos] >= 0 ) || (idxIJ[IdXPos] <= mMesh.getNodesOnDim(IdXPos)-2))
+		{
+			double r = (1/mMesh.getDeltaOnDim(IdXPos));
 
-			std::cout << "value fdOnX " <<  fdOnX.getValue() << std::endl;
-			std::cout << "value fdOnY " <<  fdOnY.getValue() << std::endl;
-			//std::cout << "values dDeltaT " <<  dDeltaT << std::endl;
-			//std::cout << "values mMesh[idx] " << mMesh[idxIJ] << std::endl;
-			std::cout << "Result " << mBufferMesh[idxIJ] << std::endl;
-
-
-			//std::cout << idxIJ << "\t" <<  idxIJI << "\t" <<  idxIIJ << "\t" <<   idxIJJ << "\t" <<   idxJIJ << std::endl; 
+			return r*(mMesh[idxIJI] - mMesh[idxIJ]);
+		}
+		else
+		{
+			std::cout << "[EE] FDFirstOrderForward DeltaIdx outbounds" << std::endl;
+			return mMesh[idxIJ];
 		}
 	}
 
 
-
-	//int i(1),j(1);
-	////for(mIterator = mBufferBoundary.begin(); mIterator != mBufferBoundary.end(); ++mIterator)
-	////for(mIterator =  mMesh.getBoundaryMesh().begin(); mIterator !=  mMesh.getBoundaryMesh().end(); ++mIterator)
-	//for(mIterator = mBufferBoundary.begin(); mIterator != mBufferBoundary.end(); ++mIterator)
-	//{
-		//std::cout << mIterator->second << std::endl;
-
-		//fdOnX = coeff1*(mMesh[idxIJI] - 2*mMesh[idxIJ] + mMesh[idxIIJ]);
-		//fdOnY = coeff2*(mMesh[idxIJJ] - 2*mMesh[idxIJ] + mMesh[idxJIJ]);
+	node_t FDFirstOrderBackward(index_t idxIJ, mesh_t& mMesh,int_t IdXPos) 
+	{	
+		index_t idxIIJ; /*!< idxIJ = i,j idxIJI = i+1,j idxIIJ = i-1,j idxIJJ = i,j+1  idxJIJ = i,j-1*/
 		
-		//mBufferMesh[idxIJ] = mMesh[idxIJ] + dDeltaT*( fdOnX + fdOnY);
-
-		//std::cout << "values " << mBufferMesh[idxIJ] << std::endl;
-
-		//i++;
-		//j++;
-
-		//idxIJ = {i,j}; /*!< Initial node.*/
-
-		//idxIJI = DeltaIdx(idxIJ,0,1);  /*!< i+1,j   */ 
-		//idxIIJ = DeltaIdx(idxIJ,0,-1); /*!< i-1,j   */ 
-		//idxIJJ = DeltaIdx(idxIJ,1,1);  /*!< i  ,j+1 */
-		//idxJIJ = DeltaIdx(idxIJ,1,-1); /*!< i  ,j-1 */
-	//}	 
-
-	//idxIJ = {1,1};
-
-	//for(int i;i<mMesh.getNodesOnDim(0)-1;i++)
-	//{
-		//std::cout << idxIJ << "\t";
-		//std::cout << mBufferMesh[idxIJ] << std::endl;
+		idxIIJ = DeltaIdx(idxIJ,IdXPos,-1);  /*!< i-1,j This uses IdXPos to determine wich index to iterate.*/ 
+			
 		
-		//DeltaIdx(idxIJ,0,1);
-	//}
+		if( (idxIJ[IdXPos] >= 1 ) || (idxIJ[IdXPos] <= mMesh.getNodesOnDim(IdXPos)-1))
+		{
+			double r = (1/mMesh.getDeltaOnDim(IdXPos));
 
-	/*!< Boundary region of the mesh */
+			return r*(mMesh[idxIJ] - mMesh[idxIIJ]);
+		}
+		else
+		{
+			std::cout << "[EE] FDFirstOrderBackward DeltaIdx outbounds" << std::endl;
+			return mMesh[idxIJ];
+		}
+		
+	}
 
-	/*!< Inner region of the mesh */
+	node_t FDFirstOrderCentered(index_t idxIJ, mesh_t& mMesh,int_t IdXPos) 
+	{	
+		index_t idxIJI,idxIIJ; /*!< idxIJ = i,j idxIJI = i+1,j idxIIJ = i-1,j idxIJJ = i,j+1  idxJIJ = i,j-1*/
 
-	return mBufferMesh;
+		idxIJI = DeltaIdx(idxIJ,IdXPos,1);  /*!< i+1,j This uses IdXPos to determine wich index to iterate.*/ 
+		idxIIJ = DeltaIdx(idxIJ,IdXPos,-1);  /*!< i-1,j This uses IdXPos to determine wich index to iterate.*/ 
+
+		if( (idxIIJ[IdXPos] >= 0 ) || (idxIJI[IdXPos] < mMesh.getNodesOnDim(IdXPos)) )
+		{
+
+			double r = 0.5*(1/mMesh.getDeltaOnDim(IdXPos));
+
+			return r*(mMesh[idxIJI] - mMesh[idxIIJ]);
+		}
+		else
+		{
+			std::cout << "[EE] FDFirstOrderCentered DeltaIdx outbounds" << std::endl;
+			return mMesh[idxIJ];
+		}
+	}
+
+
+	node_t FDSecondOrder(index_t idxIJ, mesh_t& mMesh,int_t IdXPos) 
+	{	
+
+		if( idxIJ[IdXPos] == 0 )
+		{
+			double r = (2/pow(mMesh.getDeltaOnDim(IdXPos),2));
+
+			/*!< Using Homogeneous Neuman Condition */
+		
+			return r*(mMesh[ DeltaIdx(idxIJ,IdXPos,1) ] - mMesh[idxIJ]);
+		}
+		else if( idxIJ[IdXPos] == mMesh.getNodesOnDim(IdXPos)-1 )
+		{
+			
+			double r = (2/pow(mMesh.getDeltaOnDim(IdXPos),2));
+
+			/*!< Using Homogeneous Neuman Condition */
+			
+			return r*(mMesh[ DeltaIdx(idxIJ,IdXPos,-1) ] - mMesh[idxIJ]);
+	
+		}
+		else if( (idxIJ[IdXPos] > 0 ) && (idxIJ[IdXPos] < mMesh.getNodesOnDim(IdXPos)-1))
+		{
+			double r = (1/pow(mMesh.getDeltaOnDim(IdXPos),2));
+			
+			return r*(mMesh[DeltaIdx(idxIJ,IdXPos,1)] - 2*mMesh[idxIJ] + mMesh[DeltaIdx(idxIJ,IdXPos,-1)]);
+		}
+		else
+		{
+			std::cout << "[EE] FDSecondOrder DeltaIdx outbounds" << std::endl;
+			return mMesh[idxIJ];
+		}
+
+	}
+
+	mesh_t IterateFD(mesh_t& mMesh,floating_t dDeltaT)
+	{
+		mesh_t mBufferMesh(mMesh);
+
+		double coeff1(1.0), coeff2(1.0);
+		//double coeff1(1.0/pow(mMesh.getDeltaOnDim(0),2)), coeff2(1.0/pow(mMesh.getDeltaOnDim(1),2));
+
+		index_t idxIJ, idxIJI, idxIJJ, idxIIJ, idxJIJ; /*!< idxIJ = i,j idxIJI = i+1,j idxIIJ = i-1,j idxIJJ = i,j+1  idxJIJ = i,j-1*/
+		
+		node_t fdOnX, fdOnY; /*!< Transitional nodes to store iterations on each dimension */
+
+
+		for(int i(0); i < mMesh.getNodesOnDim(0); i++)
+		{
+			for(int j(0); j < mMesh.getNodesOnDim(1); j++)
+			{
+
+				idxIJ = {i,j};
+
+				fdOnX = coeff1*Cartesian_Coordinates::FDSecondOrder(idxIJ,mMesh,0);
+				fdOnY = coeff2*Cartesian_Coordinates::FDSecondOrder(idxIJ,mMesh,1);
+
+				mBufferMesh[idxIJ] = mMesh[idxIJ] + dDeltaT*( fdOnX + fdOnY);
+				
+				//std::cout << idxIJ << std::endl; 
+				//std::cout << "values mMesh[ij] " << mMesh[idxIJ].getValue() << std::endl;
+				//std::cout << "values mMesh[i] " << fdOnX.getValue() << std::endl;
+				//std::cout << "values mMesh[j] " << fdOnY.getValue() << std::endl;
+				//std::cout << "\n value dDeltaT " <<  dDeltaT << std::endl;
+				//std::cout << "\n coeff1 " <<  coeff1 << std::endl;
+				//std::cout << "\n coeff2 " <<  coeff2 << std::endl;
+
+				//std::cout << "value fdOnX " <<  fdOnX.getValue() << std::endl;
+				//std::cout << "value fdOnY " <<  fdOnY.getValue() << std::endl;
+				//std::cout << "values mMesh[idx] " << mMesh[idxIJ] << std::endl;
+				//std::cout << "Result " << mBufferMesh[idxIJ] << std::endl;
+
+
+			}
+		}
+
+
+		return mBufferMesh;
+	}
 }
+
+namespace Cylindrical_Coordinates
+{
+
+	node_t FDSecondOrder(index_t idxIJ, mesh_t& mMesh,int_t IdXPos) 
+	{	
+
+		if( idxIJ[IdXPos] == 0 )
+		{
+			double r = (4/pow(mMesh.getDeltaOnDim(IdXPos),2));
+
+			/*!< Using predefined equation
+			 *   Remember that DeltaIdx(idxIJ,0,1) means {i,j,k} --> {i+1,j,k}
+			 * */
+		
+			return r*(mMesh[ DeltaIdx(idxIJ,IdXPos,1) ] - mMesh[idxIJ]);
+		}
+		else if( idxIJ[IdXPos] == mMesh.getNodesOnDim(IdXPos)-1 )
+		{
+			
+			double alpha = mMesh.getNodesOnDim(IdXPos)-1;
+			double r = (2/(pow(mMesh.getDeltaOnDim(IdXPos),2)*alpha));
+
+			/*!< Using Homogeneous Neuman Condition */
+			
+			return r*(alpha*mMesh[ DeltaIdx(idxIJ,0,-1) ]-mMesh[idxIJ]);
+	
+		}
+		else if( ( 0 < idxIJ[IdXPos] ) && (idxIJ[IdXPos] < mMesh.getNodesOnDim(IdXPos)-1))
+		{
+			double alpha = 2*idxIJ[IdXPos];
+			double beta = alpha+1;
+			double gamma = alpha-1;
+			double r = (1/(alpha*pow(mMesh.getDeltaOnDim(IdXPos),2)));
+			
+			return r*(beta*mMesh[DeltaIdx(idxIJ,IdXPos,1)] - 2*alpha*mMesh[idxIJ] + gamma*mMesh[DeltaIdx(idxIJ,IdXPos,-1)]);
+		}
+		else
+		{
+			std::cout << "[EE] FDSecondOrder DeltaIdx outbounds" << std::endl;
+			return mMesh[idxIJ];
+		}
+
+	}
+	
+	
+	mesh_t IterateFD(mesh_t& mMesh,floating_t dDeltaT)
+	{
+		mesh_t mBufferMesh(mMesh);
+
+		double coeff1(1.0), coeff2(1.0);
+		//double coeff1(1.0/pow(mMesh.getDeltaOnDim(0),2)), coeff2(1.0/pow(mMesh.getDeltaOnDim(1),2));
+
+		index_t idxIJ, idxIJI, idxIJJ, idxIIJ, idxJIJ; /*!< idxIJ = i,j idxIJI = i+1,j idxIIJ = i-1,j idxIJJ = i,j+1  idxJIJ = i,j-1*/
+		
+		node_t fdOnR, fdOnZ; /*!< Transitional nodes to store iterations on each dimension */
+
+
+		for(int i(0); i < mMesh.getNodesOnDim(0); i++)
+		{
+			for(int j(0); j < mMesh.getNodesOnDim(1); j++)
+			{
+
+				idxIJ = {i,j};
+
+				fdOnR = coeff1*FDSecondOrder(idxIJ,mMesh,1); /*!< Coordinates should be (z,r) so the horizontal axis represents longitudinal dimension */
+				fdOnZ = coeff2*Cartesian_Coordinates::FDSecondOrder(idxIJ,mMesh,0); /*!< Coordinates should be (z,r) so the vertical axis represents radial dimension */
+
+
+				mBufferMesh[idxIJ] = mMesh[idxIJ] + dDeltaT*( fdOnX + fdOnY);
+
+			}
+		}
+
+
+		return mBufferMesh;
+	}
+}
+
+
