@@ -26,7 +26,7 @@ int main(void)
 	std::vector<std::string> vsSimpleReactions;
 
 	std::map<std::string,int> mSpecies;
-	std::map<std::string,int>::iterator iTmSpecies;
+	//std::map<std::string,int>::iterator iTmSpecies;
 	std::string sLine;
 
 	if(fsInput.is_open() && fsOutput.is_open())
@@ -64,11 +64,7 @@ int main(void)
 
 			
 
-		for(iTmSpecies=mSpecies.begin();iTmSpecies != mSpecies.end();iTmSpecies++)
-		{
-			std::cout << " Key " << iTmSpecies->first << " Value " << iTmSpecies->second << std::endl;
-		}
-
+		std::cout << mSpecies << std::endl;
 
 	}
 
