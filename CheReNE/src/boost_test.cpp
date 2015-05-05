@@ -1,18 +1,5 @@
-//#include <iostream>
-//#include <vector>
-//#include <fstream>
-//#include <string>
-//#include <cmath>
-
-//#include <boost/numeric/ublas/vector.hpp>
-//#include <boost/numeric/ublas/matrix.hpp>
-//#include <boost/numeric/ublas/io.hpp>
-
 #include "cherene.hpp"
-//#include "getSimpleReactions.hpp"
-//#include "overloadedMatrix.hpp"
 
-//using namespace std;
 //using namespace cherene;
 
 int main(void)
@@ -38,6 +25,7 @@ int main(void)
 
 			if(sLine!="")
 			{
+				std::cout << sLine << std::endl;
 				getSimpleReactions(sLine,vsSimpleReactions);
 			}
 		}
@@ -45,11 +33,15 @@ int main(void)
 		fsInput.close();
 
 
+		std::cout << "Parsed Simple Reactions" << std::endl;
+
 		for(int i=0;i<vsSimpleReactions.size();i++)
 		{
+			std::cout << vsSimpleReactions[i] << std::endl;
 			fsOutput << vsSimpleReactions[i] << std::endl;
 		}
 
+		fsOutput.clear();
 		fsOutput.seekg(fsOutput.beg);
 
 		while(fsOutput.eof()!=true)
@@ -59,10 +51,9 @@ int main(void)
 			if(sLine!="")
 			{
 				getSpeciesMap(">",sLine,mSpecies);
+				//std::cout << sLine << std::endl;
 			}
 		}
-
-			
 
 		std::cout << mSpecies << std::endl;
 

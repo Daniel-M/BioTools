@@ -6,22 +6,44 @@
  * \param[out] mSpecies a map that stores the chemical species contained on \a vsStringInput.
  * \note mSpecies is modified by reference.
  */
-void getSpeciesMap(std::vector<std::string> vsStringInput, std::map<std::string,int> &mSpecies)
+void getSpeciesMap(std::vector<std::string>& vsStringInput, std::map<std::string,int>& mSpecies)
 {
 
   std::vector<std::string> vsSpecies;
+
+  std::cout << "Input vector" << std::endl;
+
+  for(int k(0); k < vsStringInput.size(); k++)
+  {
+    std::cout << k << ",\t" << vsStringInput[k] << std::endl;
+  }
   
-  for(int k=0;k!=vsStringInput.size();k++)
+  for(int k(0); k < vsStringInput.size(); k++)
   {
 	  boost::algorithm::split(vsSpecies,vsStringInput[k],boost::algorithm::is_any_of("+"));
   }
 
+  //std::cout << "vector" << std::endl;
+
+  //for(int k(0); k <vsSpecies.size(); k++)
+  //{
+	  //std::cout << vsSpecies[k] << std::endl;
+  //}
   
-  for(int k=0;k!=vsSpecies.size();k++)
+  for(int k(0); k <vsSpecies.size(); k++)
   {
     unStoichem(vsSpecies[k]);
   }
   
+  //std::cout << "unStoichem vector" << std::endl;
+ 
+  //for(int k(0); k <vsSpecies.size(); k++)
+  //{
+	  //std::cout << vsSpecies[k] << std::endl;
+  //}
+
+
+
   for(int i=0;i<vsSpecies.size();i++)
   {   
     if(mSpecies.find(vsSpecies[i])==mSpecies.end())
@@ -39,7 +61,7 @@ void getSpeciesMap(std::vector<std::string> vsStringInput, std::map<std::string,
 /**
  * \overload This function maps chemical species given a string as input.
  */
-void getSpeciesMap(std::string sPattern, std::string sInput, std::map<std::string,int> &mSpecies)
+void getSpeciesMap(std::string sPattern, std::string& sInput, std::map<std::string,int> &mSpecies)
 {
   std::vector<std::string> *vComplex = new std::vector<std::string>;
   

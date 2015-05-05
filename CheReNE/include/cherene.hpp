@@ -54,6 +54,8 @@
 #ifndef CHERENE 
 namespace cherene
 {
+
+
 	std::map<std::string,std::string> getMassActionLawEquations(std::vector<std::string> vsSimpleReactions, std::map<std::string,int> mSpecies, boost::numeric::ublas::matrix<int>& mStoichometricMatrix);
 	
 	void getProductsVector(std::string sInput,std::map<std::string,int> mSpecies, std::vector< int >& viResult);
@@ -66,7 +68,8 @@ namespace cherene
 
 	void getSimpleReactions(std::string sInput,std::vector<std::string>& vsSimpleReactions);
 
-	void getSpeciesMap(std::vector<std::string> vsStringInput, std::map<std::string,int> &mSpecies);
+	void getSpeciesMap(std::string sPattern, std::string& sInput, std::map<std::string,int>& mSpecies);
+	void getSpeciesMap(std::vector<std::string>& vsStringInput, std::map<std::string,int>& mSpecies);
 	
 	int unStoichem(std::string& sInput);
 
